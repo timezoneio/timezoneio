@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 var React        = require('react');
-var TimezoneList = require('./timezoneList.jsx');
+var TimezoneList = require('../components/timezoneList.jsx');
 
 module.exports = React.createClass({
   getInitialState: function() {

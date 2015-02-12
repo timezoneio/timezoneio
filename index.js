@@ -9,18 +9,32 @@ var fs = require('fs');
 
 var people = require('./people.json');
 var transform = require('./app/utils/transform.js');
+var strings = require('./app/utils/strings.js');
 
 // Allow direct requiring of .jsx files
 require('node-jsx').install({extension: '.jsx'});
 
+// React views
+var App = require('./app/views/app.jsx');
+var Homepage = require('./app/views/homepage.jsx');
+
+// Read the main template in once
+var template = fs.readFileSync('./app/templates/layout.hbs', 'utf8');
+
+
 // Should switch this out for proper Handlebars usage
-function template (body, done) {
-  fs.readFile('./app/views/layout.hbs', 'utf8', function (err, layout) {
-    if (err) done(err);
-    done(null, layout
-                .replace('{{{body}}}', body)
-                .replace('{{{people}}}', JSON.stringify(people)));
-  });
+function render(params, done) {
+
+  params.title = params.title ? 'Timezone.io - ' + params.title : 'Timezone.io';
+  params.body = params.body || '404 :(';
+  params.data = JSON.stringify(params.data || {});
+  params.script = params.script || '/js/genericPage.js';
+
+  var page = Object.keys(params).reduce(function(page, key) {
+    return page.replace('{{{' + key + '}}}', params[key]);
+  }, template);
+
+  done(null, page);
 }
 
 app.use(logger('common'));
@@ -33,16 +47,33 @@ app.use(
     compile: function (str, path, fn) {
       return stylus(str)
         .use(autoprefixer())
-        .set('filename', path);
-        // .set('compress', true);
+        .set('filename', path)
+        .set('compress', true);
     }
   })
 );
 
-app.get('/', function(err, res){
+app.get('/', function(req, res) {
 
-  var App = require('./app/views/app.jsx');
+  var body = React.renderComponentToString(
+    Homepage()
+  );
 
+  var params = {
+    title: 'Keep track where and when your team is.',
+    body: body,
+    script: 'bundles/homepage.js'
+  };
+
+  render(params, function(err, html){
+    if (err) throw err;
+    res.send(html);
+  });
+
+});
+
+app.get('/team/:name', function(req, res) {
+  
   // Organize into timezones
   var time = moment();
   var timezones = transform(time, people);
@@ -54,7 +85,17 @@ app.get('/', function(err, res){
     })
   );
 
-  template(body, function(err, html){
+  var params = {
+    title: strings.capFirst(req.params.name),
+    body: body,
+    script: 'bundles/app.js',
+    data: {
+      time: time,
+      people: people
+    }
+  };
+
+  render(params, function(err, html){
     if (err) throw err;
     res.send(html);
   });

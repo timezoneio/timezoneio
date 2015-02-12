@@ -6,11 +6,12 @@ var App = React.createFactory(require('./views/app.jsx'));
 
 
 // Organize into timezones
-var time = moment();
-var timezones = transform(time, window.people);
+var appData = window.appData;
+var time = moment(appData.time);
+var timezones = transform(time, appData.people);
 
 // Add the component to the DOM
-var targetNode = document.querySelector('#app');
+var targetNode = document.querySelector('#page');
 
 React.render(
   App({
