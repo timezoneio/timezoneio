@@ -1,3 +1,76 @@
 
 .hp-headline
+  margin-top: 0
   text-align: center
+  font-weight: normal
+  
+.hp-section
+  width: 100%;
+  padding: 2em 0
+  
+  &.demo
+    padding: 3em 0
+    
+    .timezone-list
+      min-height: 264px // prevent jumping during render
+
+  &.alt
+    background: $fillColor
+    
+.hp-content-container
+  max-width: 800px
+  margin: 0 auto;
+  
+.hp-pitch
+  font-size: 1.1em
+  line-height: 1.5em
+  font-weight: normal
+  text-align: center
+
+.hp-pitch-search
+  position: relative
+  display: inline-block
+  height: 30px
+  width: 60%
+  max-width: 500px
+  padding: 0.3em 0.6em
+  margin: 1em auto
+  
+  text-align: left
+  background: #fff
+  border: 1px solid #ccc
+  font: 16px arial, sans-serif
+  
+  &::after 
+    position: absolute
+    top: -1px // to offset border
+    right: -1px
+    display: block
+    content: ""
+    width: 60px
+    height: 30px
+    background: url("/images/homepage/search-button.png") no-repeat top right
+    background-size: 60px 30px
+
+  
+
+.hp-description,
+.hp-description-quote
+  max-width: 580px
+  margin: 1.2em auto
+  
+  line-height: 1.8em // move this to generic class
+  
+// .hp-description-quote
+//   padding: 0.5em 1em
+//   margin: 2em auto
+//   background: lighten($fillColor, 20%)
+//   font-style: italic
+
+.mc-field-group
+  margin: 1em 0
+
+.site-footer
+  padding: 3em 0
+  text-align: center
+  

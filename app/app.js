@@ -10,6 +10,8 @@ var appData = window.appData;
 var time = moment(appData.time);
 var timezones = transform(time, appData.people);
 
+window.timezones = timezones;
+
 // Add the component to the DOM
 var targetNode = document.querySelector('#page');
 

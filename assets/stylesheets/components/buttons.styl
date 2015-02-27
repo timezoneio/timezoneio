@@ -1,0 +1,31 @@
+
+.button
+  display: inline-block
+  padding: 0.3em 1em 0.4em
+  
+  background-color: lighten($fillColor, 10%)
+  border-radius: 20px
+  
+  font-size: 15px
+  line-height: 1.4em
+  color: $textColor
+  text-decoration: none
+  
+  &::after
+    content: none
+    width: inherit
+    height: inherit
+  
+  &:hover
+    background-color: $fillColor
+    
+  &.cta
+    background-color: lighten($brandColor, 10%)
+    color: #fff
+    
+    &:hover
+      background-color: $brandColor
+  
+  
+input[type="submit"].button
+  border: 0
