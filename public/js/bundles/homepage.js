@@ -349,7 +349,7 @@ module.exports = React.createClass({displayName: "exports",
                     name: "mc-embedded-subscribe-form", 
                     className: "validate", 
                     target: "_blank", 
-                    novalidate: true}, 
+                    noValidate: true}, 
                 React.createElement("div", {id: "mc_embed_signup_scroll"}, 
                 
                   React.createElement("div", {className: "mc-field-group"}, 
@@ -365,7 +365,7 @@ module.exports = React.createClass({displayName: "exports",
                     React.createElement("div", {className: "response", id: "mce-success-response", style: {display: "none"}})
                   ), 
                   React.createElement("div", {style: honeyPotStyle}, 
-                    React.createElement("input", {type: "text", name: "b_34f393bbea3791dbad5109a7b_cb191e06bc", tabindex: "-1", defaultValue: ""})
+                    React.createElement("input", {type: "text", name: "b_34f393bbea3791dbad5109a7b_cb191e06bc", tabIndex: "-1", defaultValue: ""})
                   ), 
                   React.createElement("div", {className: "clear"}, 
                     React.createElement("input", {type: "submit", 

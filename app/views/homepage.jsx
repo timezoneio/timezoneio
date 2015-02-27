@@ -188,7 +188,7 @@ module.exports = React.createClass({
                     name="mc-embedded-subscribe-form" 
                     className="validate" 
                     target="_blank" 
-                    novalidate>
+                    noValidate>
                 <div id="mc_embed_signup_scroll">
                 
                   <div className="mc-field-group">
@@ -204,7 +204,7 @@ module.exports = React.createClass({
                     <div className="response" id="mce-success-response" style={{display: "none"}}></div>
                   </div>
                   <div style={honeyPotStyle}>
-                    <input type="text" name="b_34f393bbea3791dbad5109a7b_cb191e06bc" tabindex="-1" defaultValue="" />
+                    <input type="text" name="b_34f393bbea3791dbad5109a7b_cb191e06bc" tabIndex="-1" defaultValue="" />
                   </div>
                   <div className="clear">
                     <input type="submit" 
