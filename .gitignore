@@ -1,4 +1,6 @@
 node_modules
 
+people.json
+
 *.log
 public/stylesheets/*.css
