@@ -105,4 +105,5 @@ app.get('/team/:name', function(req, res) {
 // Static files
 app.use(express.static(__dirname + '/public'));
 
-app.listen(process.env.PORT || 8080);
+//process.env.PORT || 
+app.listen(8080);
