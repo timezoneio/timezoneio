@@ -231,17 +231,18 @@ module.exports = React.createClass({displayName: "exports",
   },
   showNextSearchCity: function() {
 
-    var KEY_DELAY = 140;
+    var TYPE_DELAY = 100;
+    var BACKSPACE_DELAY = 60;
     var CITY_DELAY = 1000;
 
     var backspace = function() {
       var partial = this.state.searchCity;
       if (!partial.length)
-        return setTimeout(nextCity, KEY_DELAY);
+        return setTimeout(nextCity, BACKSPACE_DELAY);
 
       partial = partial.substr(0, partial.length - 1);
       this.setState({ searchCity: partial });
-      setTimeout(backspace, KEY_DELAY);
+      setTimeout(backspace, BACKSPACE_DELAY);
     }.bind(this);
 
     var nextCity = function() {
@@ -249,7 +250,7 @@ module.exports = React.createClass({displayName: "exports",
                     0 : 
                     this.state.searchCityIdx + 1;
       this.setState({ searchCityIdx: nextIdx });
-      setTimeout(type, KEY_DELAY);
+      setTimeout(type, TYPE_DELAY);
     }.bind(this);
 
     var type = function() {
@@ -260,7 +261,7 @@ module.exports = React.createClass({displayName: "exports",
       var partial = this.state.searchCity;
       partial = full.substr(0, partial.length + 1);
       this.setState({ searchCity: partial });
-      setTimeout(type, KEY_DELAY);
+      setTimeout(type, TYPE_DELAY);
     }.bind(this);
 
     // Start it!
