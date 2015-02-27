@@ -297,7 +297,7 @@ module.exports = React.createClass({displayName: "exports",
   },
   render: function() {
     return (
-      React.createElement("div", {className: "container"}, 
+      React.createElement("div", {className: "container team-container"}, 
         React.createElement(TimezoneList, {time: this.props.time, 
                       timeFormat: this.state.timeFormat, 
                       timezones: this.props.timezones}), 

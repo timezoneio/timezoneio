@@ -33,6 +33,7 @@
   height: 30px
   width: 60%
   max-width: 500px
+  min-width: 240px
   padding: 0.3em 0.6em
   margin: 1em auto
   
@@ -51,6 +52,7 @@
     height: 30px
     background: url("/images/homepage/search-button.png") no-repeat top right
     background-size: 60px 30px
+    filter: grayscale(100%)
 
   
 
@@ -60,12 +62,6 @@
   margin: 1.2em auto
   
   line-height: 1.8em // move this to generic class
-  
-// .hp-description-quote
-//   padding: 0.5em 1em
-//   margin: 2em auto
-//   background: lighten($fillColor, 20%)
-//   font-style: italic
 
 .mc-field-group
   margin: 1em 0
@@ -73,4 +69,12 @@
 .site-footer
   padding: 3em 0
   text-align: center
+  
+
+@media screen and (max-width: 320px)
+  body
+    font-size: 14px
+    
+  .hp-content-container
+    max-width: 90%
   
