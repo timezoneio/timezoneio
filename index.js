@@ -22,19 +22,23 @@ var Homepage = require('./app/views/homepage.jsx');
 var template = fs.readFileSync('./app/templates/layout.hbs', 'utf8');
 
 
-// Should switch this out for proper Handlebars usage
-function render(params, done) {
+var defaultDescription = 'Keep track where and when your remote team is with Timezone.io';
+
+function render(req, res, params) {
 
   params.title = params.title ? 'Timezone.io - ' + params.title : 'Timezone.io';
+  params.description = params.description || defaultDescription;
+  params.url = 'http://timezone.io' + req.url;
   params.body = params.body || '404 :(';
   params.data = JSON.stringify(params.data || {});
   params.script = params.script || '/js/genericPage.js';
 
-  var page = Object.keys(params).reduce(function(page, key) {
-    return page.replace('{{{' + key + '}}}', params[key]);
+  var html = Object.keys(params).reduce(function(page, key) {
+    var reggae = new RegExp('{{{' + key + '}}}', 'g');
+    return page.replace(reggae, params[key]);
   }, template);
 
-  done(null, page);
+  res.send(html);
 }
 
 app.use(logger('common'));
@@ -65,10 +69,7 @@ app.get('/', function(req, res) {
     script: 'bundles/homepage.js'
   };
 
-  render(params, function(err, html){
-    if (err) throw err;
-    res.send(html);
-  });
+  render(req, res, params);
 
 });
 
@@ -95,10 +96,7 @@ app.get('/team/:name', function(req, res) {
     }
   };
 
-  render(params, function(err, html){
-    if (err) throw err;
-    res.send(html);
-  });
+  render(req, res, params);
 
 });
 
