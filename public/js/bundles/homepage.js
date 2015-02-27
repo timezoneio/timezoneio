@@ -305,7 +305,7 @@ module.exports = React.createClass({displayName: "exports",
             React.createElement("h3", {className: "hp-pitch"}, 
               "Easily plan meetings + calls with your remote, nomadic team without having to Google ", React.createElement("br", null), 
               React.createElement("span", {className: "hp-pitch-search"}, "time in ", this.state.searchCity), React.createElement("br", null), 
-              React.createElement("em", null, "Ever again.")
+              React.createElement("em", null, "...ever again.")
             )
 
           )
@@ -319,7 +319,7 @@ module.exports = React.createClass({displayName: "exports",
             React.createElement("p", {className: "hp-description"}, 
               "Modern global teams have awesome people spread across multiple timezones," + ' ' + 
               "lots of teams have ", React.createElement("em", null, "digital nomads"), " changing locations faster than" + ' ' +
-              "you can keep up. Sometimes it gets tricky to remember what time it is" + ' ' + 
+              "you can keep up with. Often it gets tricky to remember what time it is" + ' ' + 
               "where your teammates are. That's why we built ", React.createElement("strong", null, "Timezone.io"), "."
             ), 
 

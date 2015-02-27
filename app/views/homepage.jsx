@@ -144,7 +144,7 @@ module.exports = React.createClass({
             <h3 className="hp-pitch">
               Easily plan meetings + calls with your remote, nomadic team without having to Google <br/>
               <span className="hp-pitch-search">time in {this.state.searchCity}</span><br/> 
-              <em>Ever again.</em>
+              <em>...ever again.</em>
             </h3>
 
           </div>
@@ -158,7 +158,7 @@ module.exports = React.createClass({
             <p className="hp-description">
               Modern global teams have awesome people spread across multiple timezones, 
               lots of teams have <em>digital nomads</em> changing locations faster than
-              you can keep up. Sometimes it gets tricky to remember what time it is 
+              you can keep up with. Often it gets tricky to remember what time it is 
               where your teammates are. That's why we built <strong>Timezone.io</strong>.
             </p>
 
