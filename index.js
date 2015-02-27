@@ -22,7 +22,8 @@ var Homepage = require('./app/views/homepage.jsx');
 var template = fs.readFileSync('./app/templates/layout.hbs', 'utf8');
 
 
-var defaultDescription = 'Keep track where and when your remote team is with Timezone.io';
+var defaultDescription = 'Keep track where and when your team is. ' +
+  'Timezone.io is a simple way to display the local time for members of your global, remote, nomadic team.';
 
 function render(req, res, params) {
 
@@ -64,7 +65,6 @@ app.get('/', function(req, res) {
   );
 
   var params = {
-    title: 'Keep track where and when your team is.',
     body: body,
     script: 'bundles/homepage.js'
   };
