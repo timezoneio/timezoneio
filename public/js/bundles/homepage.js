@@ -317,9 +317,9 @@ module.exports = React.createClass({displayName: "exports",
           React.createElement("div", {className: "hp-content-container"}, 
 
             React.createElement("p", {className: "hp-description"}, 
-              "Modern global teams have awesome people spread across multiple timezones," + ' ' + 
-              "lots of teams have ", React.createElement("em", null, "digital nomads"), " changing locations faster than" + ' ' +
-              "you can keep up with. Often it gets tricky to remember what time it is" + ' ' + 
+              "Modern global teams have awesome people spread across multiple timezones." + ' ' + 
+              "Lots of teams have ", React.createElement("em", null, "digital nomads"), " changing locations faster than" + ' ' +
+              "we can keep up with. Often it gets tricky to remember what time it is" + ' ' + 
               "where your teammates are. That's why we built ", React.createElement("strong", null, "Timezone.io"), "."
             ), 
 
@@ -329,10 +329,11 @@ module.exports = React.createClass({displayName: "exports",
 
             React.createElement("p", {className: "hp-description"}, 
               "We're starting off with a simple, clear way to display where your team is by timezone." + ' ' + 
-              "Next we'll add some ways to automatically update users locations." + ' ' + 
-              "We have a few ideas, but would love to hear what you would work for you..." + ' ' + 
-              "Grab the location of your last Tweet? Want to use Slackbot or Hubot?" + ' ' + 
-              "What about a command line utily? We can't wait to hear your ideas!"
+              "Next we'll add some ways to automatically update people's locations." + ' ' + 
+              "We have a few ideas we're been thinking about, but we'd love to hear" + ' ' + 
+              "what you would work best for you: Update your location using the" + ' ' +
+              "location of your last Tweet? Want to use Slackbot or Hubot?" + ' ' + 
+              "What about a command line utility? We can't wait to hear your ideas!"
             ), 
 
             React.createElement("h4", {className: "hp-description"}, 

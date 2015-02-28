@@ -156,9 +156,9 @@ module.exports = React.createClass({
           <div className="hp-content-container">
 
             <p className="hp-description">
-              Modern global teams have awesome people spread across multiple timezones, 
-              lots of teams have <em>digital nomads</em> changing locations faster than
-              you can keep up with. Often it gets tricky to remember what time it is 
+              Modern global teams have awesome people spread across multiple timezones. 
+              Lots of teams have <em>digital nomads</em> changing locations faster than
+              we can keep up with. Often it gets tricky to remember what time it is 
               where your teammates are. That's why we built <strong>Timezone.io</strong>.
             </p>
 
@@ -168,10 +168,11 @@ module.exports = React.createClass({
 
             <p className="hp-description">
               We're starting off with a simple, clear way to display where your team is by timezone. 
-              Next we'll add some ways to automatically update users locations. 
-              We have a few ideas, but would love to hear what you would work for you... 
-              Grab the location of your last Tweet? Want to use Slackbot or Hubot? 
-              What about a command line utily? We can't wait to hear your ideas!
+              Next we'll add some ways to automatically update people's locations. 
+              We have a few ideas we're been thinking about, but we'd love to hear 
+              what you would work best for you: Update your location using the
+              location of your last Tweet? Want to use Slackbot or Hubot? 
+              What about a command line utility? We can't wait to hear your ideas!
             </p>
 
             <h4 className="hp-description">
