@@ -1,5 +1,18 @@
-.team-container
+.app-container
+  display: flex
   min-width: 880px
+  
+$sideBarMargin = 20px;
+
+.app-sidebar
+  width: 200px
+  padding: 2em 1em 1em
+  background: $fillColor
+
+.app-sidebar--time
+  margin: 0 0 $sideBarMargin
+  font-size: 2em
+  text-align: center
 
 .instructions
   position: fixed
@@ -12,13 +25,10 @@
   text-align: center
 
 .timezone-list
-  display: -webkit-box
-  display: -moz-box
-  display: -ms-flexbox
-  display: -webkit-flex
   display: flex
   height: 100%;
   justify-content: center
+  flex-grow: 1 // this grows, the sidebar is a fixed width
 
 .timezone
   padding: 1em
