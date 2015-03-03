@@ -5,8 +5,20 @@ var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
 
 module.exports = React.createClass({
-  handleChange: function(e) {
-    var percentDelta = (100 - e.target.value) / 100;
+  getInitialState: function() {
+    return {
+      value: 50,
+      isCurrentTime: this.props.isCurrentTime
+    };
+  },
+  handleChange: function(value) {
+    value = +value;
+    var percentDelta = (100 - value) / 100;
+
+    this.setState({
+      value: value,
+      isCurrentTime: value === 50
+    });
 
     // NOTE - This may need to be throttled
     AppDispatcher.handleViewAction({
@@ -15,10 +27,16 @@ module.exports = React.createClass({
     });
   },
   render: function() {
+
+    var valueLink = {
+      value: this.props.isCurrentTime ? 50 : this.state.value,
+      requestChange: this.handleChange
+    };
+
     return <div className="time-slider-container">
       <input type="range" 
              className="time-slider"
-             onChange={this.handleChange} />
+             valueLink={valueLink} />
     </div>;
   }
 });

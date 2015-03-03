@@ -6,27 +6,22 @@ var ActionTypes = require('./actions/actionTypes.js');
 var App = React.createFactory(require('./views/app.jsx'));
 
 
-// Organize into timezones
+// Application state:
 var appData = window.appData;
-// var currentTime = moment(appData.time);
-var time = moment(appData.time);
-var timezones = transform(time, appData.people);
-var timeFormat = appData.timeFormat;
 
-window.timezones = timezones;
+var appState = {
+  time:             moment(appData.time),
+  isCurrentTime:    true,
+  timeFormat:       appData.timeFormat,
+  timezones:        transform(moment(appData.time), appData.people),
+};
+
 
 // Add the component to the DOM
 var targetNode = document.querySelector('#page');
 
 function renderApp() {
-  React.render(
-    App({
-      time: time,
-      timezones: timezones,
-      timeFormat: timeFormat
-    }),
-    targetNode
-  );
+  React.render(App(appState), targetNode);
 }
 
 renderApp();
@@ -50,19 +45,29 @@ window.addEventListener('keyup', function(e){
 
 function updateToCurrentTime() {
   var now = moment();
-  if (now.hour() === time.hour() && now.minute() === time.minute()) return;
+  if (now.hour() === appState.time.hour() && now.minute() === appState.time.minute()) return;
 
-  time.hour( now.hour() );
-  time.minute( now.minute() );
+  appState.time.hour( now.hour() );
+  appState.time.minute( now.minute() );
+  appState.isCurrentTime = true;
+
+  renderApp();
 }
 
 // 0 is now, 100% is in 12 hours, 0% is 12 hours ago
 function updateTimeAsPercent(percentDelta) {
+
+  if (percentDelta === 50)
+    return updateToCurrentTime();
+
   var MIN_IN_12_HOURS = 720;
   var deltaMinutes = MIN_IN_12_HOURS * percentDelta;
   var now = moment();
   now.add(deltaMinutes, 'm');
-  time = now;
+  appState.time = now;
+  appState.isCurrentTime = false;
+
+  renderApp();
 }
 
 AppDispatcher.register(function(payload) {
@@ -74,9 +79,10 @@ AppDispatcher.register(function(payload) {
 
   switch (actionType) {
     case ActionTypes.CHANGE_TIME_FORMAT:
-      timeFormat = value;
+      appState.timeFormat = value;
+      renderApp();
       break;
-    case ActionTypes.RESET_TIME_CURRENT:
+    case ActionTypes.USE_CURRENT_TIME:
       updateToCurrentTime();
       break;
     case ActionTypes.ADJUST_TIME_DISPLAY:
@@ -84,27 +90,21 @@ AppDispatcher.register(function(payload) {
       updateTimeAsPercent(value);
       break;
   }
-
-  renderApp();
+  
 });
 
 
 
 // Auto updating the time
-// This will automatically make the display time update to the current time
-function updateOnFocus() {
-  updateToCurrentTime();
-  renderApp();
-}
 
 var autoUpdateIntervalId = null;
 function enableAutoUpdate() {
 
   // Check every 30 seconds for an updated time
-  autoUpdateIntervalId = setInterval(renderApp, 1000 * 30);
+  autoUpdateIntervalId = setInterval(updateToCurrentTime, 1000 * 30);
 
   // Check on window focus
-  window.onfocus = updateOnFocus;
+  window.onfocus = updateToCurrentTime;
 }
 
 function disableAutoUpdate() {

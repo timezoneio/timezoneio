@@ -84,7 +84,8 @@ app.get('/team/:name', function(req, res) {
     App({
       time: time,
       timezones: timezones,
-      timeFormat: timeFormat
+      timeFormat: timeFormat,
+      isCurrentTime: true
     })
   );
 

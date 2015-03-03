@@ -5,18 +5,23 @@
 $sideBarMargin = 20px;
 
 .app-sidebar
-  width: 200px
+  flex-shrink: 0
+  width: 180px
   padding: 2em 1em 1em
   background: $fillColor
 
 .app-sidebar--time
-  margin: 0 // 0 $sideBarMargin
+  margin: 0
   font-size: 2em
   text-align: center
   font-weight: normal
   
-.app-sidebar--format-select
-  text-align: center
+.app-sidebar--button-row
+  display: flex
+  justify-content: space-between
+  
+// .app-sidebar--format-select
+//   text-align: center
   
 
 
