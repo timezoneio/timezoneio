@@ -8,6 +8,7 @@ var App = React.createFactory(require('./views/app.jsx'));
 
 // Organize into timezones
 var appData = window.appData;
+// var currentTime = moment(appData.time);
 var time = moment(appData.time);
 var timezones = transform(time, appData.people);
 var timeFormat = appData.timeFormat;
@@ -30,23 +31,21 @@ function renderApp() {
 
 renderApp();
 
+// Allow arrow keys to change time by selecting time range input
 var KEY = {
   LEFT:  37,
   RIGHT: 39
 };
+var timeSlider = document.querySelector('.time-slider');
 
-// Listen to keyup for timechange
 window.addEventListener('keyup', function(e){
 
-  if (e.keyCode === KEY.RIGHT){
-    time.add(1, 'h');
-  } else if (e.keyCode === KEY.LEFT){
-    time.subtract(1, 'h');
+  if (e.keyCode === KEY.RIGHT || e.keyCode === KEY.LEFT) {
+    disableAutoUpdate();
+    timeSlider.focus();
+    renderApp();
   }
-
-  // Push new data to re-render component
-  renderApp();
-
+  
 });
 
 function updateToCurrentTime() {
@@ -55,6 +54,15 @@ function updateToCurrentTime() {
 
   time.hour( now.hour() );
   time.minute( now.minute() );
+}
+
+// 0 is now, 100% is in 12 hours, 0% is 12 hours ago
+function updateTimeAsPercent(percentDelta) {
+  var MIN_IN_12_HOURS = 720;
+  var deltaMinutes = MIN_IN_12_HOURS * percentDelta;
+  var now = moment();
+  now.add(deltaMinutes, 'm');
+  time = now;
 }
 
 AppDispatcher.register(function(payload) {
@@ -68,17 +76,40 @@ AppDispatcher.register(function(payload) {
     case ActionTypes.CHANGE_TIME_FORMAT:
       timeFormat = value;
       break;
+    case ActionTypes.RESET_TIME_CURRENT:
+      updateToCurrentTime();
+      break;
+    case ActionTypes.ADJUST_TIME_DISPLAY:
+      disableAutoUpdate();
+      updateTimeAsPercent(value);
+      break;
   }
 
   renderApp();
 });
 
-// Check every 60 seconds for an updated time
-setInterval(renderApp, 1000 * 60);
 
-// Check on window focus
-window.onfocus = function() {
-  console.info('focus :)');
+
+// Auto updating the time
+// This will automatically make the display time update to the current time
+function updateOnFocus() {
   updateToCurrentTime();
   renderApp();
-};
+}
+
+var autoUpdateIntervalId = null;
+function enableAutoUpdate() {
+
+  // Check every 30 seconds for an updated time
+  autoUpdateIntervalId = setInterval(renderApp, 1000 * 30);
+
+  // Check on window focus
+  window.onfocus = updateOnFocus;
+}
+
+function disableAutoUpdate() {
+  clearInterval(autoUpdateIntervalId);
+  window.onfocus = null;
+}
+
+enableAutoUpdate();

@@ -4,6 +4,7 @@ var React = require('react');
 var time = require('../utils/time.js');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
+var TimeSlider = require('./timeSlider.jsx');
 
 module.exports = React.createClass({
   handleFormatChange: function(e) {
@@ -21,6 +22,8 @@ module.exports = React.createClass({
     return <div className="app-sidebar">
       
       <h2 className="app-sidebar--time">{displayTime}</h2>
+
+      <TimeSlider time={this.props.time} />
 
       <div className="button-group app-sidebar--format-select">
         <button className={'small hollow ' + (format === 12 ? 'selected' : '')}
