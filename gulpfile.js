@@ -14,6 +14,7 @@ gulp.task('browserify', function() {
   });
 
   return gulp.src(['app/*.js'])
+    .pipe(plumber())
     .pipe(browserified)
     .pipe(gulp.dest('public/js/bundles'));
 
