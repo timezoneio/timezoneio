@@ -13,7 +13,7 @@ module.exports = React.createClass({
   },
   handleChange: function(value) {
     value = +value;
-    var percentDelta = (100 - value) / 100;
+    var percentDelta = 2 * (value - 50) / 100;
 
     this.setState({
       value: value,

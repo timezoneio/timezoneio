@@ -14,6 +14,7 @@ module.exports = keyMirror({
 var React  = require('react');
 var moment = require('moment-timezone');
 var transform = require('./utils/transform.js');
+var timeUtils = require('./utils/time.js');
 var AppDispatcher = require('./dispatchers/appDispatcher.js');
 var ActionTypes = require('./actions/actionTypes.js');
 var App = React.createFactory(require('./views/app.jsx'));
@@ -67,16 +68,22 @@ function updateToCurrentTime() {
   renderApp();
 }
 
-// 0 is now, 100% is in 12 hours, 0% is 12 hours ago
+// 0 is now, 1.0 is in 12 hours, -1.0 is 12 hours ago
 function updateTimeAsPercent(percentDelta) {
 
-  if (percentDelta === 50)
+  if (percentDelta === 0)
     return updateToCurrentTime();
 
   var MIN_IN_12_HOURS = 720;
   var deltaMinutes = MIN_IN_12_HOURS * percentDelta;
+
   var now = moment();
   now.add(deltaMinutes, 'm');
+
+  // Round to quarter hour
+  var minutes = now.minutes();
+  now.add(timeUtils.roundToQuarterHour(minutes) - minutes, 'm');
+
   appState.time = now;
   appState.isCurrentTime = false;
 
@@ -128,11 +135,11 @@ function disableAutoUpdate() {
 enableAutoUpdate();
 
 
-},{"./actions/actionTypes.js":1,"./dispatchers/appDispatcher.js":8,"./utils/transform.js":10,"./views/app.jsx":11,"moment-timezone":18,"react":166}],3:[function(require,module,exports){
+},{"./actions/actionTypes.js":1,"./dispatchers/appDispatcher.js":8,"./utils/time.js":9,"./utils/transform.js":10,"./views/app.jsx":11,"moment-timezone":18,"react":166}],3:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
-var time = require('../utils/time.js');
+var timeUtils = require('../utils/time.js');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
 var TimeSlider = require('./timeSlider.jsx');
@@ -152,7 +159,7 @@ module.exports = React.createClass({displayName: "exports",
   render: function() {
     
     var format = this.props.timeFormat;
-    var formatString = time.getFormatStringFor(this.props.timeFormat);
+    var formatString = timeUtils.getFormatStringFor(this.props.timeFormat);
     var displayTime = this.props.time.format(formatString);
 
     return React.createElement("div", {className: "app-sidebar"}, 
@@ -218,7 +225,7 @@ module.exports = React.createClass({displayName: "exports",
   },
   handleChange: function(value) {
     value = +value;
-    var percentDelta = (100 - value) / 100;
+    var percentDelta = 2 * (value - 50) / 100;
 
     this.setState({
       value: value,
@@ -252,7 +259,7 @@ module.exports = React.createClass({displayName: "exports",
 var React = require('react');
 var moment = require('moment-timezone');
 var Person = require('./person.jsx');
-var time = require('../utils/time.js');
+var timeUtils = require('../utils/time.js');
 
 var PEOPLE_PER_COL = 7;
 
@@ -320,7 +327,7 @@ module.exports = React.createClass({displayName: "exports",
     // the global app time
 
     var localTime   = moment( this.props.time ).tz( this.props.model.tz ),
-        fmtString   = time.getFormatStringFor(this.props.timeFormat),
+        fmtString   = timeUtils.getFormatStringFor(this.props.timeFormat),
         displayTime = localTime.format(fmtString),
         offset      = localTime.format('Z');
 
@@ -397,11 +404,16 @@ module.exports = AppDispatcher;
 
 
 },{"flux":13}],9:[function(require,module,exports){
-var time = module.exports = {};
+var timeUtils = module.exports = {};
 
 // Get the time format string
-time.getFormatStringFor = function(fmt) {
+timeUtils.getFormatStringFor = function(fmt) {
   return fmt === 24 ? 'H:mm' : 'h:mm a';
+};
+
+// Round to the closest quarter hour
+timeUtils.roundToQuarterHour = function(minutes) {
+  return Math.round(minutes / 60 * 4) * 15;
 };
 
 },{}],10:[function(require,module,exports){

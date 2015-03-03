@@ -3,7 +3,7 @@
 var React = require('react');
 var moment = require('moment-timezone');
 var Person = require('./person.jsx');
-var time = require('../utils/time.js');
+var timeUtils = require('../utils/time.js');
 
 var PEOPLE_PER_COL = 7;
 
@@ -71,7 +71,7 @@ module.exports = React.createClass({
     // the global app time
 
     var localTime   = moment( this.props.time ).tz( this.props.model.tz ),
-        fmtString   = time.getFormatStringFor(this.props.timeFormat),
+        fmtString   = timeUtils.getFormatStringFor(this.props.timeFormat),
         displayTime = localTime.format(fmtString),
         offset      = localTime.format('Z');
 

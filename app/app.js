@@ -1,6 +1,7 @@
 var React  = require('react');
 var moment = require('moment-timezone');
 var transform = require('./utils/transform.js');
+var timeUtils = require('./utils/time.js');
 var AppDispatcher = require('./dispatchers/appDispatcher.js');
 var ActionTypes = require('./actions/actionTypes.js');
 var App = React.createFactory(require('./views/app.jsx'));
@@ -54,16 +55,22 @@ function updateToCurrentTime() {
   renderApp();
 }
 
-// 0 is now, 100% is in 12 hours, 0% is 12 hours ago
+// 0 is now, 1.0 is in 12 hours, -1.0 is 12 hours ago
 function updateTimeAsPercent(percentDelta) {
 
-  if (percentDelta === 50)
+  if (percentDelta === 0)
     return updateToCurrentTime();
 
   var MIN_IN_12_HOURS = 720;
   var deltaMinutes = MIN_IN_12_HOURS * percentDelta;
+
   var now = moment();
   now.add(deltaMinutes, 'm');
+
+  // Round to quarter hour
+  var minutes = now.minutes();
+  now.add(timeUtils.roundToQuarterHour(minutes) - minutes, 'm');
+
   appState.time = now;
   appState.isCurrentTime = false;
 

@@ -24,7 +24,7 @@ module.exports = React.createClass({displayName: "exports",
 var React = require('react');
 var moment = require('moment-timezone');
 var Person = require('./person.jsx');
-var time = require('../utils/time.js');
+var timeUtils = require('../utils/time.js');
 
 var PEOPLE_PER_COL = 7;
 
@@ -92,7 +92,7 @@ module.exports = React.createClass({displayName: "exports",
     // the global app time
 
     var localTime   = moment( this.props.time ).tz( this.props.model.tz ),
-        fmtString   = time.getFormatStringFor(this.props.timeFormat),
+        fmtString   = timeUtils.getFormatStringFor(this.props.timeFormat),
         displayTime = localTime.format(fmtString),
         offset      = localTime.format('Z');
 
@@ -161,11 +161,16 @@ React.render(
 );
 
 },{"./views/homepage.jsx":6,"moment-timezone":9,"react":157}],5:[function(require,module,exports){
-var time = module.exports = {};
+var timeUtils = module.exports = {};
 
 // Get the time format string
-time.getFormatStringFor = function(fmt) {
+timeUtils.getFormatStringFor = function(fmt) {
   return fmt === 24 ? 'H:mm' : 'h:mm a';
+};
+
+// Round to the closest quarter hour
+timeUtils.roundToQuarterHour = function(minutes) {
+  return Math.round(minutes / 60 * 4) * 15;
 };
 
 },{}],6:[function(require,module,exports){

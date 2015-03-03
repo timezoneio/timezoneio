@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var time = require('../utils/time.js');
+var timeUtils = require('../utils/time.js');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
 var TimeSlider = require('./timeSlider.jsx');
@@ -21,7 +21,7 @@ module.exports = React.createClass({
   render: function() {
     
     var format = this.props.timeFormat;
-    var formatString = time.getFormatStringFor(this.props.timeFormat);
+    var formatString = timeUtils.getFormatStringFor(this.props.timeFormat);
     var displayTime = this.props.time.format(formatString);
 
     return <div className="app-sidebar">
