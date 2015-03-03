@@ -14,7 +14,9 @@ var appState = {
   time:             moment(appData.time),
   isCurrentTime:    true,
   timeFormat:       appData.timeFormat,
+  people:           appData.people,
   timezones:        transform(moment(appData.time), appData.people),
+  selectedPeople:   []
 };
 
 
@@ -75,7 +77,17 @@ var updateTimeAsPercent = function(percentDelta) {
   appState.isCurrentTime = false;
 
   renderApp();
-}
+};
+
+
+// People actions
+var togglePersonSelected = function(person) {
+  console.info('togglePersonSelected ', person.name);
+  person = appState.people.filter(function(p){ return p._id === person._id; })[0];
+  person.isSelected = !person.isSelected;
+  // Update timezone display - should be automatically adjusted?
+  appState.timezones = transform(moment(appData.time), appState.people);
+};
 
 AppDispatcher.register(function(payload) {
 
@@ -95,6 +107,10 @@ AppDispatcher.register(function(payload) {
     case ActionTypes.ADJUST_TIME_DISPLAY:
       disableAutoUpdate();
       updateTimeAsPercent(value);
+      break;
+    case ActionTypes.TOGGLE_SELECT_PERSON:
+      togglePersonSelected(value);
+      renderApp();
       break;
   }
   

@@ -5,7 +5,8 @@ module.exports = keyMirror({
 
   CHANGE_TIME_FORMAT: null,
   ADJUST_TIME_DISPLAY: null,
-  USE_CURRENT_TIME: null
+  USE_CURRENT_TIME: null,
+  TOGGLE_SELECT_PERSON: null
 
 });
 
@@ -27,7 +28,9 @@ var appState = {
   time:             moment(appData.time),
   isCurrentTime:    true,
   timeFormat:       appData.timeFormat,
+  people:           appData.people,
   timezones:        transform(moment(appData.time), appData.people),
+  selectedPeople:   []
 };
 
 
@@ -57,7 +60,7 @@ window.addEventListener('keyup', function(e){
   
 });
 
-function updateToCurrentTime() {
+var updateToCurrentTime = function() {
   var now = moment();
   if (now.hour() === appState.time.hour() && now.minute() === appState.time.minute()) return;
 
@@ -66,10 +69,10 @@ function updateToCurrentTime() {
   appState.isCurrentTime = true;
 
   renderApp();
-}
+};
 
 // 0 is now, 1.0 is in 12 hours, -1.0 is 12 hours ago
-function updateTimeAsPercent(percentDelta) {
+var updateTimeAsPercent = function(percentDelta) {
 
   if (percentDelta === 0)
     return updateToCurrentTime();
@@ -88,7 +91,17 @@ function updateTimeAsPercent(percentDelta) {
   appState.isCurrentTime = false;
 
   renderApp();
-}
+};
+
+
+// People actions
+var togglePersonSelected = function(person) {
+  console.info('togglePersonSelected ', person.name);
+  person = appState.people.filter(function(p){ return p._id === person._id; })[0];
+  person.isSelected = !person.isSelected;
+  // Update timezone display - should be automatically adjusted?
+  appState.timezones = transform(moment(appData.time), appState.people);
+};
 
 AppDispatcher.register(function(payload) {
 
@@ -109,6 +122,10 @@ AppDispatcher.register(function(payload) {
       disableAutoUpdate();
       updateTimeAsPercent(value);
       break;
+    case ActionTypes.TOGGLE_SELECT_PERSON:
+      togglePersonSelected(value);
+      renderApp();
+      break;
   }
   
 });
@@ -118,19 +135,19 @@ AppDispatcher.register(function(payload) {
 // Auto updating the time
 
 var autoUpdateIntervalId = null;
-function enableAutoUpdate() {
+var enableAutoUpdate = function() {
 
   // Check every 30 seconds for an updated time
   autoUpdateIntervalId = setInterval(updateToCurrentTime, 1000 * 30);
 
   // Check on window focus
   window.onfocus = updateToCurrentTime;
-}
+};
 
-function disableAutoUpdate() {
+var disableAutoUpdate = function() {
   clearInterval(autoUpdateIntervalId);
   window.onfocus = null;
-}
+};
 
 enableAutoUpdate();
 
@@ -193,23 +210,35 @@ module.exports = React.createClass({displayName: "exports",
 /** @jsx React.DOM */
 
 var React = require('react');
-var moment = require('moment-timezone');
+var AppDispatcher = require('../dispatchers/appDispatcher.js');
+var ActionTypes = require('../actions/actionTypes.js');
 
 module.exports = React.createClass({displayName: "exports",
+  handleToggleSelected: function() {
+    AppDispatcher.handleViewAction({
+      actionType: ActionTypes.TOGGLE_SELECT_PERSON,
+      value: this.props.model
+    });
+  },
   render: function() {
     var person = this.props.model;
-    return React.createElement("div", {className: "person", key: person.name}, 
-      React.createElement("img", {src: person.avatar, className: "avatar"}), 
-      React.createElement("div", {className: "person-info"}, 
-        React.createElement("p", {className: "person-name"}, person.name), 
-        React.createElement("p", {className: "person-city"}, person.city)
+
+    return (
+      React.createElement("div", {className: "person", 
+           key: person._id, 
+           onClick: this.handleToggleSelected}, 
+        React.createElement("img", {src: person.avatar, className: "avatar"}), 
+        React.createElement("div", {className: "person-info"}, 
+          React.createElement("p", {className: "person-name"}, person.name), 
+          React.createElement("p", {className: "person-city"}, person.city)
+        )
       )
     );
   }
 });
 
 
-},{"moment-timezone":18,"react":166}],5:[function(require,module,exports){
+},{"../actions/actionTypes.js":1,"../dispatchers/appDispatcher.js":8,"react":166}],5:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -346,13 +375,15 @@ module.exports = React.createClass({displayName: "exports",
       ), 
       React.createElement("div", {className: "timezone-people"}, 
         columns.map(function(column, idx){
-          return React.createElement("div", {className: "timezone-people-column", key: "column-" + idx}, 
-            column.map(function(person){
-              // NOTE: Replace with future user id
-              var key = person.avatar.substr(person.avatar.length - 20, 20);
-              return React.createElement(Person, {model: person, key: key});
-            })
-          )
+          return (
+            React.createElement("div", {className: "timezone-people-column", key: "column-" + idx}, 
+              column.map(function(person){
+                // NOTE: Replace with future user id
+                var key = person.avatar.substr(person.avatar.length - 20, 20);
+                return React.createElement(Person, {model: person, key: key});
+              })
+            )
+          );
         })
       )
     );
