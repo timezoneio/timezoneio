@@ -73,11 +73,12 @@ AppDispatcher.register(function(payload) {
   renderApp();
 });
 
-// Check every 10 seconds for an updated time
-// setInterval(reRender, 1000 * 10);
+// Check every 60 seconds for an updated time
+setInterval(renderApp, 1000 * 60);
 
 // Check on window focus
 window.onfocus = function() {
+  console.info('focus :)');
   updateToCurrentTime();
   renderApp();
 };
