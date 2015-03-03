@@ -44,7 +44,7 @@ window.addEventListener('keyup', function(e){
   
 });
 
-function updateToCurrentTime() {
+var updateToCurrentTime = function() {
   var now = moment();
   if (now.hour() === appState.time.hour() && now.minute() === appState.time.minute()) return;
 
@@ -53,10 +53,10 @@ function updateToCurrentTime() {
   appState.isCurrentTime = true;
 
   renderApp();
-}
+};
 
 // 0 is now, 1.0 is in 12 hours, -1.0 is 12 hours ago
-function updateTimeAsPercent(percentDelta) {
+var updateTimeAsPercent = function(percentDelta) {
 
   if (percentDelta === 0)
     return updateToCurrentTime();
@@ -105,18 +105,18 @@ AppDispatcher.register(function(payload) {
 // Auto updating the time
 
 var autoUpdateIntervalId = null;
-function enableAutoUpdate() {
+var enableAutoUpdate = function() {
 
   // Check every 30 seconds for an updated time
   autoUpdateIntervalId = setInterval(updateToCurrentTime, 1000 * 30);
 
   // Check on window focus
   window.onfocus = updateToCurrentTime;
-}
+};
 
-function disableAutoUpdate() {
+var disableAutoUpdate = function() {
   clearInterval(autoUpdateIntervalId);
   window.onfocus = null;
-}
+};
 
 enableAutoUpdate();
