@@ -1,7 +1,8 @@
 var React  = require('react');
 var moment = require('moment-timezone');
-
 var transform = require('./utils/transform.js');
+var AppDispatcher = require('./dispatchers/appDispatcher.js');
+var ActionTypes = require('./actions/actionTypes.js');
 var App = React.createFactory(require('./views/app.jsx'));
 
 
@@ -9,20 +10,25 @@ var App = React.createFactory(require('./views/app.jsx'));
 var appData = window.appData;
 var time = moment(appData.time);
 var timezones = transform(time, appData.people);
+var timeFormat = appData.timeFormat;
 
 window.timezones = timezones;
 
 // Add the component to the DOM
 var targetNode = document.querySelector('#page');
 
-React.render(
-  App({
-    time: time,
-    timezones: timezones
-  }),
-  targetNode
-);
+function renderApp() {
+  React.render(
+    App({
+      time: time,
+      timezones: timezones,
+      timeFormat: timeFormat
+    }),
+    targetNode
+  );
+}
 
+renderApp();
 
 var KEY = {
   LEFT:  37,
@@ -39,36 +45,39 @@ window.addEventListener('keyup', function(e){
   }
 
   // Push new data to re-render component
-  React.render(
-    App({
-      time: time,
-      timezones: timezones
-    }),
-    targetNode
-  );
+  renderApp();
 
 });
 
-function reRender() {
-
+function updateToCurrentTime() {
   var now = moment();
   if (now.hour() === time.hour() && now.minute() === time.minute()) return;
 
   time.hour( now.hour() );
   time.minute( now.minute() );
-
-  React.render(
-    App({
-      time: time,
-      timezones: timezones
-    }),
-    targetNode
-  );
-
 }
 
+AppDispatcher.register(function(payload) {
+
+  // console.info('EVENT: ', payload);
+
+  var actionType = payload.action.actionType;
+  var value = payload.action.value;
+
+  switch (actionType) {
+    case ActionTypes.CHANGE_TIME_FORMAT:
+      timeFormat = value;
+      break;
+  }
+
+  renderApp();
+});
+
 // Check every 10 seconds for an updated time
-setInterval(reRender, 1000 * 10);
+// setInterval(reRender, 1000 * 10);
 
 // Check on window focus
-window.onfocus = reRender;
+window.onfocus = function() {
+  updateToCurrentTime();
+  renderApp();
+};
