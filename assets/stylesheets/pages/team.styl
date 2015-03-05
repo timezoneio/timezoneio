@@ -1,30 +1,39 @@
-.team-container
+.app-container
+  display: flex
   min-width: 880px
+  
+$sideBarMargin = 20px;
 
-.instructions
-  position: fixed
-  bottom: 1em
-  left: 0
-  right: 0
-  margin: 0 auto;
-  font-size: 0.8em
-  font-style: italic
+.app-sidebar
+  flex-shrink: 0
+  width: 180px
+  padding: 2em 1em 1em
+  background: $fillColor
+
+.app-sidebar--time
+  margin: 0
+  font-size: 2em
   text-align: center
+  font-weight: normal
+  
+.app-sidebar--button-row
+  display: flex
+  justify-content: space-between
+  
+// .app-sidebar--format-select
+//   text-align: center
+  
+
+
 
 .timezone-list
-  display: -webkit-box
-  display: -moz-box
-  display: -ms-flexbox
-  display: -webkit-flex
   display: flex
   height: 100%;
   justify-content: center
+  flex-grow: 1 // this grows, the sidebar is a fixed width
 
 .timezone
   padding: 1em
-  
-  &:last-of-type
-    padding-right: 0
   
 // .timezone-major
   

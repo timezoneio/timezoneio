@@ -6,6 +6,7 @@ $brandColor     = #01579B
 $brandColorText = rgb(255, 255, 255)
 $textColor      = rgb(50, 50, 50)
 $fillColor      = #E7EDF0 // darker DCE5EB
+$borderColor    = darken($fillColor, 30%)
 $linkColor      = $brandColor
 
 $avatarSize     = 60px
@@ -16,11 +17,12 @@ $avatarSize     = 60px
 *
   box-sizing: border-box
 
-html
+html,
+body,
+#page
   height: 100%
 
 body
-  height: 100%
   margin: 0
 
   background: #fff
@@ -28,7 +30,7 @@ body
   font-size: 16px
   font-family: Lato, Roboto, 'Open Sans', Helvetica, sans-serif
   color: $textColor
-  
+
 a,
 a:visited
   position: relative;
@@ -70,5 +72,6 @@ input[type="email"]
   
 @import 'components/buttons'
 @import 'components/header'
+@import 'components/timeSlider'
 @import 'pages/homepage'
 @import 'pages/team'

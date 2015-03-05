@@ -5,7 +5,7 @@ var Timezone = require('./timezone.jsx');
 
 module.exports = React.createClass({
   render: function() {
-    var timeFormat = this.props.timeFormat || 'h:mm a';
+    var timeFormat = this.props.timeFormat || 12;
     return <div className="timezone-list">
       {this.props.timezones.map(function(timezone){
         return <Timezone key={timezone.tz}

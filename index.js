@@ -60,7 +60,7 @@ app.use(
 
 app.get('/', function(req, res) {
 
-  var body = React.renderComponentToString(
+  var body = React.renderToString(
     Homepage()
   );
 
@@ -78,11 +78,14 @@ app.get('/team/:name', function(req, res) {
   // Organize into timezones
   var time = moment();
   var timezones = transform(time, people);
+  var timeFormat = 12; // hardcode default for now
 
-  var body = React.renderComponentToString(
+  var body = React.renderToString(
     App({
       time: time,
-      timezones: timezones
+      timezones: timezones,
+      timeFormat: timeFormat,
+      isCurrentTime: true
     })
   );
 
@@ -92,7 +95,8 @@ app.get('/team/:name', function(req, res) {
     script: 'bundles/app.js',
     data: {
       time: time,
-      people: people
+      people: people,
+      timeFormat: timeFormat
     }
   };
 

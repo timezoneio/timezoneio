@@ -1,0 +1,31 @@
+//TODO - Create appearance mixin
+
+$sliderHeight = 20px
+
+.time-slider
+  width: 100%
+  height: $sliderHeight
+  margin: 1em 0
+  -webkit-appearance: none
+  -moz-appearance: none
+  -ms-appearance: none
+  appearance: none
+  background: transparent url(/images/ui/border.svg) repeat-x 50% 50%
+  cursor: pointer
+  
+  &:focus
+    outline: 0
+  
+  // NOTE: Need to determine x-browser support
+  &::-webkit-slider-thumb
+    width: 4px
+    height: $sliderHeight
+    -webkit-appearance: none
+    -moz-appearance: none
+    -ms-appearance: none
+    appearance: none
+    background: darken($borderColor, 30%)
+    
+  &:focus
+    &::-webkit-slider-thumb
+      background: $textColor
