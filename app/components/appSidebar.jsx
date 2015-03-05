@@ -5,6 +5,7 @@ var timeUtils = require('../utils/time.js');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
 var TimeSlider = require('./timeSlider.jsx');
+var MeetingPlanner = require('./meetingPlanner.jsx');
 
 module.exports = React.createClass({
   handleFormatChange: function(e) {
@@ -33,7 +34,7 @@ module.exports = React.createClass({
 
       <div className="app-sidebar--button-row">
         
-        <div className="button-group app-sidebar--format-select">
+        <div className="button-group">
           <button className={'small hollow ' + (format === 12 ? 'selected' : '')}
                   data-value="12"
                   onClick={this.handleFormatChange}>12</button>
@@ -46,6 +47,9 @@ module.exports = React.createClass({
                 disabled={this.props.isCurrentTime}
                 onClick={this.handleGotoCurrentTime}>Now</button>
       </div>
+
+      <MeetingPlanner people={this.props.people}
+                      timeFormat={this.props.timeFormat}  />
 
     </div>;
   }

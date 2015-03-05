@@ -1,0 +1,35 @@
+
+.meeting-planner
+  display: flex
+  margin: 1em auto
+
+
+// NOTE: Could be moved out to own component
+.schedule
+  flex: 1 30%
+  .avatar
+    margin: 0.4em auto
+    
+
+.schedule--hours
+  padding: 0
+  margin: 0
+  list-style: none
+  color: lighten($textColor, 20%)
+  background-color: darken($fillColor, 5%)
+
+.schedule--hour
+  padding: 0.4em
+  margin: 0
+  width: 100%
+  min-height: 20px
+  
+  background-color: transparent
+  font-size: 12px
+  line-height: 1em
+  
+.schedule--hour-available
+  background-color: #fff
+  color: lighten($textColor, 10%)
+  
+  

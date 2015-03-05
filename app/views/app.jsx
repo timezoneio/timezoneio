@@ -11,7 +11,8 @@ module.exports = React.createClass({
 
         <AppSidebar time={this.props.time} 
                     timeFormat={this.props.timeFormat}
-                    isCurrentTime={this.props.isCurrentTime} />
+                    isCurrentTime={this.props.isCurrentTime}
+                    people={this.props.people} />
 
         <TimezoneList time={this.props.time}
                       timeFormat={this.props.timeFormat}

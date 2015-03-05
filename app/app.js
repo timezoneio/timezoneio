@@ -15,9 +15,16 @@ var appState = {
   isCurrentTime:    true,
   timeFormat:       appData.timeFormat,
   people:           appData.people,
-  timezones:        transform(moment(appData.time), appData.people),
-  selectedPeople:   []
+  timezones:        transform(moment(appData.time), appData.people)
 };
+
+
+// DEBUG + TESTING
+// window.moment = moment;
+// appState.people[0].isSelected = true;
+// appState.people[4].isSelected = true;
+// appState.people[14].isSelected = true;
+
 
 
 // Add the component to the DOM
@@ -48,7 +55,9 @@ window.addEventListener('keyup', function(e){
 
 var updateToCurrentTime = function() {
   var now = moment();
-  if (now.hour() === appState.time.hour() && now.minute() === appState.time.minute()) return;
+  if (now.hour() === appState.time.hour() && 
+      now.minute() === appState.time.minute())
+    return;
 
   appState.time.hour( now.hour() );
   appState.time.minute( now.minute() );
@@ -82,11 +91,11 @@ var updateTimeAsPercent = function(percentDelta) {
 
 // People actions
 var togglePersonSelected = function(person) {
-  console.info('togglePersonSelected ', person.name);
   person = appState.people.filter(function(p){ return p._id === person._id; })[0];
   person.isSelected = !person.isSelected;
+
   // Update timezone display - should be automatically adjusted?
-  appState.timezones = transform(moment(appData.time), appState.people);
+  // appState.timezones = transform(moment(appData.time), appState.people);
 };
 
 AppDispatcher.register(function(payload) {

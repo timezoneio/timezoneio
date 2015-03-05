@@ -83,9 +83,10 @@ app.get('/team/:name', function(req, res) {
   var body = React.renderToString(
     App({
       time: time,
-      timezones: timezones,
+      isCurrentTime: true,
       timeFormat: timeFormat,
-      isCurrentTime: true
+      people: people,
+      timezones: timezones
     })
   );
 
