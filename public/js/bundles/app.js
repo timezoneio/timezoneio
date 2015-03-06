@@ -50,6 +50,7 @@ var timeSlider = document.querySelector('.time-slider');
 window.addEventListener('keyup', function(e){
 
   if (e.keyCode === KEY.RIGHT || e.keyCode === KEY.LEFT) {
+    e.preventDefault();
     disableAutoUpdate();
     timeSlider.focus();
     renderApp();
@@ -71,8 +72,10 @@ function updateToCurrentTime() {
 // 0 is now, 1.0 is in 12 hours, -1.0 is 12 hours ago
 function updateTimeAsPercent(percentDelta) {
 
-  if (percentDelta === 0)
+  if (percentDelta === 0) {
+    enableAutoUpdate();
     return updateToCurrentTime();
+  }
 
   var MIN_IN_12_HOURS = 720;
   var deltaMinutes = MIN_IN_12_HOURS * percentDelta;
@@ -104,6 +107,7 @@ AppDispatcher.register(function(payload) {
       break;
     case ActionTypes.USE_CURRENT_TIME:
       updateToCurrentTime();
+      enableAutoUpdate();
       break;
     case ActionTypes.ADJUST_TIME_DISPLAY:
       disableAutoUpdate();
@@ -120,8 +124,8 @@ AppDispatcher.register(function(payload) {
 var autoUpdateIntervalId = null;
 function enableAutoUpdate() {
 
-  // Check every 30 seconds for an updated time
-  autoUpdateIntervalId = setInterval(updateToCurrentTime, 1000 * 30);
+  // Check every 20 seconds for an updated time
+  autoUpdateIntervalId = setInterval(updateToCurrentTime, 1000 * 5);
 
   // Check on window focus
   window.onfocus = updateToCurrentTime;
