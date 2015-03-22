@@ -1,6 +1,10 @@
 'use strict';
 
 exports.up = function(knex, Promise) {
+
+  // should have created 'users' table and 'user_auth' table w/ foreign key
+  // keep data separate and allow for zero or multiple authentication for a user
+
   return knex.schema.createTable('users', function (t) {
     t.increments();
     t.string('email');
