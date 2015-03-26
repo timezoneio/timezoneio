@@ -11,6 +11,280 @@ module.exports = keyMirror({
 
 
 },{"keymirror":16}],2:[function(require,module,exports){
+/** @jsx React.DOM */
+
+var React = require('react');
+var timeUtils = require('../utils/time.js');
+var AppDispatcher = require('../dispatchers/appDispatcher.js');
+var ActionTypes = require('../actions/actionTypes.js');
+var TimeSlider = require('./timeSlider.jsx');
+
+module.exports = React.createClass({displayName: "exports",
+  handleFormatChange: function(e) {
+    AppDispatcher.handleViewAction({
+      actionType: ActionTypes.CHANGE_TIME_FORMAT,
+      value: +e.target.dataset.value
+    });
+  },
+  handleGotoCurrentTime: function(e) {
+    AppDispatcher.handleViewAction({
+      actionType: ActionTypes.USE_CURRENT_TIME
+    });
+  },
+  render: function() {
+    
+    var format = this.props.timeFormat;
+    var formatString = timeUtils.getFormatStringFor(this.props.timeFormat);
+    var displayTime = this.props.time.format(formatString);
+
+    return React.createElement("div", {className: "app-sidebar"}, 
+
+      React.createElement("a", {href: "/"}, 
+        React.createElement("h1", {className: "site-branding"}, "Timezone.io")
+      ), 
+      
+      React.createElement("h2", {className: "app-sidebar--time"}, displayTime), 
+
+      React.createElement(TimeSlider, {time: this.props.time, 
+                  isCurrentTime: this.props.isCurrentTime}), 
+
+      React.createElement("div", {className: "app-sidebar--button-row"}, 
+        
+        React.createElement("div", {className: "button-group app-sidebar--format-select"}, 
+          React.createElement("button", {className: 'small hollow ' + (format === 12 ? 'selected' : ''), 
+                  "data-value": "12", 
+                  onClick: this.handleFormatChange}, "12"), 
+          React.createElement("button", {className: 'small hollow ' + (format === 24 ? 'selected' : ''), 
+                  "data-value": "24", 
+                  onClick: this.handleFormatChange}, "24")
+        ), 
+
+        React.createElement("button", {className: "small hollow", 
+                disabled: this.props.isCurrentTime, 
+                onClick: this.handleGotoCurrentTime}, "Now")
+      )
+
+    );
+  }
+});
+
+},{"../actions/actionTypes.js":1,"../dispatchers/appDispatcher.js":7,"../utils/time.js":9,"./timeSlider.jsx":4,"react":166}],3:[function(require,module,exports){
+/** @jsx React.DOM */
+
+var React = require('react');
+var moment = require('moment-timezone');
+
+module.exports = React.createClass({displayName: "exports",
+  render: function() {
+    var person = this.props.model;
+    return (
+      React.createElement("div", {className: "person", key: person.name}, 
+        React.createElement("img", {src: person.avatar, className: "avatar"}), 
+        React.createElement("div", {className: "person-info"}, 
+          React.createElement("p", {className: "person-name"}, person.name), 
+          React.createElement("p", {className: "person-city"}, person.location)
+        )
+      )
+    );
+  }
+});
+
+
+},{"moment-timezone":18,"react":166}],4:[function(require,module,exports){
+/** @jsx React.DOM */
+
+var React = require('react');
+var AppDispatcher = require('../dispatchers/appDispatcher.js');
+var ActionTypes = require('../actions/actionTypes.js');
+
+module.exports = React.createClass({displayName: "exports",
+  getInitialState: function() {
+    return {
+      value: 50,
+      isCurrentTime: this.props.isCurrentTime
+    };
+  },
+  handleChange: function(value) {
+    value = +value;
+    var percentDelta = 2 * (value - 50) / 100;
+
+    this.setState({
+      value: value,
+      isCurrentTime: value === 50
+    });
+
+    // NOTE - This may need to be throttled
+    AppDispatcher.handleViewAction({
+      actionType: ActionTypes.ADJUST_TIME_DISPLAY,
+      value: percentDelta
+    });
+  },
+  render: function() {
+
+    var valueLink = {
+      value: this.props.isCurrentTime ? 50 : this.state.value,
+      requestChange: this.handleChange
+    };
+
+    return React.createElement("div", {className: "time-slider-container"}, 
+      React.createElement("input", {type: "range", 
+             className: "time-slider", 
+             valueLink: valueLink})
+    );
+  }
+});
+
+},{"../actions/actionTypes.js":1,"../dispatchers/appDispatcher.js":7,"react":166}],5:[function(require,module,exports){
+/** @jsx React.DOM */
+
+var React = require('react');
+var moment = require('moment-timezone');
+var Person = require('./person.jsx');
+var timeUtils = require('../utils/time.js');
+
+var PEOPLE_PER_COL = 7;
+
+module.exports = React.createClass({displayName: "exports",
+
+  getCountsOf: function(list, param) {
+    return list
+      .map(function(el) {
+        return el[param];
+      })
+      .sort()
+      .reduce(function(counts, el) {
+        if (!counts[el])
+          counts[el] = 1;
+        else
+          counts[el]++;
+        return counts;
+      }, {});
+  },
+
+  getHighestOccuring: function(counts) {
+    var keys = Object.keys(counts);
+    return keys.reduce(function(prev, curr){
+      return counts[curr] > counts[prev] ? curr : prev;
+    }, keys[0]);
+  },
+
+  getTopTimezone: function() {
+
+    var tzCounts = this.getCountsOf(this.props.model.people, 'tz');
+    var topTz = this.getHighestOccuring(tzCounts);
+    
+    return topTz.replace(/.+\//g, '').replace(/_/g,' ');
+  },
+
+  getTopCity: function() {
+
+    var cityCounts = this.getCountsOf(this.props.model.people, 'location');
+    var topCity = this.getHighestOccuring(cityCounts);
+
+    return cityCounts[topCity] === 1 && this.props.model.people.length > 1 ?
+      this.getTopTimezone() :
+      topCity;
+  },
+
+  getPeopleColumns: function() {
+    
+    this.props.model.people.sort(function(a, b){
+      return a.name > b.name ? 1 : -1;
+    });
+
+    return this.props.model.people.reduce(function(cols, person){
+      if (cols[cols.length - 1] && 
+          cols[cols.length - 1].length  < PEOPLE_PER_COL)
+        cols[cols.length - 1].push(person);
+      else
+        cols.push([ person ]);
+      return cols;
+    }, []);
+  },
+
+  render: function() {
+
+    // We clone the time object itself so the this time is bound to
+    // the global app time
+
+    var localTime   = moment( this.props.time ).tz( this.props.model.tz ),
+        fmtString   = timeUtils.getFormatStringFor(this.props.timeFormat),
+        displayTime = localTime.format(fmtString),
+        offset      = localTime.format('Z');
+
+    var timezoneClasses = 'timezone timezone-hour-' + localTime.hour();
+
+    if (this.props.model.major) timezoneClasses += ' timezone-major';
+    
+    var topCity = this.getTopCity();
+    var columns = this.getPeopleColumns();
+
+    return React.createElement("div", {className: timezoneClasses}, 
+      React.createElement("div", {className: "timezone-header"}, 
+        React.createElement("h3", {className: "timezone-time"}, displayTime), 
+        React.createElement("p", {className: "timezone-name"}, topCity), 
+        React.createElement("p", {className: "timezone-offset"}, offset)
+      ), 
+      React.createElement("div", {className: "timezone-people"}, 
+        columns.map(function(column, idx){
+          return React.createElement("div", {className: "timezone-people-column", key: "column-" + idx}, 
+            column.map(function(person){
+              // NOTE: Replace with future user id
+              var key = person.avatar.substr(person.avatar.length - 20, 20);
+              return React.createElement(Person, {model: person, key: key});
+            })
+          )
+        })
+      )
+    );
+  }
+});
+
+
+},{"../utils/time.js":9,"./person.jsx":3,"moment-timezone":18,"react":166}],6:[function(require,module,exports){
+/** @jsx React.DOM */
+
+var React    = require('react');
+var Timezone = require('./timezone.jsx');
+
+module.exports = React.createClass({displayName: "exports",
+  render: function() {
+    var timeFormat = this.props.timeFormat || 12;
+    return React.createElement("div", {className: "timezone-list"}, 
+      this.props.timezones.map(function(timezone){
+        return React.createElement(Timezone, {key: timezone.tz, 
+                         time: this.props.time, 
+                         timeFormat: timeFormat, 
+                         model: timezone});
+      }.bind(this))
+    );
+  }
+});
+
+},{"./timezone.jsx":5,"react":166}],7:[function(require,module,exports){
+var Dispatcher = require('flux').Dispatcher;
+
+var AppDispatcher = new Dispatcher();
+module.exports = AppDispatcher;
+
+AppDispatcher.handleViewAction = function(action) {
+  this.dispatch({
+    source: 'VIEW_ACTION',
+    action: action
+  });
+};
+
+AppDispatcher.handleApiAction = function(action) {
+  this.dispatch({
+    source: 'API_ACTION',
+    action: action
+  });
+};
+
+module.exports = AppDispatcher;
+
+
+},{"flux":13}],8:[function(require,module,exports){
 var React  = require('react');
 var moment = require('moment-timezone');
 var transform = require('./utils/transform.js');
@@ -139,279 +413,7 @@ function disableAutoUpdate() {
 enableAutoUpdate();
 
 
-},{"./actions/actionTypes.js":1,"./dispatchers/appDispatcher.js":8,"./utils/time.js":9,"./utils/transform.js":10,"./views/app.jsx":11,"moment-timezone":18,"react":166}],3:[function(require,module,exports){
-/** @jsx React.DOM */
-
-var React = require('react');
-var timeUtils = require('../utils/time.js');
-var AppDispatcher = require('../dispatchers/appDispatcher.js');
-var ActionTypes = require('../actions/actionTypes.js');
-var TimeSlider = require('./timeSlider.jsx');
-
-module.exports = React.createClass({displayName: "exports",
-  handleFormatChange: function(e) {
-    AppDispatcher.handleViewAction({
-      actionType: ActionTypes.CHANGE_TIME_FORMAT,
-      value: +e.target.dataset.value
-    });
-  },
-  handleGotoCurrentTime: function(e) {
-    AppDispatcher.handleViewAction({
-      actionType: ActionTypes.USE_CURRENT_TIME
-    });
-  },
-  render: function() {
-    
-    var format = this.props.timeFormat;
-    var formatString = timeUtils.getFormatStringFor(this.props.timeFormat);
-    var displayTime = this.props.time.format(formatString);
-
-    return React.createElement("div", {className: "app-sidebar"}, 
-
-      React.createElement("a", {href: "/"}, 
-        React.createElement("h1", {className: "site-branding"}, "Timezone.io")
-      ), 
-      
-      React.createElement("h2", {className: "app-sidebar--time"}, displayTime), 
-
-      React.createElement(TimeSlider, {time: this.props.time, 
-                  isCurrentTime: this.props.isCurrentTime}), 
-
-      React.createElement("div", {className: "app-sidebar--button-row"}, 
-        
-        React.createElement("div", {className: "button-group app-sidebar--format-select"}, 
-          React.createElement("button", {className: 'small hollow ' + (format === 12 ? 'selected' : ''), 
-                  "data-value": "12", 
-                  onClick: this.handleFormatChange}, "12"), 
-          React.createElement("button", {className: 'small hollow ' + (format === 24 ? 'selected' : ''), 
-                  "data-value": "24", 
-                  onClick: this.handleFormatChange}, "24")
-        ), 
-
-        React.createElement("button", {className: "small hollow", 
-                disabled: this.props.isCurrentTime, 
-                onClick: this.handleGotoCurrentTime}, "Now")
-      )
-
-    );
-  }
-});
-
-},{"../actions/actionTypes.js":1,"../dispatchers/appDispatcher.js":8,"../utils/time.js":9,"./timeSlider.jsx":5,"react":166}],4:[function(require,module,exports){
-/** @jsx React.DOM */
-
-var React = require('react');
-var moment = require('moment-timezone');
-
-module.exports = React.createClass({displayName: "exports",
-  render: function() {
-    var person = this.props.model;
-    return React.createElement("div", {className: "person", key: person.name}, 
-      React.createElement("img", {src: person.avatar, className: "avatar"}), 
-      React.createElement("div", {className: "person-info"}, 
-        React.createElement("p", {className: "person-name"}, person.name), 
-        React.createElement("p", {className: "person-city"}, person.location)
-      )
-    );
-  }
-});
-
-
-},{"moment-timezone":18,"react":166}],5:[function(require,module,exports){
-/** @jsx React.DOM */
-
-var React = require('react');
-var AppDispatcher = require('../dispatchers/appDispatcher.js');
-var ActionTypes = require('../actions/actionTypes.js');
-
-module.exports = React.createClass({displayName: "exports",
-  getInitialState: function() {
-    return {
-      value: 50,
-      isCurrentTime: this.props.isCurrentTime
-    };
-  },
-  handleChange: function(value) {
-    value = +value;
-    var percentDelta = 2 * (value - 50) / 100;
-
-    this.setState({
-      value: value,
-      isCurrentTime: value === 50
-    });
-
-    // NOTE - This may need to be throttled
-    AppDispatcher.handleViewAction({
-      actionType: ActionTypes.ADJUST_TIME_DISPLAY,
-      value: percentDelta
-    });
-  },
-  render: function() {
-
-    var valueLink = {
-      value: this.props.isCurrentTime ? 50 : this.state.value,
-      requestChange: this.handleChange
-    };
-
-    return React.createElement("div", {className: "time-slider-container"}, 
-      React.createElement("input", {type: "range", 
-             className: "time-slider", 
-             valueLink: valueLink})
-    );
-  }
-});
-
-},{"../actions/actionTypes.js":1,"../dispatchers/appDispatcher.js":8,"react":166}],6:[function(require,module,exports){
-/** @jsx React.DOM */
-
-var React = require('react');
-var moment = require('moment-timezone');
-var Person = require('./person.jsx');
-var timeUtils = require('../utils/time.js');
-
-var PEOPLE_PER_COL = 7;
-
-module.exports = React.createClass({displayName: "exports",
-
-  getCountsOf: function(list, param) {
-    return list
-      .map(function(el) {
-        return el[param];
-      })
-      .sort()
-      .reduce(function(counts, el) {
-        if (!counts[el])
-          counts[el] = 1;
-        else
-          counts[el]++;
-        return counts;
-      }, {});
-  },
-
-  getHighestOccuring: function(counts) {
-    var keys = Object.keys(counts);
-    return keys.reduce(function(prev, curr){
-      return counts[curr] > counts[prev] ? curr : prev;
-    }, keys[0]);
-  },
-
-  getTopTimezone: function() {
-
-    var tzCounts = this.getCountsOf(this.props.model.people, 'tz');
-    var topTz = this.getHighestOccuring(tzCounts);
-    
-    return topTz.replace(/.+\//g, '').replace(/_/g,' ');
-  },
-
-  getTopCity: function() {
-
-    var cityCounts = this.getCountsOf(this.props.model.people, 'location');
-    var topCity = this.getHighestOccuring(cityCounts);
-
-    return cityCounts[topCity] === 1 && this.props.model.people.length > 1 ?
-      this.getTopTimezone() :
-      topCity;
-  },
-
-  getPeopleColumns: function() {
-    
-    this.props.model.people.sort(function(a, b){
-      return a.name > b.name ? 1 : -1;
-    });
-
-    return this.props.model.people.reduce(function(cols, person){
-      if (cols[cols.length - 1] && 
-          cols[cols.length - 1].length  < PEOPLE_PER_COL)
-        cols[cols.length - 1].push(person);
-      else
-        cols.push([ person ]);
-      return cols;
-    }, []);
-  },
-
-  render: function() {
-
-    // We clone the time object itself so the this time is bound to
-    // the global app time
-
-    var localTime   = moment( this.props.time ).tz( this.props.model.tz ),
-        fmtString   = timeUtils.getFormatStringFor(this.props.timeFormat),
-        displayTime = localTime.format(fmtString),
-        offset      = localTime.format('Z');
-
-    var timezoneClasses = 'timezone timezone-hour-' + localTime.hour();
-
-    if (this.props.model.major) timezoneClasses += ' timezone-major';
-    
-    var topCity = this.getTopCity();
-    var columns = this.getPeopleColumns();
-
-    return React.createElement("div", {className: timezoneClasses}, 
-      React.createElement("div", {className: "timezone-header"}, 
-        React.createElement("h3", {className: "timezone-time"}, displayTime), 
-        React.createElement("p", {className: "timezone-name"}, topCity), 
-        React.createElement("p", {className: "timezone-offset"}, offset)
-      ), 
-      React.createElement("div", {className: "timezone-people"}, 
-        columns.map(function(column, idx){
-          return React.createElement("div", {className: "timezone-people-column", key: "column-" + idx}, 
-            column.map(function(person){
-              // NOTE: Replace with future user id
-              var key = person.avatar.substr(person.avatar.length - 20, 20);
-              return React.createElement(Person, {model: person, key: key});
-            })
-          )
-        })
-      )
-    );
-  }
-});
-
-
-},{"../utils/time.js":9,"./person.jsx":4,"moment-timezone":18,"react":166}],7:[function(require,module,exports){
-/** @jsx React.DOM */
-
-var React    = require('react');
-var Timezone = require('./timezone.jsx');
-
-module.exports = React.createClass({displayName: "exports",
-  render: function() {
-    var timeFormat = this.props.timeFormat || 12;
-    return React.createElement("div", {className: "timezone-list"}, 
-      this.props.timezones.map(function(timezone){
-        return React.createElement(Timezone, {key: timezone.tz, 
-                         time: this.props.time, 
-                         timeFormat: timeFormat, 
-                         model: timezone});
-      }.bind(this))
-    );
-  }
-});
-
-},{"./timezone.jsx":6,"react":166}],8:[function(require,module,exports){
-var Dispatcher = require('flux').Dispatcher;
-
-var AppDispatcher = new Dispatcher();
-module.exports = AppDispatcher;
-
-AppDispatcher.handleViewAction = function(action) {
-  this.dispatch({
-    source: 'VIEW_ACTION',
-    action: action
-  });
-};
-
-AppDispatcher.handleApiAction = function(action) {
-  this.dispatch({
-    source: 'API_ACTION',
-    action: action
-  });
-};
-
-module.exports = AppDispatcher;
-
-
-},{"flux":13}],9:[function(require,module,exports){
+},{"./actions/actionTypes.js":1,"./dispatchers/appDispatcher.js":7,"./utils/time.js":9,"./utils/transform.js":10,"./views/app.jsx":11,"moment-timezone":18,"react":166}],9:[function(require,module,exports){
 var timeUtils = module.exports = {};
 
 // Get the time format string
@@ -507,7 +509,7 @@ module.exports = React.createClass({displayName: "exports",
   }
 });
 
-},{"../components/appSidebar.jsx":3,"../components/timezoneList.jsx":7,"react":166}],12:[function(require,module,exports){
+},{"../components/appSidebar.jsx":2,"../components/timezoneList.jsx":6,"react":166}],12:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -23134,4 +23136,4 @@ module.exports = warning;
 },{"./emptyFunction":127,"_process":12}],166:[function(require,module,exports){
 module.exports = require('./lib/React');
 
-},{"./lib/React":48}]},{},[2]);
+},{"./lib/React":48}]},{},[8]);

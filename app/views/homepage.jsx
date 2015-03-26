@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+var Header = require('../components/header.jsx');
 var TimezoneList = require('../components/timezoneList.jsx');
 
 var demoTimezones = [
@@ -115,14 +116,7 @@ module.exports = React.createClass({
     return (
       <div className="container">
       
-        <header className="site-header">
-          <h1 className="site-branding">Timezone.io</h1>
-          <div className="site-header--right">
-            <a href="/team/buffer" className="button cta">
-              Live demo
-            </a>
-          </div>
-        </header>
+        <Header demo={true} />
 
         <div className="hp-section demo">
 
