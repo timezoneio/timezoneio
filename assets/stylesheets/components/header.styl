@@ -14,7 +14,23 @@ $headerIconSize = 22px
   height: $headerIconSize
   padding-left: $headerIconSize + 6px
   
+  color: $textColor
   font-size: 1em
   line-height: $headerIconSize
   background: url(/images/brand-icon.png) no-repeat left center
   background-size: $headerIconSize $headerIconSize
+  
+  // Override any link styling
+  &::after
+    height: 0
+    width: 0
+  &:hover::after
+    opacity: 0
+    
+  
+// Center it!
+.app-sidebar .site-branding
+  margin: 0 auto 2em
+  width: 124px
+  
+    
