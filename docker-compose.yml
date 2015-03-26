@@ -6,10 +6,14 @@
 #    - db
 #   ports:
 #    - "80:8080"
+# db:
+#   environment:
+#    - POSTGRES_PASSWORD=password
+#    - POSTGRES_USER=admin
+#   image: postgres
+#   ports:
+#    - "5432:5432"
 db:
-  environment:
-   - POSTGRES_PASSWORD=password
-   - POSTGRES_USER=admin
-  image: postgres
+  image: mongo
   ports:
-   - "5432:5432"
+   - "27017:27017"

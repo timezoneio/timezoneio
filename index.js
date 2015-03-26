@@ -1,21 +1,14 @@
-require('./lib/server.js');
+var mongoose = require('mongoose');
 
-var knex = require('knex')({
-  client: 'pg',
-  connection: {
-    host     : '192.168.99.100', //process.env.DB_PORT_5432_TCP_ADDR,
-    user     : 'admin', //process.env.DB_ENV_POSTGRES_USER,
-    password : 'password', //process.env.DB_ENV_POSTGRES_PASSWORD,
-    database : 'timezoneio',
-    charset  : 'utf8'
-  },
-  migrations: {
-    tableName: 'migrations'
-  }
-});
+var server = require('./lib/server.js');
 
-var bookshelf = require('bookshelf')(knex);
+mongoose.connect('mongodb://localhost/timezone');
 
-var User = bookshelf.Model.extend({
-  tableName: 'users'
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback) {
+  
+  console.info('We\'re connected, great. Starting up the server...');
+  server();
+
 });
