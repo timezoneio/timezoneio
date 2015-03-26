@@ -10,7 +10,7 @@ module.exports = React.createClass({
       <img src={person.avatar} className="avatar"/>
       <div className="person-info">
         <p className="person-name">{person.name}</p>
-        <p className="person-city">{person.city}</p>
+        <p className="person-city">{person.location}</p>
       </div>
     </div>;
   }

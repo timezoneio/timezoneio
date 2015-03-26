@@ -11,7 +11,7 @@ module.exports = React.createClass({displayName: "exports",
       React.createElement("img", {src: person.avatar, className: "avatar"}), 
       React.createElement("div", {className: "person-info"}, 
         React.createElement("p", {className: "person-name"}, person.name), 
-        React.createElement("p", {className: "person-city"}, person.city)
+        React.createElement("p", {className: "person-city"}, person.location)
       )
     );
   }
@@ -62,7 +62,7 @@ module.exports = React.createClass({displayName: "exports",
 
   getTopCity: function() {
 
-    var cityCounts = this.getCountsOf(this.props.model.people, 'city');
+    var cityCounts = this.getCountsOf(this.props.model.people, 'location');
     var topCity = this.getHighestOccuring(cityCounts);
 
     return cityCounts[topCity] === 1 && this.props.model.people.length > 1 ?
