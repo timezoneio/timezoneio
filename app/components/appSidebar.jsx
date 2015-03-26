@@ -25,6 +25,10 @@ module.exports = React.createClass({
     var displayTime = this.props.time.format(formatString);
 
     return <div className="app-sidebar">
+
+      <a href="/">
+        <h1 className="site-branding">Timezone.io</h1>
+      </a>
       
       <h2 className="app-sidebar--time">{displayTime}</h2>
 

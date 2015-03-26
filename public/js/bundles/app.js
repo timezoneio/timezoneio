@@ -167,6 +167,10 @@ module.exports = React.createClass({displayName: "exports",
     var displayTime = this.props.time.format(formatString);
 
     return React.createElement("div", {className: "app-sidebar"}, 
+
+      React.createElement("a", {href: "/"}, 
+        React.createElement("h1", {className: "site-branding"}, "Timezone.io")
+      ), 
       
       React.createElement("h2", {className: "app-sidebar--time"}, displayTime), 
 
