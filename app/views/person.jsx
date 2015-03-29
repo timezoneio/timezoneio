@@ -16,7 +16,7 @@ module.exports = React.createClass({
   render: function() {
     var person = this.props.user;
     return (
-      <div className="container person-container">
+      <div className="container profile-container">
 
         <Header />
 
