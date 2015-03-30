@@ -116,7 +116,8 @@ module.exports = React.createClass({
     return (
       <div className="container">
       
-        <Header demo={true} />
+        <Header demo={true} 
+                link={false} />
 
         <div className="hp-section demo">
 

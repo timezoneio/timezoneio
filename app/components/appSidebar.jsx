@@ -5,6 +5,7 @@ var timeUtils = require('../utils/time.js');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
 var TimeSlider = require('./timeSlider.jsx');
+var Branding = require('./branding.jsx');
 
 module.exports = React.createClass({
   handleFormatChange: function(e) {
@@ -26,9 +27,7 @@ module.exports = React.createClass({
 
     return <div className="app-sidebar">
 
-      <a href="/">
-        <h1 className="site-branding">Timezone.io</h1>
-      </a>
+      <Branding link={true} />
       
       <h2 className="app-sidebar--time">{displayTime}</h2>
 

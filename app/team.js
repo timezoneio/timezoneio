@@ -4,7 +4,7 @@ var transform = require('./utils/transform.js');
 var timeUtils = require('./utils/time.js');
 var AppDispatcher = require('./dispatchers/appDispatcher.js');
 var ActionTypes = require('./actions/actionTypes.js');
-var App = React.createFactory(require('./views/app.jsx'));
+var Team = React.createFactory(require('./views/team.jsx'));
 
 
 // Application state:
@@ -22,7 +22,7 @@ var appState = {
 var targetNode = document.querySelector('#page');
 
 function renderApp() {
-  React.render(App(appState), targetNode);
+  React.render(Team(appState), targetNode);
 }
 
 renderApp();

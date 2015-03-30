@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+var Branding = require('./branding.jsx');
 
 module.exports = React.createClass({
   
@@ -16,9 +17,10 @@ module.exports = React.createClass({
   },
 
   render: function() {
+    var link = this.props.link === false ? false : true;
     return (
       <header className="site-header">
-        <h1 className="site-branding">Timezone.io</h1>
+        <Branding link={link} />
         <div className="site-header--right">
           {this.renderRightComponent()}
         </div>
