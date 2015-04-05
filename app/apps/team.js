@@ -1,10 +1,10 @@
 var React  = require('react');
 var moment = require('moment-timezone');
-var transform = require('./utils/transform.js');
-var timeUtils = require('./utils/time.js');
-var AppDispatcher = require('./dispatchers/appDispatcher.js');
-var ActionTypes = require('./actions/actionTypes.js');
-var Team = React.createFactory(require('./views/team.jsx'));
+var transform = require('../utils/transform.js');
+var timeUtils = require('../utils/time.js');
+var AppDispatcher = require('../dispatchers/appDispatcher.js');
+var ActionTypes = require('../actions/actionTypes.js');
+var Team = React.createFactory(require('../views/team.jsx'));
 
 
 // Application state:

@@ -1,4 +1,18 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var React  = require('react');
+
+var Homepage = React.createFactory(require('../views/homepage.jsx'));
+
+var targetNode = document.querySelector('#page');
+
+React.render(
+  Homepage({
+    // data?
+  }),
+  targetNode
+);
+
+},{"../views/homepage.jsx":8,"react":159}],2:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -16,7 +30,7 @@ module.exports = React.createClass({displayName: "exports",
 
 
 
-},{"react":159}],2:[function(require,module,exports){
+},{"react":159}],3:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -50,7 +64,7 @@ module.exports = React.createClass({displayName: "exports",
 
 
 
-},{"./branding.jsx":1,"react":159}],3:[function(require,module,exports){
+},{"./branding.jsx":2,"react":159}],4:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -72,7 +86,7 @@ module.exports = React.createClass({displayName: "exports",
 });
 
 
-},{"moment-timezone":11,"react":159}],4:[function(require,module,exports){
+},{"moment-timezone":11,"react":159}],5:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -179,7 +193,7 @@ module.exports = React.createClass({displayName: "exports",
 });
 
 
-},{"../utils/time.js":7,"./person.jsx":3,"moment-timezone":11,"react":159}],5:[function(require,module,exports){
+},{"../utils/time.js":7,"./person.jsx":4,"moment-timezone":11,"react":159}],6:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React    = require('react');
@@ -199,21 +213,7 @@ module.exports = React.createClass({displayName: "exports",
   }
 });
 
-},{"./timezone.jsx":4,"react":159}],6:[function(require,module,exports){
-var React  = require('react');
-
-var Homepage = React.createFactory(require('./views/homepage.jsx'));
-
-var targetNode = document.querySelector('#page');
-
-React.render(
-  Homepage({
-    // data?
-  }),
-  targetNode
-);
-
-},{"./views/homepage.jsx":8,"react":159}],7:[function(require,module,exports){
+},{"./timezone.jsx":5,"react":159}],7:[function(require,module,exports){
 var timeUtils = module.exports = {};
 
 // Get the time format string
@@ -465,7 +465,7 @@ module.exports = React.createClass({displayName: "exports",
   }
 });
 
-},{"../components/header.jsx":2,"../components/timezoneList.jsx":5,"react":159}],9:[function(require,module,exports){
+},{"../components/header.jsx":3,"../components/timezoneList.jsx":6,"react":159}],9:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -22718,4 +22718,4 @@ module.exports = warning;
 },{"./emptyFunction":120,"_process":9}],159:[function(require,module,exports){
 module.exports = require('./lib/React');
 
-},{"./lib/React":41}]},{},[6]);
+},{"./lib/React":41}]},{},[1]);

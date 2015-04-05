@@ -13,7 +13,7 @@ gulp.task('browserify', function() {
       .bundle();
   });
 
-  return gulp.src(['app/*.js'])
+  return gulp.src(['app/apps/*.js'])
     .pipe(plumber())
     .pipe(browserified)
     .pipe(gulp.dest('public/js/bundles'));

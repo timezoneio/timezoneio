@@ -15,7 +15,7 @@ var teamController = require('./controllers/team.js');
 var peopleController = require('./controllers/people.js');
 
 // React views
-var Homepage = require('../app/views/homepage.jsx');
+var Homepage = require('./views/homepage.jsx');
 
 
 // Stylus

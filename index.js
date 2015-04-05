@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var server = require('./lib/server.js');
+var server = require('./app/server.js');
 
 var connect = function () {
   var options = { server: { socketOptions: { keepAlive: 1 } } };

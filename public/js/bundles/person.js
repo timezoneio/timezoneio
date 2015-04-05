@@ -1,4 +1,16 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var React  = require('react');
+
+var Person = React.createFactory(require('../views/person.jsx'));
+
+var targetNode = document.querySelector('#page');
+
+React.render(
+  Person(window.appData),
+  targetNode
+);
+
+},{"../views/person.jsx":5,"react":156}],2:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -16,7 +28,7 @@ module.exports = React.createClass({displayName: "exports",
 
 
 
-},{"react":156}],2:[function(require,module,exports){
+},{"react":156}],3:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -50,19 +62,7 @@ module.exports = React.createClass({displayName: "exports",
 
 
 
-},{"./branding.jsx":1,"react":156}],3:[function(require,module,exports){
-var React  = require('react');
-
-var Person = React.createFactory(require('./views/person.jsx'));
-
-var targetNode = document.querySelector('#page');
-
-React.render(
-  Person(window.appData),
-  targetNode
-);
-
-},{"./views/person.jsx":5,"react":156}],4:[function(require,module,exports){
+},{"./branding.jsx":2,"react":156}],4:[function(require,module,exports){
 var timeUtils = module.exports = {};
 
 // Get the time format string
@@ -119,7 +119,7 @@ module.exports = React.createClass({displayName: "exports",
   }
 });
 
-},{"../components/header.jsx":2,"../utils/time.js":4,"moment-timezone":8,"react":156}],6:[function(require,module,exports){
+},{"../components/header.jsx":3,"../utils/time.js":4,"moment-timezone":8,"react":156}],6:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -22372,4 +22372,4 @@ module.exports = warning;
 },{"./emptyFunction":117,"_process":6}],156:[function(require,module,exports){
 module.exports = require('./lib/React');
 
-},{"./lib/React":38}]},{},[3]);
+},{"./lib/React":38}]},{},[1]);

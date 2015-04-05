@@ -1,12 +1,10 @@
 var React  = require('react');
 
-var Homepage = React.createFactory(require('./views/homepage.jsx'));
+var Person = React.createFactory(require('../views/person.jsx'));
 
 var targetNode = document.querySelector('#page');
 
 React.render(
-  Homepage({
-    // data?
-  }),
+  Person(window.appData),
   targetNode
 );
