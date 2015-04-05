@@ -4,18 +4,12 @@ var logger = require('morgan');
 var stylus = require('stylus');
 var autoprefixer  = require('autoprefixer-stylus');
 var slashes = require('connect-slashes');
-var React = require('react');
 
 require('node-jsx').install({extension: '.jsx'});
 
-
-var render = require('./helpers/render.js');
-
+var baseController = require('./controllers/base.js');
 var teamController = require('./controllers/team.js');
 var peopleController = require('./controllers/people.js');
-
-// React views
-var Homepage = require('./views/homepage.jsx');
 
 
 // Stylus
@@ -30,20 +24,6 @@ var stylusMiddleware = stylus.middleware({
   }
 });
 
-var home = function(req, res) {
-
-  var body = React.renderToString(
-    Homepage()
-  );
-
-  var params = {
-    body: body,
-    script: 'bundles/homepage.js'
-  };
-
-  render(req, res, params);
-
-};
 
 module.exports = function() {
   var app = express();
@@ -52,7 +32,7 @@ module.exports = function() {
   app.use(slashes(false));
   app.use(logger('common'));
 
-  app.get('/', home);
+  app.get('/', baseController.index);
   app.get('/team/:name', teamController.index);
   app.get('/people/:username', peopleController.index);
 
