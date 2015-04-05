@@ -9,7 +9,6 @@ var transform = require('../../app/utils/transform.js');
 var strings = require('../../app/utils/strings.js');
 var Team = require('../../app/views/team.jsx');
 
-var people = require('../../people.json');
 
 var team = module.exports = {};
 

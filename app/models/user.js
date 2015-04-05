@@ -196,6 +196,10 @@ userSchema.statics = {
     User.findOne({ username: username }, done);
   },
 
+  findOneByEmail: function(email, done) {
+    User.findOne({ email: email }, done);
+  },
+
   findAllByTeam: function(teamId, done) {
     User.find({ 'teams.teamId': teamId }, done);
   }
