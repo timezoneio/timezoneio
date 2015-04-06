@@ -12,16 +12,20 @@ mongoose.connection.on('error', console.error);
 mongoose.connection.on('disconnected', connect);
 mongoose.connection.once('open', function (callback) {
   
-  console.info('We\'re connected, great. Starting up the server...');
+  console.info('We\'re connected, booyah! Starting up the server...');
   server();
 
 });
 
-var UserModal = require('./app/models/user.js');
+// var UserModal = require('./app/models/user.js');
 
-UserModal.findOne({ username: "dan" }, function(err, user) {
+// UserModal.findOne({ username: 'dan' }, function(err, user) {
   
+//   user.tz = 'America/New_York';
+//   user.password = 'password';
+//   user.save();
+
+//   console.info( user );
   
-  
-});
+// });
 

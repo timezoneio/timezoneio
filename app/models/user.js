@@ -116,7 +116,7 @@ userSchema.path('username').validate(function (username) {
   return username.length;
 }, 'Username cannot be blank');
 
-userSchema.path('username').validate(function (username) {
+userSchema.path('username').validate(function (username, fn) {
   var User = mongoose.model('User');
   if (this.skipValidation()) fn(true);
 
