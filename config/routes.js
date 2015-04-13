@@ -12,13 +12,13 @@ module.exports = function(app, passport) {
 
   app.get('/login', auth.login);
   app.post('/login', passport.authenticate('local', {
-                        // successRedirect: '/',
-                        failureRedirect: '/login'
-                        // failureFlash: 'Invalid email or password.'
+                        failureRedirect: '/login',
+                        failureFlash: 'Invalid email or password'
                       }),
-                     team.index);
-
-  // app.get('/logout', auth.logout);
+                      function(req, res) {
+                        res.redirect('/people/' + req.user.username);
+                      });
+  app.get('/logout', auth.logout);
 
   app.get('/team/:name', team.index);
 

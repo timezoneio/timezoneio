@@ -20,12 +20,8 @@ mongoose.connection.once('open', function (callback) {
 // var UserModal = require('./app/models/user.js');
 
 // UserModal.findOne({ username: 'dan' }, function(err, user) {
-  
-//   user.tz = 'America/New_York';
-//   user.password = 'password';
-//   user.save();
 
-//   console.info( user );
+//   console.info( user.authenticate('password') ? 'OK!' : 'NO' );
   
 // });
 

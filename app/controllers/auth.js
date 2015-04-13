@@ -1,26 +1,18 @@
-var React = require('react');
-
-var render = require('../helpers/render.js');
-var Login = require('../views/login.jsx');
-
 var auth = module.exports = {};
 
 
 auth.login = function(req, res) {
 
-  var body = React.renderToString(
-    Login({})
-  );
+  if (req.user) {
+    return res.redirect('/people/' + req.user.username);
+  }
 
-  var params = {
-    body: body,
-    script: 'bundles/login.js'
-  };
-
-  render(req, res, params);
+  res.render('login', {
+    errors: req.flash('error')
+  });
 };
 
-auth.session = function(req, res) {
-
-
+auth.logout = function(req, res) {
+  req.logout();
+  res.redirect('/login');
 };

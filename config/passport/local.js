@@ -9,12 +9,8 @@ module.exports = new LocalStrategy({
   },
   function(email, password, done) {
 
-
-
     UserModel.findOneByEmail(email, function(err, user) {
       if (err) return done(err);
-
-      console.info('Finding...');
 
       if (!user) {
         return done(null, false, { message: 'User not found' });

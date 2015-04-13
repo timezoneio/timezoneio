@@ -14,7 +14,11 @@ module.exports = React.createClass({
 
         <h1>Login</h1>
 
+        { this.props.errors ? <p>{this.props.errors.join(',')}</p> : '' }
+
         <form action="/login" method="post">
+
+          <input type="hidden" name="_csrf" value={this.props.csrf_token} />
 
           <div>
             <input type="email" 
