@@ -4,7 +4,7 @@ a:visited
   text-decoration: none;
   color: $linkColor
   transition: all 250ms ease;
-  
+
   &::after
     content: ""
     position: absolute
@@ -22,3 +22,10 @@ a:visited
   &:hover::after
     opacity: 1
     transform: translateY(2px)
+
+
+cancelLinkHover()
+  &::after
+    display: none
+    width: 0
+    height: 0

@@ -18,7 +18,7 @@ module.exports = React.createClass({
     return (
       <div className="container profile-container">
 
-        <Header />
+        <Header {...this.props} />
 
         <div className="fw-section alt profile">
           <div className="content-container">

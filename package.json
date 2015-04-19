@@ -37,8 +37,8 @@
     "node-jsx": "^0.12.4",
     "passport": "^0.2.1",
     "passport-local": "^1.0.0",
-    "react": "^0.12.2",
-    "react-tools": "^0.12.2",
+    "react": "^0.13.2",
+    "react-tools": "^0.13.2",
     "stylus": "^0.49.3",
     "whatwg-fetch": "^0.7.0"
   },

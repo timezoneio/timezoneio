@@ -5,8 +5,6 @@ var Homepage = React.createFactory(require('../views/homepage.jsx'));
 var targetNode = document.querySelector('#page');
 
 React.render(
-  Homepage({
-    // data?
-  }),
+  Homepage(appData),
   targetNode
 );

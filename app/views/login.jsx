@@ -10,7 +10,7 @@ module.exports = React.createClass({
     return (
       <div className="container login-container">
 
-        <Header />
+        <Header {...this.props} />
 
         <h1>Login</h1>
 
@@ -21,13 +21,13 @@ module.exports = React.createClass({
           <input type="hidden" name="_csrf" value={this.props.csrf_token} />
 
           <div>
-            <input type="email" 
+            <input type="email"
                    name="email"
                    placeholder="email" />
           </div>
 
           <div>
-            <input type="password" 
+            <input type="password"
                    name="password"
                    placeholder="password" />
           </div>
