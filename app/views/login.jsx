@@ -12,11 +12,11 @@ module.exports = React.createClass({
 
         <Header {...this.props} />
 
-        <h1>Login</h1>
+        <h1 className="page-headline">Login</h1>
 
         { this.props.errors ? <p>{this.props.errors.join(',')}</p> : '' }
 
-        <form action="/login" method="post">
+        <form action="/login" method="post" className="login-form">
 
           <input type="hidden" name="_csrf" value={this.props.csrf_token} />
 
@@ -33,7 +33,7 @@ module.exports = React.createClass({
           </div>
 
           <div>
-            <button type="submit">
+            <button type="submit" className="cta login-button">
               Login
             </button>
           </div>
