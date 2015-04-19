@@ -63,7 +63,13 @@ module.exports = function() {
     next();
   });
 
-  require('../config/routes.js')(app, passport);  
+  // Append the user to the locals for use in every view
+  app.use(function(req, res, next) {
+    res.locals.user = req.user;
+    next();
+  });
+
+  require('../config/routes.js')(app, passport);
 
   app.listen(8080);
 

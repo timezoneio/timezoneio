@@ -35,8 +35,10 @@ var React = require('react');
 var Branding = require('./branding.jsx');
 
 module.exports = React.createClass({displayName: "exports",
-  
+
   renderRightComponent: function() {
+    // if (this.props.user)
+
     if (this.props.demo)
       return (
         React.createElement("a", {href: "/team/buffer", className: "button cta"}, 

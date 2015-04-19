@@ -4,8 +4,10 @@ var React = require('react');
 var Branding = require('./branding.jsx');
 
 module.exports = React.createClass({
-  
+
   renderRightComponent: function() {
+    // if (this.props.user)
+
     if (this.props.demo)
       return (
         <a href="/team/buffer" className="button cta">

@@ -15,16 +15,16 @@ var defaultDescription = 'Keep track where and when your team is. ' +
 
 //NOTE - I don't know if there is overhead of requiring the view each time
 module.exports = function render(pathName, locals, cb) {
-    
+
   var ViewComponent = require(pathName);
 
   var params = {};
-  
+
   params.data = locals || {};
   params.data.csrf_token = locals.csrf_token;
 
   params.body = React.renderToString(
-    ViewComponent(params.data)
+    React.createElement(ViewComponent, params.data)
   );
 
   //NOTE - currently this.name will always be truthy
