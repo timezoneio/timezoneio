@@ -28,6 +28,7 @@ team.index = function(req, res, next) {
 
       res.render('team', {
         title: strings.capFirst(team.name || ''),
+        people: users,
         time: time,
         timezones: timezones,
         timeFormat: timeFormat,
