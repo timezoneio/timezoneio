@@ -137,9 +137,41 @@ for hour in 0 1 2 3 4 5 6 7 22 23
     flex-direction: column
   
   .app-sidebar
+    position: fixed
+    z-index: 1
     width: 100%
+    padding: 0.8em
+    display: flex
+    flex-wrap: wrap
+    justify-content: space-between
+  
+    .site-branding
+      margin: 0.2em 0 0
+    
+    // all children are 50%
+    > *
+      width: 40%
+  
+  .app-sidebar--time
+    font-size: 1.5em
+    text-align: right
+    
+  .time-slider-container
+    order: 4 // put this under the time
+  
+  .time-slider
+    margin: 0.9em 0 0
+  
+  .app-sidebar--button-row
+    max-height: 27px
+    margin-top: 0.7em
+    justify-content: flex-start
+    
+  .app-sidebar--format-select
+    margin-right: 0.8em
     
   .timezone-list
+    margin-top: 6em
     justify-content: flex-start
     flex-direction: column-reverse
   
@@ -170,6 +202,7 @@ for hour in 0 1 2 3 4 5 6 7 22 23
     display: block
     opacity: 1.0
     position: inherit
+    z-index: inherit
     left: auto
     right: auto
     width: auto
