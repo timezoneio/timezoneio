@@ -77,7 +77,7 @@ app.get('/team/:name', function(req, res) {
 
   var customTime = req.query.t ? moment(req.query.t) : null;
   var time = (customTime && customTime.isValid()) ? customTime : moment();
-  var isCurrentTime = !customTime.isValid();
+  var isCurrentTime = !(customTime && customTime.isValid());
   var timezones = transform(time, people);
   var timeFormat = 12; // hardcode default for now
 
