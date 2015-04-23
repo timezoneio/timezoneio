@@ -61,7 +61,7 @@ app.use(
 app.get('/', function(req, res) {
 
   var body = React.renderToString(
-    Homepage()
+    React.createElement(Homepage, {})
   );
 
   var params = {
@@ -81,7 +81,7 @@ app.get('/team/:name', function(req, res) {
   var timeFormat = 12; // hardcode default for now
 
   var body = React.renderToString(
-    App({
+    React.createElement(App, {
       time: time,
       timezones: timezones,
       timeFormat: timeFormat,
