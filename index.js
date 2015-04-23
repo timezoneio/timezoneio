@@ -74,9 +74,10 @@ app.get('/', function(req, res) {
 });
 
 app.get('/team/:name', function(req, res) {
-  
-  // Organize into timezones
-  var time = moment();
+
+  var time = req.query.t ? moment(req.query.t) : moment();
+  time = time.isValid() ? time : moment();
+
   var timezones = transform(time, people);
   var timeFormat = 12; // hardcode default for now
 
