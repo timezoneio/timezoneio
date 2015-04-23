@@ -12,7 +12,7 @@ var appData = window.appData;
 
 var appState = {
   time:             moment(appData.time),
-  isCurrentTime:    true,
+  isCurrentTime:    appData.isCurrentTime,
   timeFormat:       appData.timeFormat,
   timezones:        transform(moment(appData.time), appData.people),
 };
@@ -123,4 +123,6 @@ function disableAutoUpdate() {
   window.onfocus = null;
 }
 
-enableAutoUpdate();
+if (appState.isCurrentTime) {
+  enableAutoUpdate();
+}

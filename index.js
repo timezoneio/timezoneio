@@ -75,9 +75,9 @@ app.get('/', function(req, res) {
 
 app.get('/team/:name', function(req, res) {
 
-  var time = req.query.t ? moment(req.query.t) : moment();
-  time = time.isValid() ? time : moment();
-
+  var customTime = req.query.t ? moment(req.query.t) : null;
+  var time = customTime.isValid() ? customTime : moment();
+  var isCurrentTime = !customTime.isValid();
   var timezones = transform(time, people);
   var timeFormat = 12; // hardcode default for now
 
@@ -86,7 +86,7 @@ app.get('/team/:name', function(req, res) {
       time: time,
       timezones: timezones,
       timeFormat: timeFormat,
-      isCurrentTime: true
+      isCurrentTime: isCurrentTime
     })
   );
 
@@ -97,7 +97,8 @@ app.get('/team/:name', function(req, res) {
     data: {
       time: time,
       people: people,
-      timeFormat: timeFormat
+      timeFormat: timeFormat,
+      isCurrentTime: isCurrentTime
     }
   };
 

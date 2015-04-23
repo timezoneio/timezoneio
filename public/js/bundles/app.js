@@ -25,7 +25,7 @@ var appData = window.appData;
 
 var appState = {
   time:             moment(appData.time),
-  isCurrentTime:    true,
+  isCurrentTime:    appData.isCurrentTime,
   timeFormat:       appData.timeFormat,
   timezones:        transform(moment(appData.time), appData.people),
 };
@@ -136,7 +136,9 @@ function disableAutoUpdate() {
   window.onfocus = null;
 }
 
-enableAutoUpdate();
+if (appState.isCurrentTime) {
+  enableAutoUpdate();
+}
 
 
 },{"./actions/actionTypes.js":1,"./dispatchers/appDispatcher.js":8,"./utils/time.js":9,"./utils/transform.js":10,"./views/app.jsx":11,"moment-timezone":18,"react":175}],3:[function(require,module,exports){
