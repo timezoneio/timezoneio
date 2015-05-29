@@ -16,11 +16,11 @@ var userSchema = new Schema({
   // facebook: {},
   // twitter: {},
   // google: {},
-  
+
   avatar: { type: String, default: '' },
   location: { type: String, default: '' },
   tz: { type: String, default: '' },
-  
+
   teams: [{
     teamId: { type: Schema.ObjectId, ref: 'Team' }
   }],

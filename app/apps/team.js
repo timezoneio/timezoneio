@@ -1,21 +1,19 @@
 var React  = require('react');
 var moment = require('moment-timezone');
+require('whatwg-fetch');
 var transform = require('../utils/transform.js');
 var timeUtils = require('../utils/time.js');
+var clone = require('../utils/clone.js');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
 var Team = React.createFactory(require('../views/team.jsx'));
 
 
 // Application state:
-var appData = window.appData;
+var appState = clone(window.appData);
 
-var appState = {
-  time:             moment(appData.time),
-  isCurrentTime:    true,
-  timeFormat:       appData.timeFormat,
-  timezones:        transform(moment(appData.time), appData.people),
-};
+appState.time = moment(appState.time);
+appState.timezones = transform(moment(appState.time), appState.people);
 
 
 // Add the component to the DOM
@@ -42,7 +40,7 @@ window.addEventListener('keyup', function(e){
     timeSlider.focus();
     renderApp();
   }
-  
+
 });
 
 function updateToCurrentTime() {
@@ -80,6 +78,59 @@ function updateTimeAsPercent(percentDelta) {
   renderApp();
 }
 
+
+function json(res) {
+  return res.json();
+}
+function saveTeamInfo(info) {
+
+  info._csrf = appState.csrf_token;
+
+  var options = {
+    method: 'PUT',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include',
+    body: JSON.stringify(info)
+  };
+
+  return fetch('/api/team/' + appState.team._id, options)
+    .then(json)
+    .then(function(res){
+      console.info(res);
+      return res;
+    });
+}
+
+window.saveTeamInfo = saveTeamInfo;
+
+function updateCurrentView(view, shouldUpdateUrl) {
+  appState.currentView = view;
+
+  if (shouldUpdateUrl) {
+    var path = appState.team.url;
+
+    if (view !== 'app')
+      path += '/' + view;
+
+    window.history.pushState({}, null, path);
+  }
+
+  renderApp();
+}
+
+function handlePopState(e) {
+  var path = window.location.pathname;
+  var segment = path.replace(appState.team.url, '');
+  var view = segment.length ? segment.substr(1) : 'app';
+  updateCurrentView(view);
+}
+
+
+window.addEventListener('popstate', handlePopState);
+
 AppDispatcher.register(function(payload) {
 
   // console.info('EVENT: ', payload);
@@ -88,6 +139,7 @@ AppDispatcher.register(function(payload) {
   var value = payload.action.value;
 
   switch (actionType) {
+
     case ActionTypes.CHANGE_TIME_FORMAT:
       appState.timeFormat = value;
       renderApp();
@@ -100,8 +152,20 @@ AppDispatcher.register(function(payload) {
       disableAutoUpdate();
       updateTimeAsPercent(value);
       break;
+
+    case ActionTypes.CLOSE_MODAL:
+      updateCurrentView('app', true);
+      break;
+    case ActionTypes.SHOW_MODAL:
+      updateCurrentView(value, true);
+      break;
+
+    case ActionTypes.SAVE_TEAM_INFO:
+      saveTeamInfo(value);
+      break;
+
   }
-  
+
 });
 
 

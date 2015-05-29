@@ -38,26 +38,35 @@ var Branding = require('./branding.jsx');
 module.exports = React.createClass({displayName: "exports",
 
   renderRightComponent: function() {
+
+    var buttons = [];
+
+    if (this.props.demo)
+      buttons.push(
+        React.createElement("a", {href: "/team/buffer", className: "button cta"}, 
+          "Live demo"
+        )
+      );
+
     if (this.props.user) {
       var url = '/people/' + this.props.user.username;
       var style = { backgroundImage: 'url(' + this.props.user.avatar + ')' };
-      return (
+      buttons.push(
         React.createElement("a", {href: url, 
            className: "avatar header-avatar", 
            style: style, 
            name: this.props.user.name}
         )
       );
-    }
-
-    if (this.props.demo)
-      return (
-        React.createElement("a", {href: "/team/buffer", className: "button cta"}, 
-          "Live demo"
+    } else {
+      buttons.push(
+        React.createElement("a", {href: "/login", className: "button hollow"}, 
+          "Login"
         )
       );
+    }
 
-    return '';
+    return buttons;
   },
 
   render: function() {

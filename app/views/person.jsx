@@ -31,6 +31,13 @@ module.exports = React.createClass({
                 {person.location}
                 <span className="profile-offset">{this.getLocalTime()}</span>
               </h3>
+              <p>
+                {this.props.teams.map(function(team) {
+                  return (
+                    <a href={team.url}>{team.name}</a>
+                  )
+                })}
+              </p>
             </div>
 
           </div>

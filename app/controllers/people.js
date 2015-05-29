@@ -12,14 +12,21 @@ people.index = function(req, res, next) {
 
   User.findOneByUsername(username, function(err, user) {
 
-    var time = moment();
-    var timeFormat = 12; // hardcode default for now
+    var teamIds = user.teams.map(function(t) { return t.teamId; });
 
-    res.render('person', {
-      title: strings.capFirst(user.name || ''),
-      user: user,
-      time: time,
-      timeFormat: timeFormat
+    Team.findInfoByIds(teamIds, function(err, teams) {
+
+      var time = moment();
+      var timeFormat = 12; // hardcode default for now
+
+      res.render('person', {
+        title: strings.capFirst(user.name || ''),
+        user: user,
+        teams: teams,
+        time: time,
+        timeFormat: timeFormat
+      });
+
     });
 
   });

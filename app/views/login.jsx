@@ -14,9 +14,15 @@ module.exports = React.createClass({
 
         <h1 className="page-headline">Login</h1>
 
-        { this.props.errors ? <p>{this.props.errors.join(',')}</p> : '' }
+
 
         <form action="/login" method="post" className="login-form">
+
+          { (this.props.errors && this.props.errors.length) ? (
+              <p className="login-form--error">
+                {this.props.errors.join('<br>')}
+              </p>
+            ) : ''}
 
           <input type="hidden" name="_csrf" value={this.props.csrf_token} />
 

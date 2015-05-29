@@ -18,13 +18,43 @@ var teamSchema = new Schema({
 
   createdAt: { type : Date, default : Date.now },
   updatedAt: { type : Date, default : Date.now }
+}, {
+  toObject: {
+    virtuals: true
+  },
+  toJSON: {
+    virtuals: true
+  }
 });
+
 
 // Indexes
 teamSchema.index({ slug: 1 });
 
+teamSchema
+  .virtual('url')
+  .get(function() { return '/team/' + this.slug; });
+
 // TODO - slug validation
 //      - admin required
 //      - people validation/limitation
+
+teamSchema.methods = {
+
+  isAdmin: function(user) {
+    return !!user && !!this.admins.filter(function(a) {
+      return a.userId.toString() === user._id.toString();
+    }).length;
+  }
+
+};
+
+teamSchema.statics = {
+
+  findInfoByIds: function(teamIds, done) {
+    Team.find({ _id: { $in: teamIds } }, 'name slug', done);
+  }
+
+};
 
 var Team = module.exports = mongoose.model('Team', teamSchema);

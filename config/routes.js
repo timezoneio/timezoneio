@@ -2,6 +2,7 @@
 var base = require('../app/controllers/base.js');
 var auth = require('../app/controllers/auth.js');
 var team = require('../app/controllers/team.js');
+var api = require('../app/controllers/api.js');
 var people = require('../app/controllers/people.js');
 
 
@@ -21,8 +22,11 @@ module.exports = function(app, passport) {
   app.get('/logout', auth.logout);
 
   app.get('/team/:name', team.index);
+  app.get('/team/:name/:view', team.index);
 
   app.get('/people/:username', people.index);
+
+  app.put('/api/team/:id', api.teamUpdate);
 
 
 
@@ -32,8 +36,8 @@ module.exports = function(app, passport) {
 
   app.use(function (err, req, res, next) {
     // treat as 404
-    if (err.message && 
-        (~err.message.indexOf('not found') || 
+    if (err.message &&
+        (~err.message.indexOf('not found') ||
          (~err.message.indexOf('Cast to ObjectId failed'))
         )
         ) {

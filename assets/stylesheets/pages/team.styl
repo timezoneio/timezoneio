@@ -1,10 +1,12 @@
 .app-container
   display: flex
   min-width: 880px
-  
+
 $sideBarMargin = 20px;
 
 .app-sidebar
+  // display: flex
+  // flex-direction: column
   flex-shrink: 0
   width: 180px
   padding: 1em
@@ -15,15 +17,17 @@ $sideBarMargin = 20px;
   font-size: 2em
   text-align: center
   font-weight: normal
-  
+
 .app-sidebar--button-row
   display: flex
   justify-content: space-between
-  
+
 // .app-sidebar--format-select
 //   text-align: center
-  
 
+
+.app-sidebar--admin
+  margin: 1em 0
 
 
 .timezone-list
@@ -34,12 +38,12 @@ $sideBarMargin = 20px;
 
 .timezone
   padding: 1em
-  
+
 // .timezone-major
-  
+
 .timezone-people
   display: flex
-  
+
 .timezone-people-column
   min-width: $avatarSize
   margin-right: 1em
@@ -55,7 +59,7 @@ for hour in 0 1 2 3 4 5 6 7 22 23
   width: 80px
   text-align: left
   white-space: nowrap;
-  
+
   p
     margin: 5px 0
     overflow: hidden
@@ -64,7 +68,7 @@ for hour in 0 1 2 3 4 5 6 7 22 23
 .timezone-time
   margin: 5px 0
   font-weight: normal
-  
+
 .timezone-name
   font-size: 0.6em
   text-transform: uppercase

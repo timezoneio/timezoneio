@@ -11,6 +11,8 @@ var team = module.exports = {};
 
 team.index = function(req, res, next) {
   var slug = req.params.name;
+  var validViews = ['manage'];
+  var view = validViews.indexOf(req.params.view) > -1 ? req.params.view : 'app';
 
   TeamModel.findOne({ slug: slug }, function(err, team) {
     if (err) return next(err);
@@ -29,10 +31,13 @@ team.index = function(req, res, next) {
       res.render('team', {
         title: strings.capFirst(team.name || ''),
         people: users,
+        isAdmin: team.isAdmin(req.user),
         time: time,
+        team: team,
         timezones: timezones,
         timeFormat: timeFormat,
-        isCurrentTime: true
+        isCurrentTime: true,
+        currentView: view
       });
 
     });
