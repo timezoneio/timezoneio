@@ -2,8 +2,11 @@
 
 var React = require('react');
 var Branding = require('./branding.jsx');
+var UserMenu = require('./userMenu.jsx');
 
 module.exports = React.createClass({
+
+  displayName: 'Header',
 
   renderRightComponent: function() {
 
@@ -11,24 +14,23 @@ module.exports = React.createClass({
 
     if (this.props.demo)
       buttons.push(
-        <a href="/team/buffer" className="button cta">
+        <a key="demo"
+           href="/team/buffer"
+           className="button cta">
           Live demo
         </a>
       );
 
     if (this.props.user) {
-      var url = '/people/' + this.props.user.username;
-      var style = { backgroundImage: 'url(' + this.props.user.avatar + ')' };
       buttons.push(
-        <a href={url}
-           className="avatar header-avatar"
-           style={style}
-           name={this.props.user.name}>
-        </a>
+        <UserMenu key="menu"
+                  {...this.props.user} />
       );
     } else {
       buttons.push(
-        <a href="/login" className="button hollow">
+        <a key="login"
+           href="/login"
+           className="button hollow">
           Login
         </a>
       );

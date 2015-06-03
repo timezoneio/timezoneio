@@ -7,14 +7,16 @@ var timeUtils = require('../utils/time.js');
 
 module.exports = React.createClass({
 
+  displayName: 'PersonView',
+
   getLocalTime: function() {
-    var localTime = moment( this.props.time ).tz( this.props.user.tz );
+    var localTime = moment( this.props.time ).tz( this.props.profileUser.tz );
     var fmtString = timeUtils.getFormatStringFor(this.props.timeFormat);
     return localTime.format(fmtString);
   },
 
   render: function() {
-    var person = this.props.user;
+    var profileUser = this.props.profileUser;
     return (
       <div className="container profile-container">
 
@@ -23,18 +25,23 @@ module.exports = React.createClass({
         <div className="fw-section alt profile">
           <div className="content-container">
 
-            <img src={person.avatar} className="avatar large profile-avatar"/>
+            <img src={profileUser.avatar} className="avatar large profile-avatar"/>
 
             <div className="profile-details">
-              <h2 className="profile-name">{person.name}</h2>
+              <h2 className="profile-name">{profileUser.name}</h2>
               <h3 className="profile-location">
-                {person.location}
-                <span className="profile-offset">{this.getLocalTime()}</span>
+                {profileUser.location}
+                <span className="profile-offset">
+                  {this.getLocalTime()}
+                </span>
               </h3>
               <p>
-                {this.props.teams.map(function(team) {
+                {this.props.teams.map(function(team, idx) {
                   return (
-                    <a href={team.url}>{team.name}</a>
+                    <a key={idx}
+                       href={team.url}>
+                      {team.name}
+                    </a>
                   )
                 })}
               </p>

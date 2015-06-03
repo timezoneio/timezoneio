@@ -10,7 +10,12 @@ var people = module.exports = {};
 people.index = function(req, res, next) {
   var username = req.params.username;
 
+  if (!username) return next('User not found :(');
+
   User.findOneByUsername(username, function(err, user) {
+
+    if (!user) console.info('User not found: %s', username);
+    if (!user) return next('User not found :(');
 
     var teamIds = user.teams.map(function(t) { return t.teamId; });
 
@@ -21,7 +26,7 @@ people.index = function(req, res, next) {
 
       res.render('person', {
         title: strings.capFirst(user.name || ''),
-        user: user,
+        profileUser: user,
         teams: teams,
         time: time,
         timeFormat: timeFormat

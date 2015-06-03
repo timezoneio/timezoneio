@@ -4,6 +4,9 @@ var React = require('react');
 var moment = require('moment-timezone');
 
 module.exports = React.createClass({
+
+  displayName: 'Person',
+
   render: function() {
     var person = this.props.model;
     return (
@@ -16,4 +19,5 @@ module.exports = React.createClass({
       </div>
     );
   }
+
 });

@@ -18,14 +18,18 @@ module.exports = function render(pathName, locals, cb) {
 
   var ViewComponent = require(pathName);
 
+  var data = locals || {};
+  data.csrf_token = locals.csrf_token;
+
+  // clean user object for render
+  data.user = data.user.toJSON();
+
   var params = {};
 
-  params.data = locals || {};
-  params.data.csrf_token = locals.csrf_token;
-
   params.body = React.renderToString(
-    React.createElement(ViewComponent, params.data)
+    React.createElement(ViewComponent, data)
   );
+  params.data = JSON.stringify(data || {});
 
   //NOTE - currently this.name will always be truthy
   params.script ='bundles/' + this.name + '.js';
@@ -33,11 +37,10 @@ module.exports = function render(pathName, locals, cb) {
   //                 '/js/bundles/' + this.name + '.js' :
   //                 '/js/genericPage.js';
 
-  params.title = params.data.title ? 'Timezone.io - ' + params.data.title : 'Timezone.io';
-  params.description = params.data.description || defaultDescription;
+  params.title = data.title ? 'Timezone.io - ' + data.title : 'Timezone.io';
+  params.description = data.description || defaultDescription;
   params.url = 'http://timezone.io'; // + req.url;
   params.body = params.body || '404 :(';
-  params.data = JSON.stringify(params.data || {});
 
   var html = Mustache.render(template, params);
 
