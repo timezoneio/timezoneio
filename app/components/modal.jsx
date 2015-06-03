@@ -1,8 +1,16 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+var AppDispatcher = require('../dispatchers/appDispatcher.js');
+var ActionTypes = require('../actions/actionTypes.js');
 
 module.exports = React.createClass({
+
+  handleClickClose: function(e) {
+    AppDispatcher.handleViewAction({
+      actionType: ActionTypes.CLOSE_MODAL
+    });
+  },
 
   handleClick: function(e) {
     e.stopPropagation();
@@ -12,6 +20,10 @@ module.exports = React.createClass({
     return (
       <div className="modal"
            onClick={this.handleClick}>
+        <a className="modal-close"
+           onClick={this.handleClickClose}>
+          +
+        </a>
         {this.props.children}
       </div>
     );

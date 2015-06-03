@@ -40,12 +40,13 @@ var PUBLIC_FIELDS = [
   'name',
   'avatar',
   'location',
-  'tz'
+  'tz',
+  'isRegistered'
 ];
 
 userSchema.set('toJSON', {
   getters: true,
-  virtuals: false,
+  virtuals: true,
   transform: function (doc, ret, options) {
     return PUBLIC_FIELDS.reduce(function(obj, field) {
       obj[field] = ret[field];
@@ -65,6 +66,9 @@ userSchema
   })
   .get(function() { return this._password; });
 
+userSchema
+  .virtual('isRegistered')
+  .get(function() { return !!this.hashedPassword; });
 
 userSchema.pre('save', function(next) {
   if (!this.isNew) return next();

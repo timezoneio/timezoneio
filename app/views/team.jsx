@@ -20,7 +20,7 @@ module.exports = React.createClass({
 
     if (currentView === 'app') return;
 
-    var modal = '';
+    var modal = null;
 
     if (currentView === 'manage')
       modal = <ManageModal {...this.props} />

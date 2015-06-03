@@ -4,8 +4,11 @@ var React = require('react');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
 var Modal = require('./modal.jsx');
+var EditPerson = require('./editPerson.jsx');
 
 module.exports = React.createClass({
+
+  displayName: 'ManageModal',
 
   getInitialState: function() {
     return {
@@ -28,24 +31,29 @@ module.exports = React.createClass({
 
   render: function() {
 
-    var nameLink = {
-      value: this.state.name,
-      requestChange: this.handleChange.bind(null, 'name')
-    };
+    // var nameLink = {
+    //   value: this.state.name,
+    //   requestChange: this.handleChange.bind(null, 'name')
+    // };
+    var team = this.props.team;
 
     return (
       <Modal>
-
-        <h2 className="modal-header">Manage</h2>
-
-        <label>Name</label>
-        <input name="name" type="text" valueLink={nameLink} />
-
-        <button onClick={this.handleClickSave}>
-          Save
-        </button>
-
+        {this.props.people.map(function(person, idx) {
+          return <EditPerson key={idx}
+                             {...person}
+                             team={team} />
+        })}
       </Modal>
     );
   }
 });
+
+        // <h2 className="modal-header">Manage</h2>
+
+        // <label>Name</label>
+        // <input name="name" type="text" valueLink={nameLink} />
+
+        // <button onClick={this.handleClickSave}>
+        //   Save
+        // </button>
