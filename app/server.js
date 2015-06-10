@@ -63,6 +63,12 @@ module.exports = function() {
     next();
   });
 
+  // Pretty print
+  if (app.get('env') === 'development') {
+    app.set('json spaces', 2);
+    // app.locals.pretty = true;
+  }
+
   // Append the user to the locals for use in every view
   app.use(function(req, res, next) {
     res.locals.user = req.user;
