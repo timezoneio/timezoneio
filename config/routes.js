@@ -27,6 +27,7 @@ module.exports = function(app, passport) {
   app.get('/people/:username', people.index);
 
   app.put('/api/team/:id', api.teamUpdate);
+  app.get('/api/location/search', api.locationSearch);
 
 
 

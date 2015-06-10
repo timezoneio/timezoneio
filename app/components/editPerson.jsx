@@ -10,8 +10,11 @@ module.exports = React.createClass({
 
   getInitialState: function() {
     return {
-      name: this.props.team.name
-    }
+      name: this.props.name,
+      location: this.props.location,
+      tz: this.props.tz,
+      avatar: this.props.avatar
+    };
   },
 
   handleChange: function(name, value) {
@@ -29,8 +32,15 @@ module.exports = React.createClass({
 
   render: function() {
 
+    console.info
+
     var nameLink = {
       value: this.state.name,
+      requestChange: this.handleChange.bind(null, 'name')
+    };
+
+    var locationLink = {
+      value: this.state.location,
       requestChange: this.handleChange.bind(null, 'name')
     };
 
@@ -38,10 +48,14 @@ module.exports = React.createClass({
     return (
       <div>
         <img src={this.props.avatar} className="avatar" />
-        <input type="text" name="name" value={nameLink} placeholder="Name" />
-        <input type="text" name="location" placeholder="Location" />
-
-
+        <input type="text"
+               name="name"
+               valueLink={nameLink}
+               placeholder="Name" />
+        <input type="text"
+               name="name"
+               valueLink={locationLink}
+               placeholder="Location" />
       </div>
     );
   }

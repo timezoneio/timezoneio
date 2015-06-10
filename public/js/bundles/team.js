@@ -317,8 +317,11 @@ module.exports = React.createClass({
 
   getInitialState: function() {
     return {
-      name: this.props.team.name
-    }
+      name: this.props.name,
+      location: this.props.location,
+      tz: this.props.tz,
+      avatar: this.props.avatar
+    };
   },
 
   handleChange: function(name, value) {
@@ -336,8 +339,15 @@ module.exports = React.createClass({
 
   render: function() {
 
+    console.info
+
     var nameLink = {
       value: this.state.name,
+      requestChange: this.handleChange.bind(null, 'name')
+    };
+
+    var locationLink = {
+      value: this.state.location,
       requestChange: this.handleChange.bind(null, 'name')
     };
 
@@ -345,10 +355,14 @@ module.exports = React.createClass({
     return (
       React.createElement("div", null, 
         React.createElement("img", {src: this.props.avatar, className: "avatar"}), 
-        React.createElement("input", {type: "text", name: "name", value: nameLink, placeholder: "Name"}), 
-        React.createElement("input", {type: "text", name: "location", placeholder: "Location"})
-
-
+        React.createElement("input", {type: "text", 
+               name: "name", 
+               valueLink: nameLink, 
+               placeholder: "Name"}), 
+        React.createElement("input", {type: "text", 
+               name: "name", 
+               valueLink: locationLink, 
+               placeholder: "Location"})
       )
     );
   }
@@ -424,7 +438,9 @@ var React = require('react');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
 
-module.exports = React.createClass({displayName: "exports",
+module.exports = React.createClass({
+
+  displayName: 'Modal',
 
   handleClickClose: function(e) {
     AppDispatcher.handleViewAction({

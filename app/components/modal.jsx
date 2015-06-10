@@ -6,6 +6,8 @@ var ActionTypes = require('../actions/actionTypes.js');
 
 module.exports = React.createClass({
 
+  displayName: 'Modal',
+
   handleClickClose: function(e) {
     AppDispatcher.handleViewAction({
       actionType: ActionTypes.CLOSE_MODAL
