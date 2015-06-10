@@ -3,6 +3,7 @@
 var React = require('react');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
+var LocationAutocomplete = require('./locationAutocomplete.jsx');
 
 module.exports = React.createClass({
 
@@ -32,30 +33,29 @@ module.exports = React.createClass({
 
   render: function() {
 
-    console.info
-
     var nameLink = {
       value: this.state.name,
       requestChange: this.handleChange.bind(null, 'name')
     };
 
-    var locationLink = {
-      value: this.state.location,
-      requestChange: this.handleChange.bind(null, 'name')
-    };
+    // var locationLink = {
+    //   value: this.state.location,
+    //   requestChange: this.handleChange.bind(null, 'name')
+    // };
 
 
     return (
       <div>
+
         <img src={this.props.avatar} className="avatar" />
+
         <input type="text"
                name="name"
                valueLink={nameLink}
                placeholder="Name" />
-        <input type="text"
-               name="name"
-               valueLink={locationLink}
-               placeholder="Location" />
+
+        <LocationAutocomplete {...this.props} />
+
       </div>
     );
   }
