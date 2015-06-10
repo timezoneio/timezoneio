@@ -104,8 +104,6 @@ function saveTeamInfo(info) {
     });
 }
 
-window.saveTeamInfo = saveTeamInfo;
-
 function updateCurrentView(view, shouldUpdateUrl) {
   appState.currentView = view;
 
