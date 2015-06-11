@@ -1,8 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var AppDispatcher = require('../dispatchers/appDispatcher.js');
-var ActionTypes = require('../actions/actionTypes.js');
+var ActionCreators = require('../actions/actionCreators.js');
 var LocationAutocomplete = require('./locationAutocomplete.jsx');
 
 module.exports = React.createClass({
@@ -11,6 +10,7 @@ module.exports = React.createClass({
 
   getInitialState: function() {
     return {
+      email: this.props.email,
       name: this.props.name,
       location: this.props.location,
       tz: this.props.tz,
@@ -24,11 +24,15 @@ module.exports = React.createClass({
     this.setState(newState);
   },
 
+  handleLocationChange: function(location, tz) {
+    this.setState({
+      location: location,
+      tz: tz
+    })
+  },
+
   handleClickSave: function(e) {
-    // AppDispatcher.handleViewAction({
-    //   actionType: ActionTypes.SAVE_TEAM_INFO,
-    //   value: this.state
-    // });
+    ActionCreators.saveUserInfo(this.props._id, this.state);
   },
 
   render: function() {
@@ -38,25 +42,62 @@ module.exports = React.createClass({
       requestChange: this.handleChange.bind(null, 'name')
     };
 
-    // var locationLink = {
-    //   value: this.state.location,
-    //   requestChange: this.handleChange.bind(null, 'name')
-    // };
+    var emailLink = {
+      value: this.state.email,
+      requestChange: this.handleChange.bind(null, 'email')
+    };
 
+    var avatarLink = {
+      value: this.state.avatar,
+      requestChange: this.handleChange.bind(null, 'avatar')
+    };
 
     return (
-      <div>
+      <div className="edit-person">
 
-        <img src={this.props.avatar} className="avatar" />
+        <div className="edit-person--row">
+          <img src={this.props.avatar} className="avatar large" />
+        </div>
 
-        <input type="text"
-               name="name"
-               valueLink={nameLink}
-               placeholder="Name" />
+        <div className="edit-person--row">
+          <input type="text"
+                 name="name"
+                 valueLink={nameLink}
+                 placeholder="Name" />
+        </div>
 
-        <LocationAutocomplete {...this.props} />
+        <div className="edit-person--row">
+
+          <LocationAutocomplete {...this.props}
+                                handleChange={this.handleLocationChange} />
+
+          <span className="edit-person--timezone-display">
+            {this.state.tz}
+          </span>
+
+        </div>
+
+        <div className="edit-person--row">
+          <input type="text"
+                 name="avatar"
+                 valueLink={avatarLink}
+                 placeholder="Avatar URL" />
+        </div>
+
+        <div className="edit-person--row">
+          <button onClick={this.handleClickSave}>
+            Save
+          </button>
+        </div>
 
       </div>
     );
   }
 });
+
+        // <div className="edit-person--row">
+        //   <input type="text"
+        //          name="email"
+        //          valueLink={emailLink}
+        //          placeholder="E-mail" />
+        // </div>

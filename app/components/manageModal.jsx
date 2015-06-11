@@ -23,7 +23,7 @@ module.exports = React.createClass({
   },
 
   handleClickSave: function(e) {
-    AppDispatcher.handleViewAction({
+    AppDispatcher.dispatchViewAction({
       actionType: ActionTypes.SAVE_TEAM_INFO,
       value: this.state
     });

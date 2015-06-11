@@ -51,15 +51,20 @@ locationSchema.set('toJSON', {
 
 locationSchema.statics = {
 
-  findByQuery: function(query, done) {
+  findByQuery: function(query, limit, done) {
     if (typeof query !== 'string')
       return done('Query must be a string');
+
+    if (typeof limit === 'function') {
+      done = limit;
+      limit = 20;
+    }
 
     var regExp = new RegExp(query.toLowerCase(), 'i');
 
     LocationModel
       .find({ value: regExp })
-      .limit(20)
+      .limit(limit)
       .exec(done);
   }
 

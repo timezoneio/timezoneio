@@ -10,7 +10,7 @@ var ManageModal = require('../components/manageModal.jsx');
 module.exports = React.createClass({
 
   handleClickMask: function(e) {
-    AppDispatcher.handleViewAction({
+    AppDispatcher.dispatchViewAction({
       actionType: ActionTypes.CLOSE_MODAL
     });
   },

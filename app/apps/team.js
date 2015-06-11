@@ -1,26 +1,27 @@
 var React  = require('react');
 var moment = require('moment-timezone');
 require('whatwg-fetch');
+
 var transform = require('../utils/transform.js');
 var timeUtils = require('../utils/time.js');
 var clone = require('../utils/clone.js');
+
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
+var AppState = require('../state/appState.js');
+
 var Team = React.createFactory(require('../views/team.jsx'));
 
 
 // Application state:
-var appState = clone(window.appData);
-
-appState.time = moment(appState.time);
-appState.timezones = transform(moment(appState.time), appState.people);
+var appState = new AppState(window.appData);
 
 
 // Add the component to the DOM
 var targetNode = document.querySelector('#page');
 
 function renderApp() {
-  React.render(Team(appState), targetNode);
+  React.render( Team( appState.getState() ), targetNode );
 }
 
 renderApp();
@@ -44,13 +45,7 @@ window.addEventListener('keyup', function(e){
 });
 
 function updateToCurrentTime() {
-  var now = moment();
-  if (now.hour() === appState.time.hour() && now.minute() === appState.time.minute()) return;
-
-  appState.time.hour( now.hour() );
-  appState.time.minute( now.minute() );
-  appState.isCurrentTime = true;
-
+  appState.updateToCurrentTime();
   renderApp();
 }
 
@@ -72,8 +67,7 @@ function updateTimeAsPercent(percentDelta) {
   var minutes = now.minutes();
   now.add(timeUtils.roundToQuarterHour(minutes) - minutes, 'm');
 
-  appState.time = now;
-  appState.isCurrentTime = false;
+  appState.setTime(now);
 
   renderApp();
 }
@@ -84,7 +78,7 @@ function json(res) {
 }
 function saveTeamInfo(info) {
 
-  info._csrf = appState.csrf_token;
+  info._csrf = appState.getCSRF();
 
   var options = {
     method: 'PUT',
@@ -96,7 +90,7 @@ function saveTeamInfo(info) {
     body: JSON.stringify(info)
   };
 
-  return fetch('/api/team/' + appState.team._id, options)
+  return fetch('/api/team/' + appState.getTeam()._id, options)
     .then(json)
     .then(function(res){
       console.info(res);
@@ -105,10 +99,11 @@ function saveTeamInfo(info) {
 }
 
 function updateCurrentView(view, shouldUpdateUrl) {
-  appState.currentView = view;
+
+  appState.setCurrentView(view);
 
   if (shouldUpdateUrl) {
-    var path = appState.team.url;
+    var path = appState.getTeam().url;
 
     if (view !== 'app')
       path += '/' + view;
@@ -121,7 +116,7 @@ function updateCurrentView(view, shouldUpdateUrl) {
 
 function handlePopState(e) {
   var path = window.location.pathname;
-  var segment = path.replace(appState.team.url, '');
+  var segment = path.replace(appState.getTeam().url, '');
   var view = segment.length ? segment.substr(1) : 'app';
   updateCurrentView(view);
 }
@@ -129,17 +124,14 @@ function handlePopState(e) {
 
 window.addEventListener('popstate', handlePopState);
 
-AppDispatcher.register(function(payload) {
-
-  // console.info('EVENT: ', payload);
-
-  var actionType = payload.action.actionType;
-  var value = payload.action.value;
+var handleViewAction = function(action) {
+  var actionType = action.actionType;
+  var value = action.value;
 
   switch (actionType) {
 
     case ActionTypes.CHANGE_TIME_FORMAT:
-      appState.timeFormat = value;
+      appState.setTimeFormat(value);
       renderApp();
       break;
     case ActionTypes.USE_CURRENT_TIME:
@@ -163,6 +155,28 @@ AppDispatcher.register(function(payload) {
       break;
 
   }
+};
+
+var handleAPIAction = function(action) {
+  var actionType = action.actionType;
+  var value = action.value;
+
+  switch (actionType) {
+
+    case ActionTypes.UPDATED_USER_DATA:
+      appState.updateUserData(value);
+      renderApp();
+      break;
+
+  }
+};
+
+AppDispatcher.register(function(payload) {
+
+  if (payload.source === 'API_ACTION')
+    handleAPIAction(payload.action);
+  else if (payload.source === 'VIEW_ACTION')
+    handleViewAction(payload.action);
 
 });
 

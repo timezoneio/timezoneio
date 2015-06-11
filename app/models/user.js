@@ -36,6 +36,7 @@ userSchema.index({ "teams.teamId": 1 });
 
 
 var PUBLIC_FIELDS = [
+  '_id',
   'username',
   'name',
   'avatar',
@@ -195,6 +196,14 @@ userSchema.methods = {
 };
 
 userSchema.statics = {
+
+  WRITABLE_FIELDS: [
+    'name',
+    // 'email',
+    'avatar',
+    'location',
+    'tz'
+  ],
 
   findOneByUsername: function(username, done) {
     User.findOne({ username: username }, done);

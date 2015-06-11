@@ -9,7 +9,7 @@ module.exports = React.createClass({
   displayName: 'Modal',
 
   handleClickClose: function(e) {
-    AppDispatcher.handleViewAction({
+    AppDispatcher.dispatchViewAction({
       actionType: ActionTypes.CLOSE_MODAL
     });
   },

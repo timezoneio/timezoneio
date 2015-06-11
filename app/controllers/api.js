@@ -14,6 +14,35 @@ var handleError = function(res, message) {
   });
 };
 
+api.userUpdate = function(req, res, next) {
+
+  var id = req.params.id;
+
+  UserModel.findOne({ _id: id }, function(err, user) {
+    if (err) return handleError('Couldn\'t find that user!');
+
+    // if (!team.isAdmin(req.user)) {
+    //   return res.status(403).json({
+    //     message: 'Forbidden'
+    //   });
+    // }
+
+    // replace w/ underscore
+    for (var key in req.body) {
+      if (UserModel.WRITABLE_FIELDS.indexOf(key) > -1) {
+        user[key] = req.body[key];
+      }
+    }
+
+    user.save(function(err) {
+      if (err) return handleError('Failed to save');
+      res.json(user);
+    });
+
+  });
+
+};
+
 api.teamUpdate = function(req, res, next) {
 
   var id = req.params.id;
@@ -56,7 +85,7 @@ api.locationSearch = function(req, res, next) {
 
   // NOTE - maybe more data validation?
 
-  LocationModel.findByQuery(query, function(err, locations) {
+  LocationModel.findByQuery(query, 5, function(err, locations) {
     if (err) return handleError();
 
     res.json({ results: locations });

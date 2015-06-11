@@ -10,20 +10,20 @@ var Branding = require('./branding.jsx');
 module.exports = React.createClass({
 
   handleFormatChange: function(e) {
-    AppDispatcher.handleViewAction({
+    AppDispatcher.dispatchViewAction({
       actionType: ActionTypes.CHANGE_TIME_FORMAT,
       value: +e.target.dataset.value
     });
   },
 
   handleGotoCurrentTime: function(e) {
-    AppDispatcher.handleViewAction({
+    AppDispatcher.dispatchViewAction({
       actionType: ActionTypes.USE_CURRENT_TIME
     });
   },
 
   handleManageTeam: function(e) {
-    AppDispatcher.handleViewAction({
+    AppDispatcher.dispatchViewAction({
       actionType: ActionTypes.SHOW_MODAL,
       value: 'manage'
     });
