@@ -3,6 +3,7 @@
 var React = require('react');
 var ActionCreators = require('../actions/actionCreators.js');
 var LocationAutocomplete = require('./locationAutocomplete.jsx');
+var Avatar = require('./avatar.jsx');
 
 module.exports = React.createClass({
 
@@ -56,7 +57,8 @@ module.exports = React.createClass({
       <div className="edit-person">
 
         <div className="edit-person--row">
-          <img src={this.props.avatar} className="avatar large" />
+          <Avatar avatar={this.props.avatar}
+                  size="large" />
         </div>
 
         <div className="edit-person--row">

@@ -14,11 +14,14 @@
 .modal
   position: relative
   width: 600px
-  min-height: 600px
+  height: 600px
   padding: 1em
   background: #fff
   box-shadow: 0 1px 4px rgba(0,0,0,0.3)
 
+  // &.flex-modal
+  //   display: flex
+  //   align-items: center
 
 .modal-close
   cancelLinkHover()
@@ -36,3 +39,10 @@
 
 .modal-header
   margin-top: 0
+
+.modal--back-button
+  position: absolute
+  top: 0.5em
+  left: 0.5em
+
+

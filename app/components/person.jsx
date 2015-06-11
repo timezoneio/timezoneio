@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var moment = require('moment-timezone');
+var Avatar = require('./avatar.jsx');
 
 module.exports = React.createClass({
 
@@ -11,7 +11,7 @@ module.exports = React.createClass({
     var person = this.props.model;
     return (
       <div className="person" key={person.name}>
-        <img src={person.avatar} className="avatar"/>
+        <Avatar avatar={person.avatar} />
         <div className="person-info">
           <p className="person-name">{person.name}</p>
           <p className="person-city">{person.location}</p>

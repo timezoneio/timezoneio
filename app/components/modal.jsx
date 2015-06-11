@@ -20,7 +20,7 @@ module.exports = React.createClass({
 
   render: function() {
     return (
-      <div className="modal"
+      <div className={'modal ' + this.props.className}
            onClick={this.handleClick}>
         <a className="modal-close"
            onClick={this.handleClickClose}>

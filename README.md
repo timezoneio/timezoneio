@@ -17,8 +17,12 @@ To start the server and restart on changes, use nodemon:
 nodemon
 ```
 
-In a separate shell, watch for changes to the files and automatically 
+In a separate shell, watch for changes to the files and automatically
 re-browserify the bundles:
 ```shell
 gulp watch
 ```
+
+# Info
+
+- [Material Design Icons](https://www.google.com/design/icons/)
