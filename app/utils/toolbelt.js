@@ -1,10 +1,28 @@
 var toolbelt = module.exports = {};
 
-toolbelt.extend = function(object, data) {
+toolbelt.clone = function(source) {
+  if (source === null || typeof source !== 'object') {
+    return source;
+  }
+
+  var obj = source.constructor();
+  var keys = Object.keys(source);
+  var l = keys.length;
+  for (var i = 0; i < l; i++) {
+    var key = keys[i];
+    obj[key] = toolbelt.clone(source[key]);
+  }
+
+  return obj;
+};
+
+
+toolbelt.extend = function(a, b) {
+  var obj = toolbelt.clone(a);
   Object.keys(data).forEach(function(key) {
-    object[key] = data[key];
+    obj[key] = data[key];
   });
-  return object;
+  return obj;
 };
 
 // For indexOf nested objects, ex.
