@@ -19,8 +19,8 @@ toolbelt.clone = function(source) {
 
 toolbelt.extend = function(a, b) {
   var obj = toolbelt.clone(a);
-  Object.keys(data).forEach(function(key) {
-    obj[key] = data[key];
+  Object.keys(b).forEach(function(key) {
+    obj[key] = b[key];
   });
   return obj;
 };
