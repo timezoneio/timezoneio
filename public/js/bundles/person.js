@@ -123,11 +123,7 @@ module.exports = React.createClass({displayName: "exports",
 
     return (
       React.createElement("div", {className: "site-header-menu-container"}, 
-        React.createElement("a", {onClick: this.handleToggleMenu, 
-           className: "avatar header-avatar", 
-           style: style, 
-           name: this.props.name}
-        ), 
+
         React.createElement("div", {className: menuClasses}, 
           React.createElement("a", {href: profileUrl, 
              className: "site-header-menu-item"}, 
@@ -137,7 +133,14 @@ module.exports = React.createClass({displayName: "exports",
              className: "site-header-menu-item"}, 
             "Logout"
           )
+        ), 
+
+        React.createElement("a", {onClick: this.handleToggleMenu, 
+           className: "avatar header-avatar", 
+           style: style, 
+           name: this.props.name}
         )
+
       )
     );
   }

@@ -11,8 +11,8 @@ var team = module.exports = {};
 
 team.index = function(req, res, next) {
   var slug = req.params.name;
-  var validViews = ['manage'];
-  var view = validViews.indexOf(req.params.view) > -1 ? req.params.view : 'app';
+  var VALID_VIEWS = ['manage'];
+  var view = VALID_VIEWS.indexOf(req.params.view) > -1 ? req.params.view : 'app';
 
   TeamModel.findOne({ slug: slug }, function(err, team) {
     if (err) return next(err);

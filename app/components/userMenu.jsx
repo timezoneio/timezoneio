@@ -34,11 +34,7 @@ module.exports = React.createClass({
 
     return (
       <div className="site-header-menu-container">
-        <a onClick={this.handleToggleMenu}
-           className="avatar header-avatar"
-           style={style}
-           name={this.props.name}>
-        </a>
+
         <div className={menuClasses}>
           <a href={profileUrl}
              className="site-header-menu-item">
@@ -49,6 +45,13 @@ module.exports = React.createClass({
             Logout
           </a>
         </div>
+
+        <a onClick={this.handleToggleMenu}
+           className="avatar header-avatar"
+           style={style}
+           name={this.props.name}>
+        </a>
+
       </div>
     );
   }
