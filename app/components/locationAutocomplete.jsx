@@ -2,6 +2,8 @@
 
 var React = require('react');
 var classNames = require('classnames');
+var toolbelt = require('../utils/toolbelt.js');
+var KEY = require('../helpers/keyConstants.js');
 var ActionCreators = require('../actions/actionCreators.js');
 
 
@@ -41,7 +43,68 @@ module.exports = React.createClass({
   },
 
   handleKeyDown: function(e) {
+    switch (e.keyCode) {
+      case KEY.UP:
+        this.moveSelectionUp();
+        break;
+      case KEY.DOWN:
+        this.moveSelectionDown();
+        break;
+      case KEY.ENTER:
+        this.makeSelection();
+        break;
+    }
+  },
 
+  moveSelectionUp: function() {
+    var results = this.state.results;
+    var idx = toolbelt.indexOf('isSelected', results);
+    var newSelectionIdx = idx <= 0 ? results.length - 1 : idx - 1;
+
+    if (idx > -1)
+      results[idx].isSelected = false;
+
+    results[newSelectionIdx].isSelected = true;
+
+    this.setState({ results: results });
+  },
+
+  moveSelectionDown: function() {
+    var results = this.state.results;
+    var idx = toolbelt.indexOf('isSelected', results);
+    var newSelectionIdx = (idx === -1 || idx === results.length) ? 0 : idx + 1;
+
+    if (idx > -1)
+      results[idx].isSelected = false;
+
+    results[newSelectionIdx].isSelected = true;
+
+    this.setState({ results: results });
+  },
+
+  makeSelection: function() {
+    var idx = toolbelt.indexOf('isSelected', this.state.results);
+    if (idx > -1) {
+      var selected = this.state.results[idx];
+      this.saveSelection(selected.name, selected.tz);
+    }
+  },
+
+  saveSelection: function(name, tz) {
+
+    // Pass it upwards
+    this.props.handleChange(name, tz);
+
+    // clear selected
+    var results = this.state.results;
+    var idx = toolbelt.indexOf('isSelected', results);
+    results[idx].isSelected = false;
+
+    this.setState({
+      location: name,
+      results: results,
+      active: false
+    });
   },
 
   locationSearch: function(value) {
@@ -56,20 +119,16 @@ module.exports = React.createClass({
 
   handleSelectOption: function(option, e) {
     e.stopPropagation();
-
-    // Pass it upwards
-    this.props.handleChange(option.name, option.tz);
-
-    this.setState({
-      location: option.name,
-      active: false
-    });
+    this.saveSelection(option.name, option.tz)
   },
 
   renderOption: function(option, idx) {
+    var classes = classNames('autocomplete--option', {
+      selected: option.isSelected
+    })
     return (
       <div key={idx}
-           className="autocomplete--option"
+           className={classes}
            onClick={this.handleSelectOption.bind(null, option)}>
         {option.value}
       </div>

@@ -11,6 +11,8 @@ module.exports = React.createClass({
 
   getInitialState: function() {
     return {
+      saveButtonText: 'Save',
+
       email: this.props.email,
       name: this.props.name,
       location: this.props.location,
@@ -33,7 +35,14 @@ module.exports = React.createClass({
   },
 
   handleClickSave: function(e) {
-    ActionCreators.saveUserInfo(this.props._id, this.state);
+    this.setState({ saveButtonText: 'Saving' });
+    ActionCreators.saveUserInfo(this.props._id, this.state)
+      .then(function() {
+        this.setState({ saveButtonText: 'Saved' });
+        setTimeout(function() {
+          this.setState({ saveButtonText: 'Save' });
+        }.bind(this), 4000);
+      }.bind(this));
   },
 
   render: function() {
@@ -88,7 +97,7 @@ module.exports = React.createClass({
 
         <div className="edit-person--row">
           <button onClick={this.handleClickSave}>
-            Save
+            {this.state.saveButtonText}
           </button>
         </div>
 
