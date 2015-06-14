@@ -1,5 +1,6 @@
 # web:
 #   build: .
+#   command: # TODO - override the default command with forever -w
 #   volumes:
 #    - .:/app/
 #   links:

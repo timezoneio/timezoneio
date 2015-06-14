@@ -10,3 +10,5 @@ ADD . /app
 
 EXPOSE 8080
 CMD nodemon -L index.js
+# TODO Test using forever instead of nodemon, see docker-compse
+# CMD forever -w index.js
