@@ -3,6 +3,17 @@ var qs = require('querystring');
 // we rely on global csrf token for now, grab first so it can't be modified
 var CSRF = typeof window !== 'undefined' && window.appData.csrf_token;
 
+// TOOD - Need promise polyfill
+var status = function(res) {
+  if (res.status >= 200 && res.status < 300) {
+    return Promise.resolve(res);
+  } else {
+    return new Promise(function(resolve, reject) {
+      res.json().then(reject, reject);
+    });
+  }
+};
+
 var json = function(res) {
   return res.json();
 };
@@ -32,15 +43,15 @@ var getOptions = function(method, data) {
 var api = module.exports = {
 
   get: function(url, data) {
-    return fetch(appendQueryString(url, data)).then(json);
+    return fetch(appendQueryString(url, data)).then(status).then(json);
   },
 
   post: function(url, data) {
-    return fetch(url, getOptions('POST', data)).then(json);
+    return fetch(url, getOptions('POST', data)).then(status).then(json);
   },
 
   put: function(url, data) {
-    return fetch(url, getOptions('PUT', data)).then(json);
+    return fetch(url, getOptions('PUT', data)).then(status).then(json);
   }
 
 };
