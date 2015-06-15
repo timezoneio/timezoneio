@@ -37,20 +37,6 @@ module.exports = function transform(time, people) {
       timezone.major = true;
   });
 
-  // // Organize into timezones
-  // var timezones = {};
-
-  // people.forEach(function(person){
-  //   var offset = person.time.zone();
-  //   if ( !timezones[ offset ] ) timezones[ offset ] = [];
-  //   timezones[ offset ].push( person );
-  // });
-
-  // for (var offset in timezones) {
-  //   if (timezones[offset].length / people.length > 20)
-  //     timezones[offset]
-  // }
-
   return timezones;
 
 };
