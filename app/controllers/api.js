@@ -14,12 +14,50 @@ var handleError = function(res, message) {
   });
 };
 
+api.userCreate = function(req, res, next) {
+
+  var userData = req.body;
+
+  // could be DRYer
+  if (!userData.email)
+    return handleError(res, 'An email is required');
+  if (!userData.name)
+    return handleError(res, 'An name is required');
+  if (!userData.location)
+    return handleError(res, 'An location is required');
+  if (!userData.timezone)
+    return handleError(res, 'An timezone is required');
+
+  UserModel.findOne({ email: email }, function(err, user) {
+
+    // NOTE - in the future we should do a search before creating user
+    if (user) return handleError(res, 'That user already exists!');
+
+    var validData = {};
+    for (var key in userData) {
+      if (UserModel.WRITABLE_FIELDS.indexOf(key) > -1) {
+        validData[key] = userData[key];
+      }
+    }
+
+    var newUser = new UserModel(validData);
+
+    newUser.save(function() {
+      if (err) return handleError(res, 'Failed to save');
+      res.json(newUser);
+    });
+
+
+  });
+
+};
+
 api.userUpdate = function(req, res, next) {
 
   var id = req.params.id;
 
   UserModel.findOne({ _id: id }, function(err, user) {
-    if (err) return handleError('Couldn\'t find that user!');
+    if (err) return handleError(res, 'Couldn\'t find that user!');
 
     // if (!team.isAdmin(req.user)) {
     //   return res.status(403).json({
@@ -35,7 +73,7 @@ api.userUpdate = function(req, res, next) {
     }
 
     user.save(function(err) {
-      if (err) return handleError('Failed to save');
+      if (err) return handleError(res, 'Failed to save');
       res.json(user);
     });
 
@@ -48,7 +86,7 @@ api.teamUpdate = function(req, res, next) {
   var id = req.params.id;
 
   TeamModel.findOne({ _id: id }, function(err, team) {
-    if (err) return handleError('Couldn\'t find that team');
+    if (err) return handleError(res, 'Couldn\'t find that team');
 
     if (!team.isAdmin(req.user)) {
       return res.status(403).json({
@@ -64,7 +102,7 @@ api.teamUpdate = function(req, res, next) {
     }
 
     team.save(function(err) {
-      if (err) return handleError('Failed to save');
+      if (err) return handleError(res, 'Failed to save');
       res.json(team);
     });
 
@@ -86,7 +124,7 @@ api.locationSearch = function(req, res, next) {
   // NOTE - maybe more data validation?
 
   LocationModel.findByQuery(query, 5, function(err, locations) {
-    if (err) return handleError();
+    if (err) return handleError(res);
 
     res.json({ results: locations });
   });

@@ -13,7 +13,7 @@ function sortByTimezone(a, b){
 module.exports = function transform(time, people) {
 
   // Append a moment date to each person
-  people.forEach(appendTime.bind(people, time));
+  people.forEach(appendTime.bind(null, time));
   people.sort(sortByTimezone);
 
   var timezones = people.reduce(function(zones, person){

@@ -1,9 +1,13 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+var toolbelt = require('../utils/toolbelt.js');
 var ActionCreators = require('../actions/actionCreators.js');
 var LocationAutocomplete = require('./locationAutocomplete.jsx');
 var Avatar = require('./avatar.jsx');
+
+var SAVE_BUTTON_STATES = ['Save', 'Saving', 'Saved'];
+var ADD_BUTTON_STATES = ['Add', 'Adding', 'Added'];
 
 module.exports = React.createClass({
 
@@ -11,7 +15,10 @@ module.exports = React.createClass({
 
   getInitialState: function() {
     return {
-      saveButtonText: 'Save',
+      saveButtonText: this.props.isNewUser ?
+                        ADD_BUTTON_STATES[0] :
+                        SAVE_BUTTON_STATES[0],
+      error: '',
 
       email: this.props.email,
       name: this.props.name,
@@ -35,13 +42,33 @@ module.exports = React.createClass({
   },
 
   handleClickSave: function(e) {
-    this.setState({ saveButtonText: 'Saving' });
-    ActionCreators.saveUserInfo(this.props._id, this.state)
-      .then(function() {
-        this.setState({ saveButtonText: 'Saved' });
+    var BUTTON_STATES = this.props.isNewUser ?
+                          ADD_BUTTON_STATES :
+                          SAVE_BUTTON_STATES;
+    var action = this.props.isNewUser ?
+                  'addNewTeamMember' :
+                  'saveUserInfo'
+
+    this.setState({ saveButtonText: BUTTON_STATES[1] });
+
+    var data = toolbelt.extend(this.state, { teamId: this.props.teamId });
+    delete data.error;
+    delete data.saveButtonText;
+
+    ActionCreators[action](this.props._id, data)
+      .then(function(res) {
+
+
+        this.setState({ saveButtonText: BUTTON_STATES[2] });
         setTimeout(function() {
-          this.setState({ saveButtonText: 'Save' });
+          this.setState({ saveButtonText: BUTTON_STATES[0] });
         }.bind(this), 4000);
+
+      }.bind(this), function(err) {
+        this.setState({
+          error: err.message,
+          saveButtonText: BUTTON_STATES[0]
+        });
       }.bind(this));
   },
 
@@ -66,8 +93,15 @@ module.exports = React.createClass({
       <div className="edit-person">
 
         <div className="edit-person--row">
-          <Avatar avatar={this.props.avatar}
-                  size="large" />
+          { this.props.avatar ? (
+              <Avatar avatar={this.props.avatar}
+                      size="large" />
+            ) : (
+              <div className="add-image-placeholder">
+                <small>Add image below</small>
+              </div>
+            )
+          }
         </div>
 
         <div className="edit-person--row">
@@ -88,6 +122,15 @@ module.exports = React.createClass({
 
         </div>
 
+        { this.props.isNewUser &&
+          <div className="edit-person--row">
+            <input type="text"
+                   name="email"
+                   valueLink={emailLink}
+                   placeholder="E-mail" />
+          </div>
+        }
+
         <div className="edit-person--row">
           <input type="text"
                  name="avatar"
@@ -101,14 +144,11 @@ module.exports = React.createClass({
           </button>
         </div>
 
+        { this.state.error &&
+            <p className="edit-person--row error">{this.state.error}</p>
+        }
+
       </div>
     );
   }
 });
-
-        // <div className="edit-person--row">
-        //   <input type="text"
-        //          name="email"
-        //          valueLink={emailLink}
-        //          placeholder="E-mail" />
-        // </div>

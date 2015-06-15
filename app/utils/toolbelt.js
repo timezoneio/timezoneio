@@ -17,6 +17,7 @@ toolbelt.clone = function(source) {
 };
 
 
+// Returns a new object w/ updated props from the second object
 toolbelt.extend = function(a, b) {
   var obj = toolbelt.clone(a);
   Object.keys(b).forEach(function(key) {
@@ -24,6 +25,16 @@ toolbelt.extend = function(a, b) {
   });
   return obj;
 };
+
+
+// Like extend, but updates the first object passed
+toolbelt.update = function(a, b) {
+  Object.keys(b).forEach(function(key) {
+    a[key] = b[key];
+  });
+  return a;
+};
+
 
 // For indexOf nested objects, ex.
 //   toolbelt.indexOf({ isCool: true }, [{ isCool: true }, { isCool: false }])

@@ -26,7 +26,7 @@ module.exports = function(app, passport) {
 
   app.get('/people/:username', people.index);
 
-  // app.post('/api/user', api.userCreate);
+  app.post('/api/user', api.userCreate);
   app.put('/api/user/:id', api.userUpdate);
   app.put('/api/team/:id', api.teamUpdate);
   app.get('/api/location/search', api.locationSearch);

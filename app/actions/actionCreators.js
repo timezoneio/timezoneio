@@ -18,6 +18,20 @@ var ActionCreators = module.exports = {
       });
   },
 
+  addNewTeamMember: function(data) {
+    return api
+      .post('/api/user', data)
+      .then(function(data) {
+
+        AppDispatcher.dispatchApiAction({
+          actionType: ActionTypes.UPDATED_USER_DATA,
+          value: data
+        });
+
+        return data;
+      });
+  },
+
   // Returns promise
   locationSearch: function(q) {
     return api

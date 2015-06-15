@@ -33,7 +33,7 @@ module.exports = React.createClass({
   // },
 
   handleClickUserEdit: function(person, e) {
-    this.setState({ editingPerson: person });
+    this.setState({ editingPerson: person, newUser: false });
   },
 
   handleClickBackToMenu: function(e) {
@@ -42,6 +42,7 @@ module.exports = React.createClass({
 
   handleClickAdd: function(e) {
     console.info('add!');
+    this.setState({ editingPerson: {}, newUser: true });
   },
 
   render: function() {
@@ -104,12 +105,14 @@ module.exports = React.createClass({
           ) : (
             <div className="manage-modal--person">
 
-              <button className="modal--back-button material-icons"
+              <button className="modal--back-button clear material-icons"
                       onClick={this.handleClickBackToMenu}>
                 arrow_back
               </button>
 
-              <EditPerson {...this.state.editingPerson} />
+              <EditPerson {...this.state.editingPerson}
+                          teamId={this.props.team._id}
+                          isNewUser={this.state.newUser} />
 
             </div>
           )

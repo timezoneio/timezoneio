@@ -98,7 +98,7 @@ module.exports = React.createClass({
     // clear selected
     var results = this.state.results;
     var idx = toolbelt.indexOf('isSelected', results);
-    results[idx].isSelected = false;
+    if (idx > -1) results[idx].isSelected = false;
 
     this.setState({
       location: name,

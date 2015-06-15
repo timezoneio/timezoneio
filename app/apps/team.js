@@ -4,7 +4,7 @@ require('whatwg-fetch');
 
 var transform = require('../utils/transform.js');
 var timeUtils = require('../utils/time.js');
-var clone = require('../utils/clone.js');
+var clone = require('../utils/toolbelt.js').clone;
 
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');

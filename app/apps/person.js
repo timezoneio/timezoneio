@@ -1,10 +1,10 @@
 var React = require('react');
-var clone = require('../utils/clone.js');
+var toolbelt = require('../utils/toolbelt.js');
 var Person = React.createFactory(require('../views/person.jsx'));
 
 var targetNode = document.querySelector('#page');
 
 React.render(
-  Person(clone(window.appData)),
+  Person(toolbelt.clone(window.appData)),
   targetNode
 );

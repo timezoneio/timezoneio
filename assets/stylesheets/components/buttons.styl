@@ -48,13 +48,15 @@ button
     padding: 0
     border-radius: 160px // to keep it circular
 
-
+  &.clear,
   &.hollow
     background-color: transparent
-    border: 1px solid $borderColor
 
     &:hover
       background-color: lighten($buttonColor, 10%)
+
+  &.hollow
+    border: 1px solid $borderColor
 
   &.cta
     background-color: lighten($brandColor, 10%)
