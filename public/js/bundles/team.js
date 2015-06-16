@@ -435,9 +435,6 @@ module.exports = React.createClass({
     var BUTTON_STATES = this.props.isNewUser ?
                           ADD_BUTTON_STATES :
                           SAVE_BUTTON_STATES;
-    var action = this.props.isNewUser ?
-                  'addNewTeamMember' :
-                  'saveUserInfo'
 
     this.setState({ saveButtonText: BUTTON_STATES[1] });
 
@@ -445,7 +442,11 @@ module.exports = React.createClass({
     delete data.error;
     delete data.saveButtonText;
 
-    ActionCreators[action](this.props._id, data)
+    var createOrUpdateUser = this.props.isNewUser ?
+                              ActionCreators.addNewTeamMember(data) :
+                              ActionCreators.saveUserInfo(this.props._id, data);
+
+    createOrUpdateUser
       .then(function(res) {
 
         this.setState({
@@ -1151,6 +1152,8 @@ var appendQueryString = function(url, data) {
 };
 
 var getOptions = function(method, data) {
+
+  console.info('prep data', data);
 
   if (method === 'GET')
     return { credentials: 'include' };

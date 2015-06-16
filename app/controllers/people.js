@@ -12,6 +12,8 @@ people.index = function(req, res, next) {
 
   if (!username) return next('User not found :(');
 
+  // NOTE - in future try .populate('teams')
+
   User.findOneByUsername(username, function(err, user) {
 
     if (!user) console.info('User not found: %s', username);

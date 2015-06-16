@@ -30,6 +30,8 @@ var appendQueryString = function(url, data) {
 
 var getOptions = function(method, data) {
 
+  console.info('prep data', data);
+
   if (method === 'GET')
     return { credentials: 'include' };
 

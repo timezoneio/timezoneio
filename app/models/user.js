@@ -21,9 +21,7 @@ var userSchema = new Schema({
   location: { type: String, default: '' },
   tz: { type: String, default: '' },
 
-  teams: [{
-    teamId: { type: Schema.ObjectId, ref: 'Team' }
-  }],
+  teams: [{ type: Schema.ObjectId, ref: 'Team' }],
 
   createdAt: { type : Date, default : Date.now },
   updatedAt: { type : Date, default : Date.now }
@@ -32,7 +30,7 @@ var userSchema = new Schema({
 
 // Indexes
 userSchema.index({ "username": 1 });
-userSchema.index({ "teams.teamId": 1 });
+userSchema.index({ "teams": 1 });
 
 
 var PUBLIC_FIELDS = [
@@ -74,7 +72,9 @@ userSchema
 userSchema.pre('save', function(next) {
   if (!this.isNew) return next();
 
-  if (!validatePresenceOf(this.password) && !this.skipValidation()) {
+  if (!validatePresenceOf(this.password) &&
+      !this.skipValidation() &&
+      !this.isEmptyUser()) {
     next(new Error('Invalid password'));
   } else {
     next();
@@ -117,13 +117,13 @@ userSchema.path('email').validate(function (email, fn) {
 }, 'Email already exists');
 
 userSchema.path('username').validate(function (username) {
-  if (this.skipValidation()) return true;
+  if (this.skipValidation() || this.isEmptyUser()) return true;
   return username.length;
 }, 'Username cannot be blank');
 
 userSchema.path('username').validate(function (username, fn) {
   var User = mongoose.model('User');
-  if (this.skipValidation()) fn(true);
+  if (this.skipValidation() || this.isEmptyUser()) fn(true);
 
   // Check only when it is a new user or when username field is modified
   if (this.isNew || this.isModified('username')) {
@@ -134,7 +134,7 @@ userSchema.path('username').validate(function (username, fn) {
 }, 'Username already exists');
 
 userSchema.path('hashedPassword').validate(function (hashedPassword) {
-  if (this.skipValidation()) return true;
+  if (this.skipValidation() || this.isEmptyUser()) return true;
   return hashedPassword.length;
 }, 'Password cannot be blank');
 
@@ -194,23 +194,39 @@ userSchema.methods = {
   },
 
 
+  isEmptyUser: function() {
+    return !this.hashedPassword;
+  },
+
+
   isOnTeam: function(team) {
     return !!team && !!this.teams.filter(function(t) {
       return t.teamId.toString() === team._id.toString();
     }).length;
   },
 
+  addToTeam: function(team) {
+    if (!team) return false;
+    this.teams.push(team);
+    return true;
+  }
+
 };
+
+var WRITABLE_FIELDS = [
+  'name',
+  'avatar',
+  'location',
+  'tz'
+];
 
 userSchema.statics = {
 
-  WRITABLE_FIELDS: [
-    'name',
-    // 'email',
-    'avatar',
-    'location',
-    'tz'
-  ],
+  WRITABLE_FIELDS: WRITABLE_FIELDS,
+
+  ADMIN_WRITABLE_FIELDS: WRITABLE_FIELDS.concat([
+    'email'
+  ]),
 
   findOneByUsername: function(username, done) {
     User.findOne({ username: username }, done);
@@ -221,7 +237,7 @@ userSchema.statics = {
   },
 
   findAllByTeam: function(teamId, done) {
-    User.find({ 'teams.teamId': teamId }, done);
+    User.find({ 'teams': teamId }, done);
   }
 
 };

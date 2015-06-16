@@ -17,9 +17,9 @@ var apiRequireTeamAdmin = function(req, res, next) {
   var teamId = req.body.teamId || req.params.id;
 
   TeamModel.findOne({ _id: teamId }, function(err, team) {
-    if (err)
+    if (err || !team)
       return res.status(403).json({
-        message: 'I can\'t find a team with that id man...'
+        message: 'I can\'t find a team with that id (' + teamId + ') man...'
       });
 
     if (!team.isAdmin(req.user))

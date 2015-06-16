@@ -25,28 +25,30 @@ api.userCreate = function(req, res, next) {
     return handleError(res, 'An name is required');
   if (!userData.location)
     return handleError(res, 'An location is required');
-  if (!userData.timezone)
+  if (!userData.tz)
     return handleError(res, 'An timezone is required');
 
-  UserModel.findOne({ email: email }, function(err, user) {
+  UserModel.findOne({ email: userData.email }, function(err, user) {
 
     // NOTE - in the future we should do a search before creating user
     if (user) return handleError(res, 'That user already exists!');
 
     var validData = {};
     for (var key in userData) {
-      if (UserModel.WRITABLE_FIELDS.indexOf(key) > -1) {
+      if (UserModel.ADMIN_WRITABLE_FIELDS.indexOf(key) > -1) {
         validData[key] = userData[key];
       }
     }
 
     var newUser = new UserModel(validData);
 
-    newUser.save(function() {
-      if (err) return handleError(res, 'Failed to save');
+    // Add user to team
+    newUser.addToTeam(req.team);
+
+    newUser.save(function(err) {
+      if (err) return handleError(res, 'Failed to save: ' + err);
       res.json(newUser);
     });
-
 
   });
 
