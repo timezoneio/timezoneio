@@ -191,7 +191,14 @@ userSchema.methods = {
   skipValidation: function() {
     return false;
     // return ~oAuthTypes.indexOf(this.provider);
-  }
+  },
+
+
+  isOnTeam: function(team) {
+    return !!team && !!this.teams.filter(function(t) {
+      return t.teamId.toString() === team._id.toString();
+    }).length;
+  },
 
 };
 

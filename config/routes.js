@@ -1,8 +1,7 @@
-
+var apiRouter = require('./routers/api.js');
 var base = require('../app/controllers/base.js');
 var auth = require('../app/controllers/auth.js');
 var team = require('../app/controllers/team.js');
-var api = require('../app/controllers/api.js');
 var people = require('../app/controllers/people.js');
 
 
@@ -26,11 +25,7 @@ module.exports = function(app, passport) {
 
   app.get('/people/:username', people.index);
 
-  app.post('/api/user', api.userCreate);
-  app.put('/api/user/:id', api.userUpdate);
-  app.put('/api/team/:id', api.teamUpdate);
-  app.get('/api/location/search', api.locationSearch);
-
+  app.use('/api', apiRouter);
 
 
   /**

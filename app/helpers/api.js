@@ -29,6 +29,10 @@ var appendQueryString = function(url, data) {
 };
 
 var getOptions = function(method, data) {
+
+  if (method === 'GET')
+    return { credentials: 'include' };
+
   return {
     method: method || 'POST',
     headers: {
@@ -43,15 +47,21 @@ var getOptions = function(method, data) {
 var api = module.exports = {
 
   get: function(url, data) {
-    return fetch(appendQueryString(url, data)).then(status).then(json);
+    return fetch(appendQueryString(url, data), getOptions('GET'))
+      .then(status)
+      .then(json);
   },
 
   post: function(url, data) {
-    return fetch(url, getOptions('POST', data)).then(status).then(json);
+    return fetch(url, getOptions('POST', data))
+      .then(status)
+      .then(json);
   },
 
   put: function(url, data) {
-    return fetch(url, getOptions('PUT', data)).then(status).then(json);
+    return fetch(url, getOptions('PUT', data))
+      .then(status)
+      .then(json);
   }
 
 };

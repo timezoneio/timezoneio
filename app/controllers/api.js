@@ -59,11 +59,8 @@ api.userUpdate = function(req, res, next) {
   UserModel.findOne({ _id: id }, function(err, user) {
     if (err) return handleError(res, 'Couldn\'t find that user!');
 
-    // if (!team.isAdmin(req.user)) {
-    //   return res.status(403).json({
-    //     message: 'Forbidden'
-    //   });
-    // }
+    if (!user.isOnTeam(req.team))
+      return handleError(res, 'Hey, that user isn\'t on your team!');
 
     // replace w/ underscore
     for (var key in req.body) {
@@ -83,30 +80,18 @@ api.userUpdate = function(req, res, next) {
 
 api.teamUpdate = function(req, res, next) {
 
-  var id = req.params.id;
+  var team = req.team;
 
-  TeamModel.findOne({ _id: id }, function(err, team) {
-    if (err) return handleError(res, 'Couldn\'t find that team');
-
-    if (!team.isAdmin(req.user)) {
-      return res.status(403).json({
-        message: 'Forbidden'
-      });
+  // replace w/ underscore
+  for (var key in req.body) {
+    if (TEAM_WRITABLE_FIELDS.indexOf(key) > -1) {
+      team[key] = req.body[key];
     }
+  }
 
-    // replace w/ underscore
-    for (var key in req.body) {
-      if (TEAM_WRITABLE_FIELDS.indexOf(key) > -1) {
-        team[key] = req.body[key];
-      }
-    }
-
-    team.save(function(err) {
-      if (err) return handleError(res, 'Failed to save');
-      res.json(team);
-    });
-
-
+  team.save(function(err) {
+    if (err) return handleError(res, 'Failed to save');
+    res.json(team);
   });
 
 };
