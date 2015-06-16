@@ -97,8 +97,8 @@ module.exports = React.createClass({
       <div className="edit-person">
 
         <div className="edit-person--row">
-          { this.props.avatar ? (
-              <Avatar avatar={this.props.avatar}
+          { this.state.avatar ? (
+              <Avatar avatar={this.state.avatar}
                       size="large" />
             ) : (
               <div className="add-image-placeholder">

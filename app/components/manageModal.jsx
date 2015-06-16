@@ -41,7 +41,6 @@ module.exports = React.createClass({
   },
 
   handleClickAdd: function(e) {
-    console.info('add!');
     this.setState({ editingPerson: {}, newUser: true });
   },
 

@@ -487,8 +487,8 @@ module.exports = React.createClass({
       React.createElement("div", {className: "edit-person"}, 
 
         React.createElement("div", {className: "edit-person--row"}, 
-           this.props.avatar ? (
-              React.createElement(Avatar, {avatar: this.props.avatar, 
+           this.state.avatar ? (
+              React.createElement(Avatar, {avatar: this.state.avatar, 
                       size: "large"})
             ) : (
               React.createElement("div", {className: "add-image-placeholder"}, 
@@ -772,7 +772,6 @@ module.exports = React.createClass({
   },
 
   handleClickAdd: function(e) {
-    console.info('add!');
     this.setState({ editingPerson: {}, newUser: true });
   },
 
@@ -1152,8 +1151,6 @@ var appendQueryString = function(url, data) {
 };
 
 var getOptions = function(method, data) {
-
-  console.info('prep data', data);
 
   if (method === 'GET')
     return { credentials: 'include' };

@@ -201,7 +201,7 @@ userSchema.methods = {
 
   isOnTeam: function(team) {
     return !!team && !!this.teams.filter(function(t) {
-      return t.teamId.toString() === team._id.toString();
+      return t.toString() === team._id.toString();
     }).length;
   },
 
