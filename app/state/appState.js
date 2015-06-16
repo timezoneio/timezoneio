@@ -15,8 +15,6 @@ var AppState = module.exports = function(initialState) {
 };
 
 
-// Generic methods:
-
 AppState.prototype.getState = function() {
   return this._state;
 };
@@ -33,8 +31,6 @@ AppState.prototype.getPersonById = function(id) {
   return this._state.people.filter(function(p) { return p._id === id; })[0];
 };
 
-
-// Data-manipulating methods:
 AppState.prototype.updateTimezones = function() {
   this._state.timezones = transform(this._state.time, this._state.people);
 };
@@ -60,6 +56,10 @@ AppState.prototype.updateToCurrentTime = function() {
 
 AppState.prototype.setTimeFormat = function(format) {
   this._state.timeFormat = format;
+};
+
+AppState.prototype.getCurrentView = function() {
+  return this._state.currentView;
 };
 
 AppState.prototype.setCurrentView = function(view) {
