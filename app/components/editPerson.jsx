@@ -58,8 +58,11 @@ module.exports = React.createClass({
     ActionCreators[action](this.props._id, data)
       .then(function(res) {
 
+        this.setState({
+          error: '', // clear the error
+          saveButtonText: BUTTON_STATES[2]
+        });
 
-        this.setState({ saveButtonText: BUTTON_STATES[2] });
         setTimeout(function() {
           this.setState({ saveButtonText: BUTTON_STATES[0] });
         }.bind(this), 4000);
