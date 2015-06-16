@@ -102,16 +102,28 @@ var KEY = {
 };
 var timeSlider = document.querySelector('.time-slider');
 
-window.addEventListener('keyup', function(e){
 
+var handleKeyUp = function(e) {
+  console.info('keyup');
   if (e.keyCode === KEY.RIGHT || e.keyCode === KEY.LEFT) {
     e.preventDefault();
     disableAutoUpdate();
     timeSlider.focus();
     renderApp();
   }
+};
 
-});
+var enableKeyTimeChange = function() {
+  window.addEventListener('keyup', handleKeyUp);
+};
+var disableKeyTimeChange = function() {
+  window.removeEventListener('keyup', handleKeyUp);
+};
+
+if (appState.getCurrentView() === 'app') {
+  enableKeyTimeChange();
+}
+
 
 function updateToCurrentTime() {
   appState.updateToCurrentTime();
@@ -174,8 +186,12 @@ function updateCurrentView(view, shouldUpdateUrl) {
   if (shouldUpdateUrl) {
     var path = appState.getTeam().url;
 
-    if (view !== 'app')
+    if (view !== 'app') {
       path += '/' + view;
+      disableKeyTimeChange();
+    } else {
+      enableKeyTimeChange();
+    }
 
     window.history.pushState({}, null, path);
   }
@@ -358,12 +374,31 @@ module.exports = React.createClass({
 
   displayName: 'Avatar',
 
+  getInitialState: function() {
+    return {
+      brokenImage: false,
+    };
+  },
+
+  handleLoadSuccess: function() {
+    if (this.state.brokenImage)
+      this.setState({ brokenImage: false });
+  },
+
+  handleLoadError: function() {
+    if (!this.state.brokenImage)
+      this.setState({ brokenImage: true });
+  },
+
   render: function() {
 
     var classes = 'avatar';
     if (this.props.size) classes += ' ' + this.props.size;
 
-    return React.createElement("img", {src: this.props.avatar, className: classes})
+    return React.createElement("img", {src: this.props.avatar, 
+                className: classes, 
+                onLoad: this.handleLoadSuccess, 
+                onError: this.handleLoadError})
   }
 
 });
@@ -1215,8 +1250,6 @@ var AppState = module.exports = function(initialState) {
 };
 
 
-// Generic methods:
-
 AppState.prototype.getState = function() {
   return this._state;
 };
@@ -1233,8 +1266,6 @@ AppState.prototype.getPersonById = function(id) {
   return this._state.people.filter(function(p) { return p._id === id; })[0];
 };
 
-
-// Data-manipulating methods:
 AppState.prototype.updateTimezones = function() {
   this._state.timezones = transform(this._state.time, this._state.people);
 };
@@ -1260,6 +1291,10 @@ AppState.prototype.updateToCurrentTime = function() {
 
 AppState.prototype.setTimeFormat = function(format) {
   this._state.timeFormat = format;
+};
+
+AppState.prototype.getCurrentView = function() {
+  return this._state.currentView;
 };
 
 AppState.prototype.setCurrentView = function(view) {
