@@ -229,15 +229,15 @@ userSchema.statics = {
   ]),
 
   findOneByUsername: function(username, done) {
-    User.findOne({ username: username }, done);
+    return User.findOne({ username: username }, done);
   },
 
   findOneByEmail: function(email, done) {
-    User.findOne({ email: email }, done);
+    return User.findOne({ email: email }, done);
   },
 
   findAllByTeam: function(teamId, done) {
-    User.find({ 'teams': teamId }, done);
+    return User.find({ 'teams': teamId }, done);
   }
 
 };
