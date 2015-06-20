@@ -209,7 +209,16 @@ userSchema.methods = {
     if (!team) return false;
     this.teams.push(team);
     return true;
-  }
+  },
+
+  removeFromTeam: function(team) {
+    if (!team) return false;
+
+    this.teams = this.teams.filter(function(teamId) {
+      return teamId.toString() !== team._id.toString();
+    });
+    return true;
+  },
 
 };
 

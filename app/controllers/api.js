@@ -8,6 +8,7 @@ var api = module.exports = {};
 
 var TEAM_WRITABLE_FIELDS = ['name'];
 
+// FIX THIS TO RETURN 400s ALSO
 var handleError = function(res, message) {
   res.status(500).json({
     message: message || 'Something bad happened'
@@ -94,6 +95,36 @@ api.teamUpdate = function(req, res, next) {
   team.save(function(err) {
     if (err) return handleError(res, 'Failed to save');
     res.json(team);
+  });
+
+};
+
+api.teamRemoveMember = function(req, res, next) {
+
+  var team = req.team;
+  var userId = req.params.userId;
+
+  var failedToRemove = function() {
+    res.status(400).json({
+      message: 'Sorry, we couldn\'t remove that team member'
+    });
+  };
+
+  UserModel.findOne({ _id: userId }, function(err, user) {
+    if (err || !user) return handleError(res, 'Team member not found');
+
+    if (!user.removeFromTeam(team))
+      return failedToRemove();
+
+    user.save(function(err) {
+      if (err) return failedToRemove();
+
+      res.json({
+        message: 'Team member successfully removed!',
+        usedId: user._id
+      });
+    });
+
   });
 
 };

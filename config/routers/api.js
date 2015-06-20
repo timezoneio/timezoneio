@@ -14,6 +14,7 @@ var apiRequireAuthentication = function(req, res, next) {
 
 var apiRequireTeamAdmin = function(req, res, next) {
 
+  // We check body when passed via POST params and not in URL
   var teamId = req.body.teamId || req.params.id;
 
   TeamModel.findOne({ _id: teamId }, function(err, team) {
@@ -37,12 +38,16 @@ var apiRequireTeamAdmin = function(req, res, next) {
 
 var router = express.Router();
 
-router.all('*', apiRequireAuthentication);
+router.all(   '*', apiRequireAuthentication);
 
-router.post('/user', apiRequireTeamAdmin,  api.userCreate);
-router.put('/user/:id', apiRequireTeamAdmin, api.userUpdate);
-router.put('/team/:id', apiRequireTeamAdmin, api.teamUpdate);
-router.get('/location/search', api.locationSearch);
+router.post(  '/user', apiRequireTeamAdmin,  api.userCreate);
+router.put(   '/user/:id', apiRequireTeamAdmin, api.userUpdate);
+
+router.put(   '/team/:id', apiRequireTeamAdmin, api.teamUpdate);
+// router.post(  '/team/:id/member', apiRequireTeamAdmin, api.teamAddMember);
+router.delete('/team/:id/member/:userId', apiRequireTeamAdmin, api.teamRemoveMember);
+
+router.get(   '/location/search', api.locationSearch);
 
 
 module.exports = router;
