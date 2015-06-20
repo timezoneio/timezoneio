@@ -28,20 +28,21 @@ module.exports = React.createClass({
     var profileUrl = '/people/' + this.props.username;
     var style = { backgroundImage: 'url(' + this.props.avatar + ')' };
 
-    var menuClasses = classNames('site-header-menu', {
-      'menu-open': this.state.open
+    var menuClasses = classNames('user-menu', {
+      'menu-open': this.state.open,
+      'bottom-left': this.props.pos === 'bottom-left'
     });
 
     return (
-      <div className="site-header-menu-container">
+      <div className="user-menu-container">
 
         <div className={menuClasses}>
           <a href={profileUrl}
-             className="site-header-menu-item">
+             className="user-menu-item">
             Profile
           </a>
           <a href="/logout"
-             className="site-header-menu-item">
+             className="user-menu-item">
             Logout
           </a>
         </div>

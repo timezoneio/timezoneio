@@ -6,8 +6,11 @@ var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
 var TimeSlider = require('./timeSlider.jsx');
 var Branding = require('./branding.jsx');
+var UserMenu = require('./userMenu.jsx');
 
 module.exports = React.createClass({
+
+  displayName: 'AppSidebar',
 
   handleFormatChange: function(e) {
     AppDispatcher.dispatchViewAction({
@@ -63,8 +66,13 @@ module.exports = React.createClass({
       { this.props.isAdmin ? (
 
           <div className="app-sidebar--admin">
+
+            <UserMenu {...this.props.user}
+                      pos="bottom-left" />
+
             <button className="small hollow"
                     onClick={this.handleManageTeam}>Manage Team</button>
+
           </div>
 
       ) : '' }

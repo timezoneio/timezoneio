@@ -16,10 +16,9 @@ people.index = function(req, res, next) {
 
   User.findOneByUsername(username, function(err, user) {
 
-    if (!user) console.info('User not found: %s', username);
     if (!user) return next('User not found :(');
 
-    var teamIds = user.teams.map(function(t) { return t.teamId; });
+    var teamIds = user.teams;
 
     Team.findInfoByIds(teamIds, function(err, teams) {
 

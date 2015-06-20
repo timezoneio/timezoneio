@@ -8,9 +8,7 @@ var teamSchema = new Schema({
   slug: { type: String, default: '', trim: true },
 
   //NOTE - I think this schema works w/ the nested array of objects
-  admins: [{
-    userId: { type: Schema.ObjectId, ref: 'User' }
-  }],
+  admins: [{ type: Schema.ObjectId, ref: 'User' }],
 
   // people: [{
   //   id: { type: Schema.ObjectId, ref: 'User' }
@@ -42,8 +40,8 @@ teamSchema
 teamSchema.methods = {
 
   isAdmin: function(user) {
-    return !!user && !!this.admins.filter(function(a) {
-      return a.userId.toString() === user._id.toString();
+    return !!user && !!this.admins.filter(function(adminId) {
+      return adminId.toString() === user._id.toString();
     }).length;
   }
 

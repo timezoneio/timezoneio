@@ -117,20 +117,21 @@ module.exports = React.createClass({displayName: "exports",
     var profileUrl = '/people/' + this.props.username;
     var style = { backgroundImage: 'url(' + this.props.avatar + ')' };
 
-    var menuClasses = classNames('site-header-menu', {
-      'menu-open': this.state.open
+    var menuClasses = classNames('user-menu', {
+      'menu-open': this.state.open,
+      'bottom-left': this.props.pos === 'bottom-left'
     });
 
     return (
-      React.createElement("div", {className: "site-header-menu-container"}, 
+      React.createElement("div", {className: "user-menu-container"}, 
 
         React.createElement("div", {className: menuClasses}, 
           React.createElement("a", {href: profileUrl, 
-             className: "site-header-menu-item"}, 
+             className: "user-menu-item"}, 
             "Profile"
           ), 
           React.createElement("a", {href: "/logout", 
-             className: "site-header-menu-item"}, 
+             className: "user-menu-item"}, 
             "Logout"
           )
         ), 

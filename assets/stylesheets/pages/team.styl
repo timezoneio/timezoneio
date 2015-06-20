@@ -2,14 +2,13 @@
   display: flex
   min-width: 880px
 
-$sideBarMargin = 20px;
+$sidebarWidth = 180px
+$sidebarPadding = 1em
 
 .app-sidebar
-  // display: flex
-  // flex-direction: column
   flex-shrink: 0
-  width: 180px
-  padding: 1em
+  width: $sidebarWidth
+  padding: $sidebarPadding
   background: $fillColor
 
 .app-sidebar--time
@@ -27,7 +26,12 @@ $sideBarMargin = 20px;
 
 
 .app-sidebar--admin
+  display: flex
+  justify-content: space-between
+  position: absolute
+  bottom: 0
   margin: 1em 0
+  width: "calc(%s - 2 * %s)" % ($sidebarWidth $sidebarPadding)
 
 
 .timezone-list
