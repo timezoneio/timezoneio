@@ -22,7 +22,8 @@ module.exports = function render(pathName, locals, cb) {
   data.csrf_token = locals.csrf_token;
 
   // clean user object for render
-  data.user = data.user.toJSON();
+  if (data.user)
+    data.user = data.user.toJSON();
 
   var params = {};
 
