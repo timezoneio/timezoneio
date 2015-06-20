@@ -1019,7 +1019,7 @@ var moment = require('moment-timezone');
 var Person = require('./person.jsx');
 var timeUtils = require('../utils/time.js');
 
-var PEOPLE_PER_COL = 7;
+var PEOPLE_PER_COL = 8;
 
 module.exports = React.createClass({displayName: "exports",
 
