@@ -19,8 +19,10 @@ module.exports = React.createClass({
   },
 
   render: function() {
+    var classes = 'modal';
+    if (this.props.className) classes += ' ' + this.props.className;
     return (
-      <div className={'modal ' + this.props.className}
+      <div className={classes}
            onClick={this.handleClick}>
         <a className="modal-close"
            onClick={this.handleClickClose}>

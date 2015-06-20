@@ -953,8 +953,10 @@ module.exports = React.createClass({
   },
 
   render: function() {
+    var classes = 'modal';
+    if (this.props.className) classes += ' ' + this.props.className;
     return (
-      React.createElement("div", {className: 'modal ' + this.props.className, 
+      React.createElement("div", {className: classes, 
            onClick: this.handleClick}, 
         React.createElement("a", {className: "modal-close", 
            onClick: this.handleClickClose}, 

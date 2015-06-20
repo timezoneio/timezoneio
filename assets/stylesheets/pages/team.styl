@@ -130,15 +130,16 @@ for hour in 0 1 2 3 4 5 6 7 22 23
 
 // Editing modal
 
-// .manage-modal--team
-//   overflow: scroll
+.manage-modal--team
+  max-height: 100%
+  overflow: scroll
 
 .manage-modal--team-header
   margin-bottom: 1em
   text-align: center //temp :()
 
-.manage-modal--team-list
-  overflow: scroll
+// .manage-modal--team-list
+//   overflow: scroll
 
 .manage-modal--team-member
   display: flex
@@ -192,12 +193,12 @@ for hour in 0 1 2 3 4 5 6 7 22 23
 
 // Mobile
 @media screen and (max-width: 500px)
-  
+
   .app-container
     min-width: 100%
     height: auto
     flex-direction: column
-  
+
   .app-sidebar
     position: fixed
     z-index: 1
@@ -206,61 +207,61 @@ for hour in 0 1 2 3 4 5 6 7 22 23
     display: flex
     flex-wrap: wrap
     justify-content: space-between
-  
+
     .site-branding
       margin: 0.2em 0 0
-    
+
     // all children are 50%
     > *
       width: 40%
-  
+
   .app-sidebar--time
     font-size: 1.5em
     text-align: right
-    
+
   .time-slider-container
     order: 4 // put this under the time
-  
+
   .time-slider
     margin: 0.9em 0 0
-  
+
   .app-sidebar--button-row
     max-height: 27px
     margin-top: 0.7em
     justify-content: flex-start
-    
+
   .app-sidebar--format-select
     margin-right: 0.8em
     white-space: nowrap
-    
+
   .timezone-list
     margin-top: 6em
     justify-content: flex-start
     flex-direction: column-reverse
-  
+
   .timezone
     display: flex
     width: auto
     padding: 0
     margin: 0.8em 0.8em 0
-  
+
   .timezone-header
     flex-shrink: 0
     margin: 0 0.8em 0 0
-    
+
   .timezone-people
     flex-direction: column
     flex-grow: 1
-  
+
   .timezone-people-column
     display: flex
     flex-wrap: wrap
     margin: 0
-  
+
   .person
     width: 25%
     margin: 0 0 0.5em
-  
+
   .person-info
     display: block
     opacity: 1.0
@@ -276,15 +277,15 @@ for hour in 0 1 2 3 4 5 6 7 22 23
 
     .person-name
       margin: 0.3em 0 0
-  
+
   .person-city
     display: none
-  
+
   .avatar
     width: 84%
     height: 84% // height will match width
     margin: 0 auto
-    
 
 
-    
+
+
