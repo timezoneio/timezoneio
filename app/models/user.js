@@ -33,6 +33,7 @@ userSchema.index({ "username": 1 });
 userSchema.index({ "teams": 1 });
 
 
+// Keep these configs closer to the ones in static
 var PUBLIC_FIELDS = [
   '_id',
   'username',
@@ -198,6 +199,11 @@ userSchema.methods = {
     return !this.hashedPassword;
   },
 
+  toAdminJSON: function() {
+    var json = this.toJSON();
+    json.email = this.email;
+    return json;
+  },
 
   isOnTeam: function(team) {
     return !!team && !!this.teams.filter(function(t) {

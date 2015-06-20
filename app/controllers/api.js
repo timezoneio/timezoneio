@@ -1,3 +1,4 @@
+var crypto = require('crypto');
 var moment = require('moment-timezone');
 
 var UserModel = require('../models/user.js');
@@ -67,7 +68,7 @@ api.userUpdate = function(req, res, next) {
 
     // replace w/ underscore
     for (var key in req.body) {
-      if (UserModel.WRITABLE_FIELDS.indexOf(key) > -1) {
+      if (UserModel.ADMIN_WRITABLE_FIELDS.indexOf(key) > -1) {
         user[key] = req.body[key];
       }
     }
@@ -145,6 +146,23 @@ api.locationSearch = function(req, res, next) {
     if (err) return handleError(res);
 
     res.json({ results: locations });
+  });
+
+};
+
+api.getGravatar = function(req, res, next) {
+
+  var email = req.query.email;
+
+  if (!email)
+    return res.status(400).json({
+      message: 'email parameter required'
+    });
+
+  var emailHash = crypto.createHash('md5').update(email).digest('hex');
+
+  res.json({
+    avatar: 'http://www.gravatar.com/avatar/' + emailHash + '?s=200'
   });
 
 };

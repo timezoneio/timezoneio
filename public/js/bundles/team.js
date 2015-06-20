@@ -7,7 +7,7 @@ var ActionCreators = module.exports = {
 
   saveUserInfo: function(userId, data) {
     return api
-      .put('/api/user/' + userId, data)
+      .put('/user/' + userId, data)
       .then(function(data) {
 
         AppDispatcher.dispatchApiAction({
@@ -21,7 +21,7 @@ var ActionCreators = module.exports = {
 
   addNewTeamMember: function(data) {
     return api
-      .post('/api/user', data)
+      .post('/user', data)
       .then(function(data) {
 
         AppDispatcher.dispatchApiAction({
@@ -36,9 +36,16 @@ var ActionCreators = module.exports = {
   // Returns promise
   locationSearch: function(q) {
     return api
-      .get('/api/location/search', { q: q })
+      .get('/location/search', { q: q })
       .then(function(data) {
         return data.results;
+      });
+  },
+
+  getGravatar: function(email) {
+    return api.get('/avatar/gravatar', { email: email })
+      .then(function(data) {
+        return data.avatar;
       });
   }
 
@@ -470,7 +477,7 @@ module.exports = React.createClass({
     this.setState({
       location: location,
       tz: tz
-    })
+    });
   },
 
   handleClickSave: function(e) {
@@ -504,6 +511,18 @@ module.exports = React.createClass({
         this.setState({
           error: err.message,
           saveButtonText: BUTTON_STATES[0]
+        });
+      }.bind(this));
+  },
+
+  handleClickUseGravatar: function(e) {
+    ActionCreators.getGravatar(this.state.email)
+      .then(function(avatar) {
+        if (avatar)
+          this.setState({ avatar: avatar });
+      }.bind(this), function(err) {
+        this.setState({
+          error: err.message
         });
       }.bind(this));
   },
@@ -558,7 +577,8 @@ module.exports = React.createClass({
 
         ), 
 
-         this.props.isNewUser &&
+         //this.props.isNewUser &&
+          // FUTURE - ONLY ALLOW USER TO EDIT THEIR OWN EMAIL
           React.createElement("div", {className: "edit-person--row"}, 
             React.createElement("input", {type: "text", 
                    name: "email", 
@@ -572,6 +592,12 @@ module.exports = React.createClass({
                  name: "avatar", 
                  valueLink: avatarLink, 
                  placeholder: "Avatar URL"})
+        ), 
+
+        React.createElement("div", {className: "edit-person--row"}, 
+          React.createElement("button", {onClick: this.handleClickUseGravatar}, 
+            "Use Gravatar"
+          )
         ), 
 
         React.createElement("div", {className: "edit-person--row"}, 
@@ -1274,19 +1300,19 @@ var getOptions = function(method, data) {
 var api = module.exports = {
 
   get: function(url, data) {
-    return fetch(appendQueryString(url, data), getOptions('GET'))
+    return fetch('/api' + appendQueryString(url, data), getOptions('GET'))
       .then(status)
       .then(json);
   },
 
   post: function(url, data) {
-    return fetch(url, getOptions('POST', data))
+    return fetch('/api' + url, getOptions('POST', data))
       .then(status)
       .then(json);
   },
 
   put: function(url, data) {
-    return fetch(url, getOptions('PUT', data))
+    return fetch('/api' + url, getOptions('PUT', data))
       .then(status)
       .then(json);
   }

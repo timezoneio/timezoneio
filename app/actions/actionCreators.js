@@ -6,7 +6,7 @@ var ActionCreators = module.exports = {
 
   saveUserInfo: function(userId, data) {
     return api
-      .put('/api/user/' + userId, data)
+      .put('/user/' + userId, data)
       .then(function(data) {
 
         AppDispatcher.dispatchApiAction({
@@ -20,7 +20,7 @@ var ActionCreators = module.exports = {
 
   addNewTeamMember: function(data) {
     return api
-      .post('/api/user', data)
+      .post('/user', data)
       .then(function(data) {
 
         AppDispatcher.dispatchApiAction({
@@ -35,9 +35,16 @@ var ActionCreators = module.exports = {
   // Returns promise
   locationSearch: function(q) {
     return api
-      .get('/api/location/search', { q: q })
+      .get('/location/search', { q: q })
       .then(function(data) {
         return data.results;
+      });
+  },
+
+  getGravatar: function(email) {
+    return api.get('/avatar/gravatar', { email: email })
+      .then(function(data) {
+        return data.avatar;
       });
   }
 

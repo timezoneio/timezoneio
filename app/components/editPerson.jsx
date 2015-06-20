@@ -38,7 +38,7 @@ module.exports = React.createClass({
     this.setState({
       location: location,
       tz: tz
-    })
+    });
   },
 
   handleClickSave: function(e) {
@@ -72,6 +72,18 @@ module.exports = React.createClass({
         this.setState({
           error: err.message,
           saveButtonText: BUTTON_STATES[0]
+        });
+      }.bind(this));
+  },
+
+  handleClickUseGravatar: function(e) {
+    ActionCreators.getGravatar(this.state.email)
+      .then(function(avatar) {
+        if (avatar)
+          this.setState({ avatar: avatar });
+      }.bind(this), function(err) {
+        this.setState({
+          error: err.message
         });
       }.bind(this));
   },
@@ -126,7 +138,8 @@ module.exports = React.createClass({
 
         </div>
 
-        { this.props.isNewUser &&
+        { //this.props.isNewUser &&
+          // FUTURE - ONLY ALLOW USER TO EDIT THEIR OWN EMAIL
           <div className="edit-person--row">
             <input type="text"
                    name="email"
@@ -140,6 +153,12 @@ module.exports = React.createClass({
                  name="avatar"
                  valueLink={avatarLink}
                  placeholder="Avatar URL" />
+        </div>
+
+        <div className="edit-person--row">
+          <button onClick={this.handleClickUseGravatar}>
+            Use Gravatar
+          </button>
         </div>
 
         <div className="edit-person--row">

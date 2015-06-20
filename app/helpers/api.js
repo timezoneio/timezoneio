@@ -47,19 +47,19 @@ var getOptions = function(method, data) {
 var api = module.exports = {
 
   get: function(url, data) {
-    return fetch(appendQueryString(url, data), getOptions('GET'))
+    return fetch('/api' + appendQueryString(url, data), getOptions('GET'))
       .then(status)
       .then(json);
   },
 
   post: function(url, data) {
-    return fetch(url, getOptions('POST', data))
+    return fetch('/api' + url, getOptions('POST', data))
       .then(status)
       .then(json);
   },
 
   put: function(url, data) {
-    return fetch(url, getOptions('PUT', data))
+    return fetch('/api' + url, getOptions('PUT', data))
       .then(status)
       .then(json);
   }

@@ -49,5 +49,7 @@ router.delete('/team/:id/member/:userId', apiRequireTeamAdmin, api.teamRemoveMem
 
 router.get(   '/location/search', api.locationSearch);
 
+router.get(   '/avatar/gravatar', api.getGravatar);
+
 
 module.exports = router;
