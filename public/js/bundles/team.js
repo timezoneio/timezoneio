@@ -459,6 +459,8 @@ module.exports = React.createClass({
                         SAVE_BUTTON_STATES[0],
       error: '',
 
+      isNewUser: this.props.isNewUser,
+
       email: this.props.email,
       name: this.props.name,
       location: this.props.location,
@@ -481,7 +483,7 @@ module.exports = React.createClass({
   },
 
   handleClickSave: function(e) {
-    var BUTTON_STATES = this.props.isNewUser ?
+    var BUTTON_STATES = this.state.isNewUser ?
                           ADD_BUTTON_STATES :
                           SAVE_BUTTON_STATES;
 
@@ -491,7 +493,8 @@ module.exports = React.createClass({
     delete data.error;
     delete data.saveButtonText;
 
-    var createOrUpdateUser = this.props.isNewUser ?
+
+    var createOrUpdateUser = this.state.isNewUser ?
                               ActionCreators.addNewTeamMember(data) :
                               ActionCreators.saveUserInfo(this.props._id, data);
 
@@ -499,12 +502,13 @@ module.exports = React.createClass({
       .then(function(res) {
 
         this.setState({
+          isNewUser: false,
           error: '', // clear the error
           saveButtonText: BUTTON_STATES[2]
         });
 
         setTimeout(function() {
-          this.setState({ saveButtonText: BUTTON_STATES[0] });
+          this.setState({ saveButtonText: SAVE_BUTTON_STATES[0] });
         }.bind(this), 4000);
 
       }.bind(this), function(err) {
@@ -577,7 +581,7 @@ module.exports = React.createClass({
 
         ), 
 
-         //this.props.isNewUser &&
+         //this.state.isNewUser &&
           // FUTURE - ONLY ALLOW USER TO EDIT THEIR OWN EMAIL
           React.createElement("div", {className: "edit-person--row"}, 
             React.createElement("input", {type: "text", 
