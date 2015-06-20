@@ -104,7 +104,6 @@ var timeSlider = document.querySelector('.time-slider');
 
 
 var handleKeyUp = function(e) {
-  console.info('keyup');
   if (e.keyCode === KEY.RIGHT || e.keyCode === KEY.LEFT) {
     e.preventDefault();
     disableAutoUpdate();
