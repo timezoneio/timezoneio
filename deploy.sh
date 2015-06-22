@@ -1,4 +1,4 @@
 #!/bin/sh
 git checkout master && git pull
-npm install
+npm install --production
 pm2 restart web
