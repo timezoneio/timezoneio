@@ -14,7 +14,8 @@ module.exports = React.createClass({
 
   getInitialState: function() {
     return {
-      editingPerson: null
+      editingPerson: null,
+      filter: null,
       // name: this.props.team.name
     };
   },
@@ -44,14 +45,24 @@ module.exports = React.createClass({
     this.setState({ editingPerson: {}, newUser: true });
   },
 
+  handleFilterList: function(e) {
+    this.setState({ filter: new RegExp(e.target.value.toLowerCase(), 'i') });
+  },
+
+  peopleFilter: function(person) {
+    return person.name && person.name.search(this.state.filter) > -1;
+  },
+
+  peopleSort: function(a, b) {
+    return a.name < b.name ? -1 : 1;
+  },
+
   render: function() {
 
-    // var nameLink = {
-    //   value: this.state.name,
-    //   requestChange: this.handleChange.bind(null, 'name')
-    // };
+    var people = this.props.people;
+    var visiblePeople = this.state.filter ? people.filter(this.peopleFilter) : people;
+    var sortedPeople = visiblePeople.sort(this.peopleSort);
 
-    // TODO - Add search filter
     return (
       <Modal>
 
@@ -59,6 +70,10 @@ module.exports = React.createClass({
             <div className="manage-modal--team">
 
               <div className="manage-modal--team-header">
+
+                <input type="search"
+                       onChange={this.handleFilterList}
+                       placeholder="Search" />
 
                 <button className="cta"
                         onClick={this.handleClickAdd}>
@@ -69,14 +84,15 @@ module.exports = React.createClass({
 
               <div className="manage-modal--team-list">
 
-                {this.props.people.map(function(person, idx) {
+                {sortedPeople.map(function(person, idx) {
                   return (
                     <div key={idx}
                          className="manage-modal--team-member">
 
                       <div className="manage-modal--team-member-info">
 
-                        <Avatar avatar={person.avatar} />
+                        <Avatar avatar={person.avatar}
+                                size="mini" />
 
                         <span className="manage-modal--team-member-name">
                           {person.name}
@@ -88,7 +104,7 @@ module.exports = React.createClass({
                       </div>
 
                       <div className="manage-modal--team-member-actions">
-                        <button className="circle material-icons md-18"
+                        <button className="circle clear material-icons md-18"
                                 onClick={this.handleClickUserEdit.bind(null, person)}>
                           edit
                         </button>
