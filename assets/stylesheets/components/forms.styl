@@ -1,0 +1,20 @@
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea
+  padding: 0.45em 0.6em
+  border-radius: 2px
+  border: 1px solid $inputBorderColor
+  border-top-width: 0
+  border-left-width: 0
+  border-right-width: 0
+
+  &:focus
+    outline: none
+    border-color: $linkColor
+
+
+// remove chrome autofill color
+input:-webkit-autofill
+  -webkit-box-shadow: 0 0 0px 1000px white inset
+

@@ -1,0 +1,52 @@
+
+.modal-container
+  display: flex
+  align-items: center
+  justify-content: center
+  position: fixed
+  top: 0
+  left: 0
+  z-index: 10000
+  height: 100%
+  width: 100%
+  background: rgba(255,255,255,0.4)
+
+.modal
+  position: relative
+  width: 600px
+  height: 600px
+  padding: 1em
+  background: #fff
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3)
+
+  // &.flex-modal
+  //   display: flex
+  //   align-items: center
+
+.modal-close
+  cancelLinkHover()
+
+  position: absolute
+  top: 0.5em
+  right: 0.5em
+  height: 0.5em
+  width: 0.5em
+  font-size: 2em
+  font-weight: bold
+  line-height: 0.5em
+  text-align: center
+  transform: rotate(45deg)
+  color: $mutedColor
+
+  &:hover
+    color: $textColor
+
+.modal-header
+  margin-top: 0
+
+.modal--back-button
+  position: absolute
+  top: 0.5em
+  left: 0.5em
+
+

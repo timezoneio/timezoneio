@@ -1,77 +1,20 @@
 @import 'lib/normalize'
 
-// Variables
-
-$brandColor     = #01579B
-$brandColorText = rgb(255, 255, 255)
-$textColor      = rgb(50, 50, 50)
-$fillColor      = #E7EDF0 // darker DCE5EB
-$borderColor    = darken($fillColor, 30%)
-$linkColor      = $brandColor
-
-$avatarSize     = 60px
-
-
-// Basic
-
-*
-  box-sizing: border-box
-
-html,
-body,
-#page
-  height: 100%
-
-body
-  margin: 0
-
-  background: #fff
-
-  font-size: 16px
-  font-family: Lato, Roboto, 'Open Sans', Helvetica, sans-serif
-  color: $textColor
-
-a,
-a:visited
-  position: relative;
-  text-decoration: none;
-  color: $linkColor
-  transition: all 250ms ease;
-  
-  &::after
-    content: ""
-    position: absolute
-    width: 96%
-    height: 1px
-    bottom: 0
-    left: 0
-    right: 0
-    margin: 0 auto
-    background-color: $linkColor
-    opacity: 0
-    transition: all .3s ease-in-out 0s
-    transform: translateY(4px)
-
-  &:hover::after
-    opacity: 1
-    transform: translateY(2px)
-
-
-input[type="text"],
-input[type="email"]
-  padding: 0.4em 0.6em
-  border-radius: 2px
-  border: 1px solid #ccc
-  
-  &:focus
-    outline: none
-    border-color: $linkColor
-
-.container
-  height: 100%
-  
+@import 'components/variables'
+@import 'components/layout'
+@import 'components/typography'
+@import 'components/links'
 @import 'components/buttons'
+@import 'components/icons'
+@import 'components/forms'
 @import 'components/header'
+@import 'components/avatars'
+@import 'components/userMenu'
 @import 'components/timeSlider'
+@import 'components/modals'
+@import 'components/autocomplete'
+
 @import 'pages/homepage'
 @import 'pages/team'
+@import 'pages/profile'
+@import 'pages/login'

@@ -1,0 +1,28 @@
+
+.autocomplete
+  position: relative
+  transition: all 400ms
+  border-radius: 2px
+
+  // &.active
+
+.autocomplete--field:focus
+  border-bottom-right-radius: 0
+  border-bottom-left-radius: 0
+
+
+.autocomplete--results
+  box-shadow()
+  position: absolute
+  background: #fff
+
+.autocomplete--option
+  padding: 0.45em 0.6em
+  cursor: pointer
+  white-space: nowrap
+
+  &.selected,
+  &:hover
+    background: $fillColor
+
+

@@ -7,69 +7,82 @@ $buttonRadius = 20px
 button
   display: inline-block
   padding: 0.3em 1em 0.4em
-  
+
   background-color: lighten($buttonColor, 10%)
   border-radius: $buttonRadius
   border: 0
-  
+
   font-size: 15px
   line-height: 1.4em
   color: $textColor
   text-decoration: none
-  
+
   // Button states
   &::after
     content: none
     width: inherit
     height: inherit
-    
+
   &:focus
     outline: 0
-  
+
   &:hover
     background-color: darken($buttonColor, 8%)
-    
+
   &[disabled]
     opacity: 0.5
     &:hover
       background-color: inherit
-    
+
   &.selected
     background-color: darken($buttonColor, 10%)
-    
+
   // Button sizes
   &.small
     font-size: 12px
-    
+
   // Button styles
+  &.material-icons
+    height: 2em
+    width: 2em
+    padding: 0
+    border-radius: 160px // to keep it circular
+
+  &.clear,
+  &.hollow
+    background-color: transparent
+
+    &:hover
+      background-color: lighten($buttonColor, 10%)
+
   &.hollow
     border: 1px solid $borderColor
-    
+
   &.cta
     background-color: lighten($brandColor, 10%)
     color: #fff
-    
+
     &:hover
       background-color: $brandColor
-  
-  
+
+
 input[type="submit"].button
   border: 0
-  
+
 
 // Button groups
 .button-group
   display: inline-block
-  
+
   > button,
   > .button
     border-radius: 0
     border-right-width: 0
-    
+
     &:first-of-type
       padding-left: 1.1em
       border-radius: $buttonRadius 0 0 $buttonRadius
-      
+
     &:last-of-type
       padding-right: 1.1em
       border-right-width: 1px

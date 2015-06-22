@@ -21,7 +21,7 @@ module.exports = React.createClass({
     });
 
     // NOTE - This may need to be throttled
-    AppDispatcher.handleViewAction({
+    AppDispatcher.dispatchViewAction({
       actionType: ActionTypes.ADJUST_TIME_DISPLAY,
       value: percentDelta
     });

@@ -1,13 +1,14 @@
 .app-container
   display: flex
   min-width: 880px
-  
-$sideBarMargin = 20px;
+
+$sidebarWidth = 180px
+$sidebarPadding = 1em
 
 .app-sidebar
   flex-shrink: 0
-  width: 180px
-  padding: 1em
+  width: $sidebarWidth
+  padding: $sidebarPadding
   background: $fillColor
 
 .app-sidebar--time
@@ -15,15 +16,22 @@ $sideBarMargin = 20px;
   font-size: 2em
   text-align: center
   font-weight: normal
-  
+
 .app-sidebar--button-row
   display: flex
   justify-content: space-between
-  
+
 // .app-sidebar--format-select
 //   text-align: center
-  
 
+
+.app-sidebar--admin
+  display: flex
+  justify-content: space-between
+  position: absolute
+  bottom: 0
+  margin: 1em 0
+  width: "calc(%s - 2 * %s)" % ($sidebarWidth $sidebarPadding)
 
 
 .timezone-list
@@ -34,12 +42,12 @@ $sideBarMargin = 20px;
 
 .timezone
   padding: 1em
-  
+
 // .timezone-major
-  
+
 .timezone-people
   display: flex
-  
+
 .timezone-people-column
   min-width: $avatarSize
   margin-right: 1em
@@ -55,7 +63,7 @@ for hour in 0 1 2 3 4 5 6 7 22 23
   width: 80px
   text-align: left
   white-space: nowrap;
-  
+
   p
     margin: 5px 0
     overflow: hidden
@@ -64,7 +72,7 @@ for hour in 0 1 2 3 4 5 6 7 22 23
 .timezone-time
   margin: 5px 0
   font-weight: normal
-  
+
 .timezone-name
   font-size: 0.6em
   text-transform: uppercase
@@ -119,23 +127,78 @@ for hour in 0 1 2 3 4 5 6 7 22 23
   text-overflow: ellipsis
   overflow: hidden
 
-.avatar
-  display: block
-  width: $avatarSize
-  // max-width: $avatarSize
-  height: $avatarSize
+
+// Editing modal
+
+.manage-modal--team
+  max-height: 100%
+  overflow: scroll
+
+.manage-modal--team-header
+  margin-bottom: 1em
+  text-align: center //temp :()
+
+// .manage-modal--team-list
+//   overflow: scroll
+
+.manage-modal--team-member
+  display: flex
+  justify-content: space-between
+  align-items: center
+  max-width: 80%
+  margin: 1em auto
+
+.manage-modal--team-member-info
+  display: flex
+  align-items: center
+  font-size: 1.2em
+
+.manage-modal--team-member-name
+  margin-left: 1em
+
+.manage-modal--team-member-location
+  margin-left: 0.5em
+  color: $mutedColor
+
+.manage-modal--person
+  display: flex
+  align-items: center
+
+  .edit-person
+    margin: 2em auto 0
+
+
+.edit-person
+  display: flex
+  flex-direction: column
+  align-items: center
+
+.edit-person--row
+  margin: 0.5em 0
+
+.add-image-placeholder
+  height: $avatarSize * 2
+  width: $avatarSize * 2
   border-radius: 50%
+  background: $fillColor
+  line-height: $avatarSize * 2 - 1px
+  text-align: center
+
+.edit-person--timezone-display
+  padding: 0.4em 10px
+  color: $mutedColor
+  font-size: 0.7em
   // border: 2px solid #fff
   // box-shadow: 0 1px 1px rgba(0,0,0,0.2)
 
 // Mobile
 @media screen and (max-width: 500px)
-  
+
   .app-container
     min-width: 100%
     height: auto
     flex-direction: column
-  
+
   .app-sidebar
     position: fixed
     z-index: 1
@@ -144,61 +207,61 @@ for hour in 0 1 2 3 4 5 6 7 22 23
     display: flex
     flex-wrap: wrap
     justify-content: space-between
-  
+
     .site-branding
       margin: 0.2em 0 0
-    
+
     // all children are 50%
     > *
       width: 40%
-  
+
   .app-sidebar--time
     font-size: 1.5em
     text-align: right
-    
+
   .time-slider-container
     order: 4 // put this under the time
-  
+
   .time-slider
     margin: 0.9em 0 0
-  
+
   .app-sidebar--button-row
     max-height: 27px
     margin-top: 0.7em
     justify-content: flex-start
-    
+
   .app-sidebar--format-select
     margin-right: 0.8em
     white-space: nowrap
-    
+
   .timezone-list
     margin-top: 6em
     justify-content: flex-start
     flex-direction: column-reverse
-  
+
   .timezone
     display: flex
     width: auto
     padding: 0
     margin: 0.8em 0.8em 0
-  
+
   .timezone-header
     flex-shrink: 0
     margin: 0 0.8em 0 0
-    
+
   .timezone-people
     flex-direction: column
     flex-grow: 1
-  
+
   .timezone-people-column
     display: flex
     flex-wrap: wrap
     margin: 0
-  
+
   .person
     width: 25%
     margin: 0 0 0.5em
-  
+
   .person-info
     display: block
     opacity: 1.0
@@ -214,15 +277,15 @@ for hour in 0 1 2 3 4 5 6 7 22 23
 
     .person-name
       margin: 0.3em 0 0
-  
+
   .person-city
     display: none
-  
+
   .avatar
     width: 84%
     height: 84% // height will match width
     margin: 0 auto
-    
 
 
-    
+
+

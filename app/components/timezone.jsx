@@ -41,7 +41,7 @@ module.exports = React.createClass({
 
   getTopCity: function() {
 
-    var cityCounts = this.getCountsOf(this.props.model.people, 'city');
+    var cityCounts = this.getCountsOf(this.props.model.people, 'location');
     var topCity = this.getHighestOccuring(cityCounts);
 
     return cityCounts[topCity] === 1 && this.props.model.people.length > 1 ?

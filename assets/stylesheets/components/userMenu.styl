@@ -1,0 +1,37 @@
+.user-menu-container
+  position: relative
+
+  .header-avatar
+    cursor: pointer
+
+.user-menu
+
+  $spacing = 4px
+
+  display: none
+  position: absolute
+  top: - $spacing
+  right: - $spacing
+  min-width: 6em
+  padding: 130% 0.1em 0.1em
+  background: #fff
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3)
+  font-size: 0.9em
+  text-align: right
+
+  &.bottom-left
+    top: auto
+    right: auto
+    bottom: - $spacing
+    left: - $spacing
+    padding: 0.1em 0.1em 130%
+
+  // TODO - Add some transition
+  &.menu-open
+    display: block
+
+
+.user-menu-item
+  cancelLinkHover()
+  display: block
+  margin: 0.5em 0.8em;
