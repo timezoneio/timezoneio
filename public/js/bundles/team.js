@@ -478,7 +478,7 @@ module.exports = React.createClass({
   handleLocationChange: function(location, tz) {
     this.setState({
       location: location,
-      tz: tz
+      tz: tz || this.state.tz
     });
   },
 
@@ -663,6 +663,8 @@ module.exports = React.createClass({
       this.locationSearch(value);
 
     this.setState({ location: value });
+
+    this.props.handleChange(value);
   },
 
   handleKeyDown: function(e) {
@@ -733,7 +735,7 @@ module.exports = React.createClass({
   locationSearch: function(value) {
     ActionCreators
       .locationSearch(value)
-      .then(this.handleResults)
+      .then(this.handleResults);
   },
 
   handleResults: function(results) {
@@ -742,13 +744,13 @@ module.exports = React.createClass({
 
   handleSelectOption: function(option, e) {
     e.stopPropagation();
-    this.saveSelection(option.name, option.tz)
+    this.saveSelection(option.name, option.tz);
   },
 
   renderOption: function(option, idx) {
     var classes = classNames('autocomplete--option', {
       selected: option.isSelected
-    })
+    });
     return (
       React.createElement("div", {key: idx, 
            className: classes, 

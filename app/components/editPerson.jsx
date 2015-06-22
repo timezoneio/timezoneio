@@ -39,7 +39,7 @@ module.exports = React.createClass({
   handleLocationChange: function(location, tz) {
     this.setState({
       location: location,
-      tz: tz
+      tz: tz || this.state.tz
     });
   },
 
