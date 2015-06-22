@@ -44,6 +44,10 @@ module.exports = React.createClass({
     this.setState({ editingPerson: {}, newUser: true });
   },
 
+  peopleSort: function(a, b) {
+    return a.name < b.name ? -1 : 1;
+  },
+
   render: function() {
 
     // var nameLink = {
@@ -69,14 +73,15 @@ module.exports = React.createClass({
 
               <div className="manage-modal--team-list">
 
-                {this.props.people.map(function(person, idx) {
+                {this.props.people.sort(this.peopleSort).map(function(person, idx) {
                   return (
                     <div key={idx}
                          className="manage-modal--team-member">
 
                       <div className="manage-modal--team-member-info">
 
-                        <Avatar avatar={person.avatar} />
+                        <Avatar avatar={person.avatar}
+                                size="mini" />
 
                         <span className="manage-modal--team-member-name">
                           {person.name}
@@ -88,7 +93,7 @@ module.exports = React.createClass({
                       </div>
 
                       <div className="manage-modal--team-member-actions">
-                        <button className="circle material-icons md-18"
+                        <button className="circle clear material-icons md-18"
                                 onClick={this.handleClickUserEdit.bind(null, person)}>
                           edit
                         </button>

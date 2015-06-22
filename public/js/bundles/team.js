@@ -849,6 +849,10 @@ module.exports = React.createClass({
     this.setState({ editingPerson: {}, newUser: true });
   },
 
+  peopleSort: function(a, b) {
+    return a.name < b.name ? -1 : 1;
+  },
+
   render: function() {
 
     // var nameLink = {
@@ -874,14 +878,15 @@ module.exports = React.createClass({
 
               React.createElement("div", {className: "manage-modal--team-list"}, 
 
-                this.props.people.map(function(person, idx) {
+                this.props.people.sort(this.peopleSort).map(function(person, idx) {
                   return (
                     React.createElement("div", {key: idx, 
                          className: "manage-modal--team-member"}, 
 
                       React.createElement("div", {className: "manage-modal--team-member-info"}, 
 
-                        React.createElement(Avatar, {avatar: person.avatar}), 
+                        React.createElement(Avatar, {avatar: person.avatar, 
+                                size: "mini"}), 
 
                         React.createElement("span", {className: "manage-modal--team-member-name"}, 
                           person.name
@@ -893,7 +898,7 @@ module.exports = React.createClass({
                       ), 
 
                       React.createElement("div", {className: "manage-modal--team-member-actions"}, 
-                        React.createElement("button", {className: "circle material-icons md-18", 
+                        React.createElement("button", {className: "circle clear material-icons md-18", 
                                 onClick: this.handleClickUserEdit.bind(null, person)}, 
                           "edit"
                         )
