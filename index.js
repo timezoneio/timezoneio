@@ -17,10 +17,17 @@ mongoose.connection.once('open', function (callback) {
 
 });
 
-// var UserModal = require('./app/models/user.js');
+/*
+var UserModel = require('./app/models/user.js');
 
-// UserModal.findOne({ username: 'dan' }, function(err, user) {
+UserModel.findOne({ username: 'dan' }, function(err, user) {
 
-//   console.info( user.authenticate('password') ? 'OK!' : 'NO' );
+  user.password = ;
 
-// });
+  user.save(function(err) {
+    if (!err)
+      console.info('success!');
+  });
+
+});
+*/
