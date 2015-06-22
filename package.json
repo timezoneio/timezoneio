@@ -32,7 +32,7 @@
     "immutable": "^3.6.2",
     "keymirror": "^0.1.1",
     "moment-timezone": "0.2.5",
-    "mongoose": "~3.8.23",
+    "mongoose": "^4.0.6",
     "morgan": "^1.5.1",
     "multer": "^0.1.8",
     "mustache": "^2.0.0",

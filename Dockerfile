@@ -1,14 +1,16 @@
-FROM google/nodejs
+FROM node:0.12.4
 
-RUN npm install -g npm
-RUN npm install -g nodemon
+ENV NODE_ENV production
 
+RUN mkdir -p /app
 WORKDIR /app
-ADD package.json /app/package.json
-ONBUILD RUN npm install
-ADD . /app
 
-EXPOSE 8080
-CMD nodemon -L index.js
-# TODO Test using forever instead of nodemon, see docker-compse
-# CMD forever -w index.js
+COPY package.json /app/
+RUN npm install --production
+COPY . /app
+
+CMD [ "npm", "start" ]
+
+# package.json requirements
+#  "forever": "^0.14.1"
+#  "start": "./node_modules/forever/bin/forever ./index.js"
