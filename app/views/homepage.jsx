@@ -220,12 +220,21 @@ module.exports = React.createClass({
 
         </div>
 
-        <footer className="hp-section alt site-footer">
+        <footer className="hp-section site-footer">
 
           <div className="hp-content-container">
 
             <p>
-              © 2015 Timezone.io
+              © 2015 Timezone.io <br/>
+            </p>
+            <p>
+              <a href="/about">
+                About
+              </a> — <a href="/team/buffer">
+                Demo
+              </a> — <a href="/login">
+                Login
+              </a>
             </p>
 
           </div>

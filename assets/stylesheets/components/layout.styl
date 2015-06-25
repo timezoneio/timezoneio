@@ -19,18 +19,23 @@ body
 
 .container
   height: 100%
-  
+
+  &.ensure-full-height
+    display: flex
+    flex-direction: column
+    justify-content: space-between
+
 
 // Full width section
 .fw-section
   width: 100%;
   padding: 2em 0
-  
+
   &.alt
     background: $fillColor
-    
+
 .content-container
   max-width: 800px
   margin: 0 auto;
   padding: 0 16px
-  
+
