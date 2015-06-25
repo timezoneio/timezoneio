@@ -10,5 +10,5 @@ base.about = function(req, res) {
 };
 
 base.roadmap = function(req, res) {
-  res.render('homepage');
+  res.render('roadmap');
 };

@@ -2,6 +2,7 @@
 
 var React = require('react');
 var Header = require('../components/header.jsx');
+var Footer = require('../components/footer.jsx');
 
 module.exports = React.createClass({
 
@@ -49,17 +50,7 @@ module.exports = React.createClass({
         </div>
 
 
-        <footer className="hp-section site-footer">
-
-          <div className="hp-content-container">
-
-            <p>
-              © 2015 Timezone.io
-            </p>
-
-          </div>
-
-        </footer>
+        <Footer />
 
       </div>
     );
