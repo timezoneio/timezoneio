@@ -10,10 +10,10 @@ var demoTimezones = [
     tz: 'America/Los_Angeles',
     people: [
       {
-        name: 'Brian',
+        name: 'Mary',
         tz: 'America/Los_Angeles',
         location: 'San Francisco',
-        avatar: '/images/avatars/brian.jpg'
+        avatar: '/images/avatars/mary.jpg'
       }
     ]
   },
@@ -35,13 +35,15 @@ var demoTimezones = [
     ]
   },
   {
-    tz: 'Europe/Madrid',
-    people: [{
-      name: 'Mike',
-      tz: 'Europe/Madrid',
-      location: 'Barcelona',
-      avatar: '/images/avatars/mike.jpg'
-    }]
+    tz: 'Europe/Rome',
+    people: [
+      {
+        name: 'Carolyn',
+        tz: 'Europe/Rome',
+        location: 'Venice',
+        avatar: 'http://www.gravatar.com/avatar/17d551ff33a7b03d93bbd1f8fa18d4f5?s=200'
+      }
+    ]
   }
 ];
 
