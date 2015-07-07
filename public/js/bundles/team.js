@@ -1484,6 +1484,7 @@ AppState.prototype.removeTeamMember = function(data) {
                               .indexOf(data.usedId);
   if (idx > -1) {
     this._state.people.splice(idx, 1);
+    this.updateTimezones();
   }
 };
 
