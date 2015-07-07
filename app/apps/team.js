@@ -183,6 +183,11 @@ var handleAPIAction = function(action) {
       renderApp();
       break;
 
+    case ActionTypes.TEAM_MEMBER_REMOVED:
+      appState.removeTeamMember(value);
+      renderApp();
+      break;
+
   }
 };
 

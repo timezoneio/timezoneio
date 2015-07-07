@@ -62,6 +62,12 @@ var api = module.exports = {
     return fetch('/api' + url, getOptions('PUT', data))
       .then(status)
       .then(json);
+  },
+
+  delete: function(url, data) {
+    return fetch('/api' + url, getOptions('DELETE', data))
+      .then(status)
+      .then(json);
   }
 
 };

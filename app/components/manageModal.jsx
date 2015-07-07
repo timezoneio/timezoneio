@@ -4,6 +4,7 @@ var React = require('react');
 var classNames = require('classnames');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
+var ActionCreators = require('../actions/actionCreators.js');
 var Modal = require('./modal.jsx');
 var Avatar = require('./avatar.jsx');
 var EditPerson = require('./editPerson.jsx');
@@ -35,6 +36,12 @@ module.exports = React.createClass({
 
   handleClickUserEdit: function(person, e) {
     this.setState({ editingPerson: person, newUser: false });
+  },
+
+  handleClickUserRemove: function(person, e) {
+    if (confirm('Are you sure you want to delete?')) {
+      ActionCreators.removeTeamMember(this.props.team._id, person._id);
+    }
   },
 
   handleClickBackToMenu: function(e) {
@@ -105,8 +112,14 @@ module.exports = React.createClass({
 
                       <div className="manage-modal--team-member-actions">
                         <button className="circle clear material-icons md-18"
+                                name="Edit team member"
                                 onClick={this.handleClickUserEdit.bind(null, person)}>
                           edit
+                        </button>
+                        <button className="circle clear material-icons md-18"
+                                name="Remove from Team"
+                                onClick={this.handleClickUserRemove.bind(null, person)}>
+                          clear
                         </button>
                       </div>
 

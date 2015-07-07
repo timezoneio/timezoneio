@@ -32,6 +32,20 @@ var ActionCreators = module.exports = {
       });
   },
 
+  removeTeamMember: function(teamId, userId) {
+    return api
+      .delete('/team/' + teamId + '/member/' + userId)
+      .then(function(data) {
+
+        AppDispatcher.dispatchApiAction({
+          actionType: ActionTypes.TEAM_MEMBER_REMOVED,
+          value: data
+        });
+
+        return data;
+      });
+  },
+
   // Returns promise
   locationSearch: function(q) {
     return api

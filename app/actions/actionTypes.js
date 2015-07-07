@@ -13,6 +13,7 @@ module.exports = keyMirror({
   SAVE_TEAM_INFO: 0,
 
   // API actions
-  UPDATED_USER_DATA: 0
+  UPDATED_USER_DATA: 0,
+  TEAM_MEMBER_REMOVED: 0
 
 });

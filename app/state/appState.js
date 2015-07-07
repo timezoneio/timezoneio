@@ -84,3 +84,11 @@ AppState.prototype.updateUserData = function(data) {
   // Update the timezone data:
   this.updateTimezones();
 };
+
+AppState.prototype.removeTeamMember = function(data) {
+  var idx = this._state.people.map(function(p) { return p._id; })
+                              .indexOf(data.usedId);
+  if (idx > -1) {
+    this._state.people.splice(idx, 1);
+  }
+};

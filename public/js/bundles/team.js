@@ -33,6 +33,20 @@ var ActionCreators = module.exports = {
       });
   },
 
+  removeTeamMember: function(teamId, userId) {
+    return api
+      .delete('/team/' + teamId + '/member/' + userId)
+      .then(function(data) {
+
+        AppDispatcher.dispatchApiAction({
+          actionType: ActionTypes.TEAM_MEMBER_REMOVED,
+          value: data
+        });
+
+        return data;
+      });
+  },
+
   // Returns promise
   locationSearch: function(q) {
     return api
@@ -68,7 +82,8 @@ module.exports = keyMirror({
   SAVE_TEAM_INFO: 0,
 
   // API actions
-  UPDATED_USER_DATA: 0
+  UPDATED_USER_DATA: 0,
+  TEAM_MEMBER_REMOVED: 0
 
 });
 
@@ -256,6 +271,11 @@ var handleAPIAction = function(action) {
 
     case ActionTypes.UPDATED_USER_DATA:
       appState.updateUserData(value);
+      renderApp();
+      break;
+
+    case ActionTypes.TEAM_MEMBER_REMOVED:
+      appState.removeTeamMember(value);
       renderApp();
       break;
 
@@ -809,6 +829,7 @@ var React = require('react');
 var classNames = require('classnames');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
+var ActionCreators = require('../actions/actionCreators.js');
 var Modal = require('./modal.jsx');
 var Avatar = require('./avatar.jsx');
 var EditPerson = require('./editPerson.jsx');
@@ -840,6 +861,12 @@ module.exports = React.createClass({
 
   handleClickUserEdit: function(person, e) {
     this.setState({ editingPerson: person, newUser: false });
+  },
+
+  handleClickUserRemove: function(person, e) {
+    if (confirm('Are you sure you want to delete?')) {
+      ActionCreators.removeTeamMember(this.props.team._id, person._id);
+    }
   },
 
   handleClickBackToMenu: function(e) {
@@ -910,8 +937,14 @@ module.exports = React.createClass({
 
                       React.createElement("div", {className: "manage-modal--team-member-actions"}, 
                         React.createElement("button", {className: "circle clear material-icons md-18", 
+                                name: "Edit team member", 
                                 onClick: this.handleClickUserEdit.bind(null, person)}, 
                           "edit"
+                        ), 
+                        React.createElement("button", {className: "circle clear material-icons md-18", 
+                                name: "Remove from Team", 
+                                onClick: this.handleClickUserRemove.bind(null, person)}, 
+                          "clear"
                         )
                       )
 
@@ -953,7 +986,7 @@ module.exports = React.createClass({
         // </button>
 
 
-},{"../actions/actionTypes.js":2,"../dispatchers/appDispatcher.js":16,"./avatar.jsx":5,"./editPerson.jsx":7,"./modal.jsx":10,"classnames":28,"react":191}],10:[function(require,module,exports){
+},{"../actions/actionCreators.js":1,"../actions/actionTypes.js":2,"../dispatchers/appDispatcher.js":16,"./avatar.jsx":5,"./editPerson.jsx":7,"./modal.jsx":10,"classnames":28,"react":191}],10:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -1339,6 +1372,12 @@ var api = module.exports = {
     return fetch('/api' + url, getOptions('PUT', data))
       .then(status)
       .then(json);
+  },
+
+  delete: function(url, data) {
+    return fetch('/api' + url, getOptions('DELETE', data))
+      .then(status)
+      .then(json);
   }
 
 };
@@ -1438,6 +1477,14 @@ AppState.prototype.updateUserData = function(data) {
 
   // Update the timezone data:
   this.updateTimezones();
+};
+
+AppState.prototype.removeTeamMember = function(data) {
+  var idx = this._state.people.map(function(p) { return p._id; })
+                              .indexOf(data.usedId);
+  if (idx > -1) {
+    this._state.people.splice(idx, 1);
+  }
 };
 
 
