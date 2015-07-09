@@ -91,6 +91,10 @@ module.exports = keyMirror({
 },{"keymirror":32}],3:[function(require,module,exports){
 var React  = require('react');
 var moment = require('moment-timezone');
+
+// Currently, the fetch API doesn't reliably parse the UTF-8 encoded json
+// correctly. Here we just force the
+window.fetch = null;
 require('whatwg-fetch');
 
 var transform = require('../utils/transform.js');
@@ -108,7 +112,7 @@ var Team = React.createFactory(require('../views/team.jsx'));
 var appState = new AppState(window.appData);
 
 
-// Add the component to the DOM
+// Add the component to the DOFM
 var targetNode = document.querySelector('#page');
 
 function renderApp() {
@@ -26031,18 +26035,15 @@ module.exports = require('./lib/React');
   function Headers(headers) {
     this.map = {}
 
-    var self = this
     if (headers instanceof Headers) {
-      headers.forEach(function(name, values) {
-        values.forEach(function(value) {
-          self.append(name, value)
-        })
-      })
+      headers.forEach(function(value, name) {
+        this.append(name, value)
+      }, this)
 
     } else if (headers) {
       Object.getOwnPropertyNames(headers).forEach(function(name) {
-        self.append(name, headers[name])
-      })
+        this.append(name, headers[name])
+      }, this)
     }
   }
 
@@ -26078,12 +26079,12 @@ module.exports = require('./lib/React');
     this.map[normalizeName(name)] = [normalizeValue(value)]
   }
 
-  // Instead of iterable for now.
-  Headers.prototype.forEach = function(callback) {
-    var self = this
+  Headers.prototype.forEach = function(callback, thisArg) {
     Object.getOwnPropertyNames(this.map).forEach(function(name) {
-      callback(name, self.map[name])
-    })
+      this.map[name].forEach(function(value) {
+        callback.call(thisArg, value, name, this)
+      }, this)
+    }, this)
   }
 
   function consumed(body) {
@@ -26284,9 +26285,6 @@ module.exports = require('./lib/React');
 
     return new Promise(function(resolve, reject) {
       var xhr = new XMLHttpRequest()
-      if (request.credentials === 'cors') {
-        xhr.withCredentials = true;
-      }
 
       function responseURL() {
         if ('responseURL' in xhr) {
@@ -26323,14 +26321,16 @@ module.exports = require('./lib/React');
 
       xhr.open(request.method, request.url, true)
 
+      if (request.credentials === 'include') {
+        xhr.withCredentials = true
+      }
+
       if ('responseType' in xhr && support.blob) {
         xhr.responseType = 'blob'
       }
 
-      request.headers.forEach(function(name, values) {
-        values.forEach(function(value) {
-          xhr.setRequestHeader(name, value)
-        })
+      request.headers.forEach(function(value, name) {
+        xhr.setRequestHeader(name, value)
       })
 
       xhr.send(typeof request._bodyInit === 'undefined' ? null : request._bodyInit)

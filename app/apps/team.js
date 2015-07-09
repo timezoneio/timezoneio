@@ -1,5 +1,9 @@
 var React  = require('react');
 var moment = require('moment-timezone');
+
+// Currently, the fetch API doesn't reliably parse the UTF-8 encoded json
+// correctly. Here we just force the
+window.fetch = null;
 require('whatwg-fetch');
 
 var transform = require('../utils/transform.js');
@@ -17,7 +21,7 @@ var Team = React.createFactory(require('../views/team.jsx'));
 var appState = new AppState(window.appData);
 
 
-// Add the component to the DOM
+// Add the component to the DOFM
 var targetNode = document.querySelector('#page');
 
 function renderApp() {

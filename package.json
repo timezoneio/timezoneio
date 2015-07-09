@@ -42,7 +42,7 @@
     "react": "^0.13.3",
     "react-tools": "^0.13.3",
     "stylus": "^0.49.3",
-    "whatwg-fetch": "^0.8.1"
+    "whatwg-fetch": "^0.9.0"
   },
   "devDependencies": {
     "browserify": "8.0.1",

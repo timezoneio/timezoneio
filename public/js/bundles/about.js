@@ -75,9 +75,10 @@ module.exports = React.createClass({
             "© 2015 Timezone.io ", React.createElement("br", null)
           ), 
           React.createElement("p", null, 
-            this.state.links.map(function(link) {
+            this.state.links.map(function(link, idx) {
               return (
-                React.createElement("a", {href: link.url, 
+                React.createElement("a", {key: idx, 
+                   href: link.url, 
                    className: "footer-link"}, 
                   link.text
                 )
@@ -91,7 +92,6 @@ module.exports = React.createClass({
     );
   }
 });
-
 
 
 },{"react":163}],4:[function(require,module,exports){
