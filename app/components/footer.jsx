@@ -43,9 +43,10 @@ module.exports = React.createClass({
             © 2015 Timezone.io <br/>
           </p>
           <p>
-            {this.state.links.map(function(link) {
+            {this.state.links.map(function(link, idx) {
               return (
-                <a href={link.url}
+                <a key={idx}
+                   href={link.url}
                    className="footer-link">
                   {link.text}
                 </a>
@@ -59,4 +60,3 @@ module.exports = React.createClass({
     );
   }
 });
-
