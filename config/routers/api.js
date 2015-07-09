@@ -1,10 +1,11 @@
 var express = require('express');
+var UserModel = require('../../app/models/user.js');
 var TeamModel = require('../../app/models/team.js');
 var api = require('../../app/controllers/api.js');
 
 
 
-var apiRequireAuthentication = function(req, res, next) {
+var requireAuthentication = function(req, res, next) {
   if (req.user) return next();
 
   res.status(403).json({
@@ -12,7 +13,7 @@ var apiRequireAuthentication = function(req, res, next) {
   });
 };
 
-var apiRequireTeamAdmin = function(req, res, next) {
+var requireTeamAdmin = function(req, res, next) {
 
   // We check body when passed via POST params and not in URL
   var teamId = req.body.teamId || req.params.id;
@@ -35,17 +36,29 @@ var apiRequireTeamAdmin = function(req, res, next) {
   });
 };
 
+var requireUser = function(req, res, next) {
+  UserModel.findOne({ _id: req.params.id }, function(err, user) {
+    if (err || !user)
+      return res.status(403).json({
+        message: 'I can\'t find a user with that id (' + req.params.id  + ') man...'
+      });
+    req.activeUser = user;
+    next();
+  });
+};
+
 
 var router = express.Router();
 
-router.all(   '*', apiRequireAuthentication);
+router.all(   '*', requireAuthentication);
 
-router.post(  '/user', apiRequireTeamAdmin,  api.userCreate);
-router.put(   '/user/:id', apiRequireTeamAdmin, api.userUpdate);
+router.post(  '/user', requireTeamAdmin,  api.userCreate);
+router.get(   '/user/:id', requireUser, api.userGet);
+router.put(   '/user/:id', requireTeamAdmin, requireUser, api.userUpdate);
 
-router.put(   '/team/:id', apiRequireTeamAdmin, api.teamUpdate);
-// router.post(  '/team/:id/member', apiRequireTeamAdmin, api.teamAddMember);
-router.delete('/team/:id/member/:userId', apiRequireTeamAdmin, api.teamRemoveMember);
+router.put(   '/team/:id', requireTeamAdmin, api.teamUpdate);
+// router.post(  '/team/:id/member', requireTeamAdmin, api.teamAddMember);
+router.delete('/team/:id/member/:userId', requireTeamAdmin, api.teamRemoveMember);
 
 router.get(   '/location/search', api.locationSearch);
 

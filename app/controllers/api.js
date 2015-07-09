@@ -56,28 +56,28 @@ api.userCreate = function(req, res, next) {
 
 };
 
+api.userGet = function(req, res, next) {
+  res.carset = 'utf-8'; //('Content-Type', 'application/json;charset=utf-8');
+  res.json(req.activeUser);
+};
+
 api.userUpdate = function(req, res, next) {
 
-  var id = req.params.id;
+  var user = req.activeUser;
 
-  UserModel.findOne({ _id: id }, function(err, user) {
-    if (err) return handleError(res, 'Couldn\'t find that user!');
+  if (!user.isOnTeam(req.team))
+    return handleError(res, 'Hey, that user isn\'t on your team!');
 
-    if (!user.isOnTeam(req.team))
-      return handleError(res, 'Hey, that user isn\'t on your team!');
-
-    // replace w/ underscore
-    for (var key in req.body) {
-      if (UserModel.ADMIN_WRITABLE_FIELDS.indexOf(key) > -1) {
-        user[key] = req.body[key];
-      }
+  // replace w/ underscore
+  for (var key in req.body) {
+    if (UserModel.ADMIN_WRITABLE_FIELDS.indexOf(key) > -1) {
+      user[key] = req.body[key];
     }
+  }
 
-    user.save(function(err) {
-      if (err) return handleError(res, 'Failed to save');
-      res.json(user);
-    });
-
+  user.save(function(err) {
+    if (err) return handleError(res, 'Failed to save');
+    res.json(user);
   });
 
 };
