@@ -16,6 +16,7 @@ module.exports = React.createClass({
   getInitialState: function() {
     return {
       editingPerson: null,
+      filterText: '',
       filter: null,
       // name: this.props.team.name
     };
@@ -45,6 +46,7 @@ module.exports = React.createClass({
   },
 
   handleClickBackToMenu: function(e) {
+    this.resetFilter();
     this.setState({ editingPerson: null });
   },
 
@@ -52,8 +54,18 @@ module.exports = React.createClass({
     this.setState({ editingPerson: {}, newUser: true });
   },
 
-  handleFilterList: function(e) {
-    this.setState({ filter: new RegExp(e.target.value.toLowerCase(), 'i') });
+  handleFilterList: function(text) {
+    this.setState({
+      filterText: text,
+      filter: new RegExp(text.toLowerCase(), 'i')
+    });
+  },
+
+  resetFilter: function() {
+    this.setState({
+      filterText: '',
+      filter: null
+    });
   },
 
   peopleFilter: function(person) {
@@ -70,6 +82,11 @@ module.exports = React.createClass({
     var visiblePeople = this.state.filter ? people.filter(this.peopleFilter) : people;
     var sortedPeople = visiblePeople.sort(this.peopleSort);
 
+    var filterValueLink = {
+      value: this.state.filterText,
+      requestChange: this.handleFilterList
+    };
+
     return (
       <Modal>
 
@@ -79,12 +96,12 @@ module.exports = React.createClass({
               <div className="manage-modal--team-header">
 
                 <input type="search"
-                       onChange={this.handleFilterList}
+                       valueLink={filterValueLink}
                        placeholder="Search" />
 
-                <button className="cta"
+                     <button className="circle material-icons md-18"
                         onClick={this.handleClickAdd}>
-                  Add team member
+                  add
                 </button>
 
               </div>
