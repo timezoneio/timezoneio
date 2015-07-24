@@ -1,12 +1,26 @@
 var express = require('express');
 var UserModel = require('../../app/models/user.js');
 var TeamModel = require('../../app/models/team.js');
+var APIClientModel = require('../../app/models/apiClient.js');
+var APIAuthModel = require('../../app/models/apiAuth.js');
 var api = require('../../app/controllers/api.js');
 
 
 
 var requireAuthentication = function(req, res, next) {
   if (req.user) return next();
+
+  if (req.query.access_token) {
+    APIAuthModel.findOne({ token: req.query.access_token }, function(err, Auth) {
+      if (err || !Auth)
+        return res.status(403).json({
+          message: 'Invalid token :('
+        });
+
+      next();
+    });
+    return;
+  }
 
   res.status(403).json({
     message: 'Ah ah ah, you didn\'t say the magic word'
@@ -63,6 +77,10 @@ router.delete('/team/:id/member/:userId', requireTeamAdmin, api.teamRemoveMember
 router.get(   '/location/search', api.locationSearch);
 
 router.get(   '/avatar/gravatar', api.getGravatar);
+
+// These should be POSTs + GETs
+router.get(   '/client', api.getOrCreateAPIClient);
+router.get(   '/client/:id/token', api.getOrCreateAPIClientToken);
 
 
 module.exports = router;

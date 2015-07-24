@@ -4,6 +4,8 @@ var moment = require('moment-timezone');
 var UserModel = require('../models/user.js');
 var TeamModel = require('../models/team.js');
 var LocationModel = require('../models/location.js');
+var APIClientModel = require('../../app/models/apiClient.js');
+var APIAuthModel = require('../../app/models/apiAuth.js');
 
 var api = module.exports = {};
 
@@ -163,6 +165,46 @@ api.getGravatar = function(req, res, next) {
 
   res.json({
     avatar: 'http://www.gravatar.com/avatar/' + emailHash + '?s=200'
+  });
+
+};
+
+// TEMP API AUTH methods
+api.getOrCreateAPIClient = function(req, res, next) {
+
+  APIClientModel.findOne({ user: req.user.id }, function(err, client) {
+    if (err) return handleError(res, 'Error finding client');
+    res.json(client);
+  });
+
+};
+
+api.getOrCreateAPIClientToken = function(req, res, next) {
+
+  APIClientModel.findOne({ _id: req.params.id }, function(err, client) {
+    if (err) return handleError(res, 'Error finding client');
+
+    APIAuthModel.findOne({
+      user: req.user.id,
+      client: req.params.id
+    }, function(err, auth) {
+      if (err) return handleError(res, 'Error finding client or user');
+
+      if (auth) return res.json(auth);
+
+      var userAuth = new APIAuthModel({
+        user: req.user,
+        client: client
+      });
+
+      userAuth.createToken();
+
+      userAuth.save(function(err) {
+        if (err) return handleError(res, 'Failed to save: ' + err);
+        res.json(auth);
+      });
+    });
+
   });
 
 };
