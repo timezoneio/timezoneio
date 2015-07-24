@@ -162,7 +162,7 @@ api.locationGetTimezone = function(req, res, next) {
 
   getTimezoneFromLocation(req.query.lat, req.query.long, function(err, tz) {
     if (err) return handleError(res, 'Error finding your timezone');
-    
+
     res.json({ tz: tz });
   });
 };
@@ -189,7 +189,19 @@ api.getOrCreateAPIClient = function(req, res, next) {
 
   APIClientModel.findOne({ user: req.user.id }, function(err, client) {
     if (err) return handleError(res, 'Error finding client');
-    res.json(client);
+
+    if (client) return res.json(client);
+
+    var userClient = new APIClientModel({
+      user: req.user
+    });
+
+    if (req.query.name) userClient.name = req.query.name;
+
+    userClient.save(function(err) {
+      if (err) return handleError(res, 'Failed to save: ' + err);
+      res.json(userClient);
+    });
   });
 
 };
@@ -216,7 +228,7 @@ api.getOrCreateAPIClientToken = function(req, res, next) {
 
       userAuth.save(function(err) {
         if (err) return handleError(res, 'Failed to save: ' + err);
-        res.json(auth);
+        res.json(userAuth);
       });
     });
 
