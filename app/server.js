@@ -9,7 +9,6 @@ var bodyParser = require('body-parser');
 var csrf = require('csurf');
 var multer = require('multer');
 var flash = require('connect-flash');
-var csrf = require('csurf');
 var passport = require('passport');
 var mongoStore = require('connect-mongo')(session);
 
@@ -57,9 +56,21 @@ module.exports = function() {
   // Always after sessions
   app.use(flash());
 
-  app.use(csrf());
+  // Don't need CSRF w/ access tokens
+  var csrfMiddleware = csrf();
   app.use(function(req, res, next) {
-    res.locals.csrf_token = req.csrfToken();
+    var isAPI = req.originalUrl.slice(0, 4) === '/api';
+    var accessToken = req.query.access_token || req.body.access_token || null;
+    if (!isAPI || !accessToken) {
+      csrfMiddleware.apply(null, arguments);
+    } else {
+      next();
+    }
+  });
+  // app.use(csrf());
+  app.use(function(req, res, next) {
+    if (req.csrfToken)
+      res.locals.csrf_token = req.csrfToken();
     next();
   });
 
@@ -80,4 +91,3 @@ module.exports = function() {
   app.listen(8080);
 
 };
-

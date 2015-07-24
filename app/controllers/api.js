@@ -67,8 +67,8 @@ api.userUpdate = function(req, res, next) {
 
   var user = req.activeUser;
 
-  if (!user.isOnTeam(req.team))
-    return handleError(res, 'Hey, that user isn\'t on your team!');
+  // if (!user.isOnTeam(req.team))
+    // return handleError(res, 'Hey, that user isn\'t on your team!');
 
   // replace w/ underscore
   for (var key in req.body) {
