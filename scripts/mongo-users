@@ -1,0 +1,17 @@
+db.createUser(
+  {
+    user: "bohdi",
+    pwd: "ZCexnznb=b(Z$9BKkNG8",
+    roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+  }
+)
+
+db.createUser(
+    {
+      user: "prod",
+      pwd: "[WexeYHJcqXjxA3;gT.8",
+      roles: [
+         { role: "readWrite", db: "timezone" }
+      ]
+    }
+)

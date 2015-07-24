@@ -1,9 +1,12 @@
 var crypto = require('crypto');
 var moment = require('moment-timezone');
+var getTimezoneFromLocation = require('../helpers/getTimezoneFromLocation.js');
 
 var UserModel = require('../models/user.js');
 var TeamModel = require('../models/team.js');
 var LocationModel = require('../models/location.js');
+var APIClientModel = require('../../app/models/apiClient.js');
+var APIAuthModel = require('../../app/models/apiAuth.js');
 
 var api = module.exports = {};
 
@@ -65,8 +68,8 @@ api.userUpdate = function(req, res, next) {
 
   var user = req.activeUser;
 
-  if (!user.isOnTeam(req.team))
-    return handleError(res, 'Hey, that user isn\'t on your team!');
+  // if (!user.isOnTeam(req.team))
+    // return handleError(res, 'Hey, that user isn\'t on your team!');
 
   // replace w/ underscore
   for (var key in req.body) {
@@ -150,6 +153,20 @@ api.locationSearch = function(req, res, next) {
 
 };
 
+api.locationGetTimezone = function(req, res, next) {
+
+  if (!req.query.lat || !req.query.long)
+    return res.status(400).json({
+      message: 'lat and long params required'
+    });
+
+  getTimezoneFromLocation(req.query.lat, req.query.long, function(err, tz) {
+    if (err) return handleError(res, 'Error finding your timezone');
+    
+    res.json({ tz: tz });
+  });
+};
+
 api.getGravatar = function(req, res, next) {
 
   var email = req.query.email;
@@ -163,6 +180,46 @@ api.getGravatar = function(req, res, next) {
 
   res.json({
     avatar: 'http://www.gravatar.com/avatar/' + emailHash + '?s=200'
+  });
+
+};
+
+// TEMP API AUTH methods
+api.getOrCreateAPIClient = function(req, res, next) {
+
+  APIClientModel.findOne({ user: req.user.id }, function(err, client) {
+    if (err) return handleError(res, 'Error finding client');
+    res.json(client);
+  });
+
+};
+
+api.getOrCreateAPIClientToken = function(req, res, next) {
+
+  APIClientModel.findOne({ _id: req.params.id }, function(err, client) {
+    if (err) return handleError(res, 'Error finding client');
+
+    APIAuthModel.findOne({
+      user: req.user.id,
+      client: req.params.id
+    }, function(err, auth) {
+      if (err) return handleError(res, 'Error finding client or user');
+
+      if (auth) return res.json(auth);
+
+      var userAuth = new APIAuthModel({
+        user: req.user,
+        client: client
+      });
+
+      userAuth.createToken();
+
+      userAuth.save(function(err) {
+        if (err) return handleError(res, 'Failed to save: ' + err);
+        res.json(auth);
+      });
+    });
+
   });
 
 };
