@@ -13,7 +13,7 @@ function sortByTimezone(a, b){
 module.exports = function transform(time, people) {
 
   // Append a moment date to each person
-  people.forEach(appendTime.bind(people, time));
+  people.forEach(appendTime.bind(null, time));
   people.sort(sortByTimezone);
 
   var timezones = people.reduce(function(zones, person){
@@ -36,20 +36,6 @@ module.exports = function transform(time, people) {
     if (timezone.people.length / people.length > 0.2)
       timezone.major = true;
   });
-
-  // // Organize into timezones
-  // var timezones = {};
-
-  // people.forEach(function(person){
-  //   var offset = person.time.zone();
-  //   if ( !timezones[ offset ] ) timezones[ offset ] = [];
-  //   timezones[ offset ].push( person );
-  // });
-
-  // for (var offset in timezones) {
-  //   if (timezones[offset].length / people.length > 20)
-  //     timezones[offset]
-  // }
 
   return timezones;
 

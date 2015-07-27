@@ -1,6 +1,8 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+var Header = require('../components/header.jsx');
+var Footer = require('../components/footer.jsx');
 var TimezoneList = require('../components/timezoneList.jsx');
 
 var demoTimezones = [
@@ -8,10 +10,10 @@ var demoTimezones = [
     tz: 'America/Los_Angeles',
     people: [
       {
-        name: 'Brian',
+        name: 'Mary',
         tz: 'America/Los_Angeles',
-        city: 'San Francisco',
-        avatar: '/images/avatars/brian.jpg'
+        location: 'San Francisco',
+        avatar: '/images/avatars/mary.jpg'
       }
     ]
   },
@@ -21,25 +23,27 @@ var demoTimezones = [
       {
         name: 'Dan',
         tz: 'America/New_York',
-        city: 'New York',
+        location: 'New York',
         avatar: '/images/avatars/dan.jpg'
       },
       {
         name: 'Sunil',
         tz: 'America/New_York',
-        city: 'DC',
+        location: 'DC',
         avatar: '/images/avatars/sunil.png'
       }
     ]
   },
   {
-    tz: 'Europe/Madrid',
-    people: [{
-      name: 'Mike',
-      tz: 'Europe/Madrid',
-      city: 'Barcelona',
-      avatar: '/images/avatars/mike.jpg'
-    }]
+    tz: 'Europe/Rome',
+    people: [
+      {
+        name: 'Carolyn',
+        tz: 'Europe/Rome',
+        location: 'Venice',
+        avatar: 'http://www.gravatar.com/avatar/17d551ff33a7b03d93bbd1f8fa18d4f5?s=200'
+      }
+    ]
   }
 ];
 
@@ -86,7 +90,7 @@ module.exports = React.createClass({
 
     var nextCity = function() {
       var nextIdx = this.state.searchCityIdx + 1 >= this.state.searchCities.length ?
-                    0 : 
+                    0 :
                     this.state.searchCityIdx + 1;
       this.setState({ searchCityIdx: nextIdx });
       setTimeout(type, TYPE_DELAY);
@@ -114,15 +118,10 @@ module.exports = React.createClass({
     var honeyPotStyle = { "position": "absolute", "left": "-5000px" };
     return (
       <div className="container">
-      
-        <header className="site-header">
-          <h1 className="site-branding">Timezone.io</h1>
-          <div className="site-header--right">
-            <a href="/team/buffer" className="button cta">
-              Live demo
-            </a>
-          </div>
-        </header>
+
+        <Header {...this.props}
+                demo={true}
+                link={false} />
 
         <div className="hp-section demo">
 
@@ -143,7 +142,7 @@ module.exports = React.createClass({
 
             <h3 className="hp-pitch">
               Easily plan meetings + calls with your remote, nomadic team without having to Google <br/>
-              <span className="hp-pitch-search">time in {this.state.searchCity}</span><br/> 
+              <span className="hp-pitch-search">time in {this.state.searchCity}</span><br/>
               <em>...ever again.</em>
             </h3>
 
@@ -156,9 +155,9 @@ module.exports = React.createClass({
           <div className="hp-content-container">
 
             <p className="hp-description">
-              Modern global teams have awesome people spread across multiple timezones. 
+              Modern global teams have awesome people spread across multiple timezones.
               Lots of teams have <em>digital nomads</em> changing locations faster than
-              we can keep up with. Often it gets tricky to remember what time it is 
+              we can keep up with. Often it gets tricky to remember what time it is
               where your teammates are. That's why we built <strong>Timezone.io</strong>.
             </p>
 
@@ -167,38 +166,38 @@ module.exports = React.createClass({
             </h3>
 
             <p className="hp-description">
-              We're starting off with a simple, clear way to display where your team is by timezone. 
-              Next we'll add some ways to automatically update people's locations. 
-              We have a few ideas we're been thinking about, but we'd love to hear 
+              We're starting off with a simple, clear way to display where your team is by timezone.
+              Next we'll add some ways to automatically update people's locations.
+              We have a few ideas we're been thinking about, but we'd love to hear
               what you would work best for you: Update your location using the
-              location of your last Tweet? Want to use Slackbot or Hubot? 
+              location of your last Tweet? Want to use Slackbot or Hubot?
               What about a command line utility? We can't wait to hear your ideas!
             </p>
 
             <h4 className="hp-description">
               Send your wants, needs and encouragement over to <a href="https://twitter.com/timezoneio">
-              <strong>@timezone.io</strong> on Twitter</a> and if you would like to 
+              <strong>@timezone.io</strong> on Twitter</a> and if you would like to
               be notified when you can sign up, add your email address below:
             </h4>
 
             <div className="hp-description">
 
               <div id="mc_embed_signup">
-              <form action="//timezone.us10.list-manage.com/subscribe/post?u=34f393bbea3791dbad5109a7b&amp;id=cb191e06bc" 
-                    method="post" 
-                    id="mc-embedded-subscribe-form" 
-                    name="mc-embedded-subscribe-form" 
-                    className="validate" 
-                    target="_blank" 
+              <form action="//timezone.us10.list-manage.com/subscribe/post?u=34f393bbea3791dbad5109a7b&amp;id=cb191e06bc"
+                    method="post"
+                    id="mc-embedded-subscribe-form"
+                    name="mc-embedded-subscribe-form"
+                    className="validate"
+                    target="_blank"
                     noValidate>
                 <div id="mc_embed_signup_scroll">
-                
+
                   <div className="mc-field-group">
-                    <input type="email" 
-                           defaultValue="" 
-                           name="EMAIL" 
+                    <input type="email"
+                           defaultValue=""
+                           name="EMAIL"
                            placeholder="email address"
-                           className="required email" 
+                           className="required email"
                            id="mce-EMAIL"/>
                   </div>
                   <div id="mce-responses" className="clear">
@@ -209,10 +208,10 @@ module.exports = React.createClass({
                     <input type="text" name="b_34f393bbea3791dbad5109a7b_cb191e06bc" tabIndex="-1" defaultValue="" />
                   </div>
                   <div className="clear">
-                    <input type="submit" 
-                          value="Sign up for Early Access" 
-                          name="subscribe" 
-                          id="mc-embedded-subscribe" 
+                    <input type="submit"
+                          value="Sign up for Early Access"
+                          name="subscribe"
+                          id="mc-embedded-subscribe"
                           className="button cta"/>
                   </div>
                 </div>
@@ -221,20 +220,10 @@ module.exports = React.createClass({
             </div>
 
           </div>
-          
+
         </div>
 
-        <footer className="hp-section alt site-footer">
-
-          <div className="hp-content-container">
-
-            <p>
-              © 2015 Timezone.io
-            </p>
-
-          </div>
-
-        </footer>
+        <Footer />
 
       </div>
     );

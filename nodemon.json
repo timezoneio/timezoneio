@@ -1,0 +1,7 @@
+{
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "ignore": ["public/**/*.js"],
+  "ext": "js json hjs jsx"
+}

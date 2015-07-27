@@ -1,0 +1,33 @@
+// Variables
+
+$blue                  = #01579B
+$teal                  = #1AD5B7
+$red                   = rgb(202, 45, 45)
+
+
+$brandColor            = $blue
+$brandColorText        = #fff
+$textColor             = rgb(50, 50, 50)
+$mutedColor            = rgb(150, 150, 150)
+$fillColor             = #E7EDF0 // darker DCE5EB
+$borderColor           = darken($fillColor, 30%)
+$inputBorderColor      = darken($fillColor, 10%)
+$linkColor             = $brandColor
+$errorColor            = $red
+$errorLightColor       = rgb(255, 226, 226)
+
+$avatarSize            = 60px
+
+
+box-shadow(depth = 0)
+  if depth == 0
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1)
+  else if depth == 1
+    box-shadow: 0 2px 2px rgba(0,0,0,0.26)
+  else if depth == 2
+    box-shadow: 0 0 2px rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.24)
+
+.card
+  border-radius: 2px
+  box-shadow()
+

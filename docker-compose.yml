@@ -1,0 +1,13 @@
+web:
+  build: .
+  # command: # TODO - override the default command with forever -w
+  volumes:
+   - .:/app/
+  links:
+   - db
+  ports:
+   - "80:8080"
+db:
+  image: mongo
+  ports:
+   - "27017:27017"
