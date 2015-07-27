@@ -9,8 +9,16 @@ var AppState = module.exports = function(initialState) {
   this._state = toolbelt.clone(window.appData);
 
   this._state.time = moment(this._state.time);
+  this._state.meeting = {
+    people: []
+  };
 
   this.updateTimezones();
+
+  // DEBUG
+  Object.observe(this._state, function(changes) {
+    console.log(changes);
+  });
 
 };
 
@@ -92,4 +100,13 @@ AppState.prototype.removeTeamMember = function(data) {
     this._state.people.splice(idx, 1);
     this.updateTimezones();
   }
+};
+
+AppState.prototype.toggleSelectPerson = function(id) {
+  var idx = this._state.meeting.people.map(function(p) { return p._id; })
+                                      .indexOf(id);
+  if (idx === -1)
+    this._state.meeting.people.push(this.getPersonById(id));
+  else
+    this._state.meeting.people.splice(idx, 1);
 };

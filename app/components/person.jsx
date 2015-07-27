@@ -2,18 +2,14 @@
 
 var React = require('react');
 var Avatar = require('./avatar.jsx');
-var AppDispatcher = require('../dispatchers/appDispatcher.js');
-var ActionTypes = require('../actions/actionTypes.js');
+var ActionCreators = require('../actions/actionCreators.js');
 
 module.exports = React.createClass({
 
   displayName: 'Person',
 
   handleToggleSelected: function() {
-    AppDispatcher.handleViewAction({
-      actionType: ActionTypes.TOGGLE_SELECT_PERSON,
-      value: this.props.model
-    });
+    ActionCreators.toggleSelectPerson(this.props.model._id);
   },
   render: function() {
     var person = this.props.model;

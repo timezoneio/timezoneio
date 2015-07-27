@@ -61,6 +61,13 @@ var ActionCreators = module.exports = {
       .then(function(data) {
         return data.avatar;
       });
+  },
+
+  toggleSelectPerson: function(userId) {
+    AppDispatcher.dispatchViewAction({
+      actionType: ActionTypes.TOGGLE_SELECT_PERSON,
+      value: userId
+    });
   }
 
 };
@@ -238,12 +245,13 @@ window.addEventListener('popstate', handlePopState);
 var handleViewAction = function(action) {
   var actionType = action.actionType;
   var value = action.value;
+  var shouldRender = false;
 
   switch (actionType) {
 
     case ActionTypes.CHANGE_TIME_FORMAT:
       appState.setTimeFormat(value);
-      renderApp();
+      shouldRender = true;
       break;
     case ActionTypes.USE_CURRENT_TIME:
       updateToCurrentTime();
@@ -265,7 +273,14 @@ var handleViewAction = function(action) {
       saveTeamInfo(value);
       break;
 
+    case ActionTypes.TOGGLE_SELECT_PERSON:
+      appState.toggleSelectPerson(value);
+      shouldRender = true;
+      break;
+
   }
+
+  if (shouldRender) renderApp();
 };
 
 var handleAPIAction = function(action) {
@@ -360,49 +375,51 @@ module.exports = React.createClass({
     var formatString = timeUtils.getFormatStringFor(this.props.timeFormat);
     var displayTime = this.props.time.format(formatString);
 
-    return React.createElement("div", {className: "app-sidebar"}, 
+    return (
+      React.createElement("div", {className: "app-sidebar"}, 
 
-      React.createElement(Branding, {link: true}), 
+        React.createElement(Branding, {link: true}), 
 
-      React.createElement("h2", {className: "app-sidebar--time"}, displayTime), 
+        React.createElement("h2", {className: "app-sidebar--time"}, displayTime), 
 
-      React.createElement(TimeSlider, {time: this.props.time, 
-                  isCurrentTime: this.props.isCurrentTime}), 
+        React.createElement(TimeSlider, {time: this.props.time, 
+                    isCurrentTime: this.props.isCurrentTime}), 
 
-      React.createElement("div", {className: "app-sidebar--button-row"}, 
+        React.createElement("div", {className: "app-sidebar--button-row"}, 
 
-        React.createElement("div", {className: "button-group app-sidebar--format-select"}, 
-          React.createElement("button", {className: 'small hollow ' + (format === 12 ? 'selected' : ''), 
-                  "data-value": "12", 
-                  onClick: this.handleFormatChange}, "12"), 
-          React.createElement("button", {className: 'small hollow ' + (format === 24 ? 'selected' : ''), 
-                  "data-value": "24", 
-                  onClick: this.handleFormatChange}, "24")
+          React.createElement("div", {className: "button-group app-sidebar--format-select"}, 
+            React.createElement("button", {className: 'small hollow ' + (format === 12 ? 'selected' : ''), 
+                    "data-value": "12", 
+                    onClick: this.handleFormatChange}, "12"), 
+            React.createElement("button", {className: 'small hollow ' + (format === 24 ? 'selected' : ''), 
+                    "data-value": "24", 
+                    onClick: this.handleFormatChange}, "24")
+          ), 
+
+          React.createElement("button", {className: "small hollow", 
+                  disabled: this.props.isCurrentTime?'disabled':'', 
+                  onClick: this.handleGotoCurrentTime}, "Now")
         ), 
 
-        React.createElement("button", {className: "small hollow", 
-                disabled: this.props.isCurrentTime?'disabled':'', 
-                onClick: this.handleGotoCurrentTime}, "Now")
-      ), 
+        React.createElement(MeetingPlanner, React.__spread({},  this.props.meeting, 
+                        {timeFormat: this.props.timeFormat})), 
 
-      React.createElement(MeetingPlanner, {people: this.props.people, 
-                      timeFormat: this.props.timeFormat}), 
+         this.props.isAdmin ? (
 
-       this.props.isAdmin ? (
+            React.createElement("div", {className: "app-sidebar--admin"}, 
 
-          React.createElement("div", {className: "app-sidebar--admin"}, 
+              React.createElement(UserMenu, React.__spread({},  this.props.user, 
+                        {pos: "bottom-left"})), 
 
-            React.createElement(UserMenu, React.__spread({},  this.props.user, 
-                      {pos: "bottom-left"})), 
+              React.createElement("button", {className: "small hollow", 
+                      onClick: this.handleManageTeam}, "Manage Team")
 
-            React.createElement("button", {className: "small hollow", 
-                    onClick: this.handleManageTeam}, "Manage Team")
+            )
 
-          )
-
-      ) : ''
+        ) : ''
 
 
+      )
     );
   }
 });
@@ -1018,7 +1035,10 @@ module.exports = React.createClass({
 var React = require('react');
 var Schedule = require('./schedule.jsx');
 
-module.exports = React.createClass({displayName: "exports",
+module.exports = React.createClass({
+
+  displayName: 'MeetingPlanner',
+
   renderEmpty: function() {
     return (
       React.createElement("p", {className: "text-small text-centered"}, 
@@ -1027,23 +1047,21 @@ module.exports = React.createClass({displayName: "exports",
       )
     );
   },
+
   render: function() {
 
-    // TODO make sure sorted by timezone :)
-    var selectedPeople = this.props.people.filter(function(person) {
-      return person.isSelected;
-    });
-
-    if (!selectedPeople.length) return this.renderEmpty();
+    if (!this.props.people || !this.props.people.length)
+      return this.renderEmpty();
 
     // var commonScheduleRows =
 
+    // TODO make sure sorted by timezone :)
     return (
       React.createElement("table", {className: "meeting-planner"}, 
         React.createElement("tr", null, 
-          selectedPeople.map(function(person) {
+          this.props.people.map(function(person, idx) {
             return (
-              React.createElement("th", null, 
+              React.createElement("th", {key: idx}, 
                 React.createElement("img", {src: person.avatar, 
                    className: "avatar small", 
                    title: person.name})
@@ -1061,6 +1079,7 @@ module.exports = React.createClass({displayName: "exports",
 //   return <Schedule person={person}
 //                    timeFormat={this.props.timeFormat} />;
 // }.bind(this))}
+
 
 },{"./schedule.jsx":13,"react":194}],11:[function(require,module,exports){
 /** @jsx React.DOM */
@@ -1105,18 +1124,14 @@ module.exports = React.createClass({
 
 var React = require('react');
 var Avatar = require('./avatar.jsx');
-var AppDispatcher = require('../dispatchers/appDispatcher.js');
-var ActionTypes = require('../actions/actionTypes.js');
+var ActionCreators = require('../actions/actionCreators.js');
 
 module.exports = React.createClass({
 
   displayName: 'Person',
 
   handleToggleSelected: function() {
-    AppDispatcher.handleViewAction({
-      actionType: ActionTypes.TOGGLE_SELECT_PERSON,
-      value: this.props.model
-    });
+    ActionCreators.toggleSelectPerson(this.props.model._id);
   },
   render: function() {
     var person = this.props.model;
@@ -1136,7 +1151,7 @@ module.exports = React.createClass({
 });
 
 
-},{"../actions/actionTypes.js":2,"../dispatchers/appDispatcher.js":18,"./avatar.jsx":5,"react":194}],13:[function(require,module,exports){
+},{"../actions/actionCreators.js":1,"./avatar.jsx":5,"react":194}],13:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -1528,8 +1543,16 @@ var AppState = module.exports = function(initialState) {
   this._state = toolbelt.clone(window.appData);
 
   this._state.time = moment(this._state.time);
+  this._state.meeting = {
+    people: []
+  };
 
   this.updateTimezones();
+
+  // DEBUG
+  Object.observe(this._state, function(changes) {
+    console.log(changes);
+  });
 
 };
 
@@ -1611,6 +1634,15 @@ AppState.prototype.removeTeamMember = function(data) {
     this._state.people.splice(idx, 1);
     this.updateTimezones();
   }
+};
+
+AppState.prototype.toggleSelectPerson = function(id) {
+  var idx = this._state.meeting.people.map(function(p) { return p._id; })
+                                      .indexOf(id);
+  if (idx === -1)
+    this._state.meeting.people.push(this.getPersonById(id));
+  else
+    this._state.meeting.people.splice(idx, 1);
 };
 
 
@@ -1774,7 +1806,9 @@ var AppSidebar = require('../components/appSidebar.jsx');
 var TimezoneList = require('../components/timezoneList.jsx');
 var ManageModal = require('../components/manageModal.jsx');
 
-module.exports = React.createClass({displayName: "exports",
+module.exports = React.createClass({
+
+  displayName: 'Team',
 
   handleClickMask: function(e) {
     AppDispatcher.dispatchViewAction({
@@ -1790,7 +1824,7 @@ module.exports = React.createClass({displayName: "exports",
     var modal = null;
 
     if (currentView === 'manage')
-      modal = React.createElement(ManageModal, React.__spread({},  this.props))
+      modal = (React.createElement(ManageModal, React.__spread({},  this.props)));
 
     return (
       React.createElement("div", {className: "modal-container", 

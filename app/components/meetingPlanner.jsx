@@ -4,6 +4,9 @@ var React = require('react');
 var Schedule = require('./schedule.jsx');
 
 module.exports = React.createClass({
+
+  displayName: 'MeetingPlanner',
+
   renderEmpty: function() {
     return (
       <p className="text-small text-centered">
@@ -12,24 +15,22 @@ module.exports = React.createClass({
       </p>
     );
   },
+
   render: function() {
 
-    // TODO make sure sorted by timezone :)
-    var selectedPeople = this.props.people.filter(function(person) {
-      return person.isSelected;
-    });
-
-    if (!selectedPeople.length) return this.renderEmpty();
+    if (!this.props.people || !this.props.people.length)
+      return this.renderEmpty();
 
     // var commonScheduleRows =
 
+    // TODO make sure sorted by timezone :)
     return (
       <table className="meeting-planner">
         <tr>
-          {selectedPeople.map(function(person) {
+          {this.props.people.map(function(person, idx) {
             return (
-              <th>
-                <img src={person.avatar} 
+              <th key={idx}>
+                <img src={person.avatar}
                    className="avatar small"
                    title={person.name} />
               </th>
