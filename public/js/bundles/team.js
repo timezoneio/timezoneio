@@ -1041,9 +1041,11 @@ module.exports = React.createClass({
 
   renderEmpty: function() {
     return (
-      React.createElement("p", {className: "text-small text-centered"}, 
-        "Click someone to start ", React.createElement("br", null), 
-        "planning a meeting!"
+      React.createElement("div", {className: "meeting-planner-cta"}, 
+        React.createElement("p", {className: "meeting-planner-cta-text"}, 
+          "Click a team member ", React.createElement("br", null), 
+          "to plan a meeting"
+        )
       )
     );
   },

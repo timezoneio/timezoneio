@@ -9,10 +9,12 @@ module.exports = React.createClass({
 
   renderEmpty: function() {
     return (
-      <p className="text-small text-centered">
-        Click someone to start <br/>
-        planning a meeting!
-      </p>
+      <div className="meeting-planner-cta">
+        <p className="meeting-planner-cta-text">
+          Click a team member <br/>
+          to plan a meeting
+        </p>
+      </div>
     );
   },
 

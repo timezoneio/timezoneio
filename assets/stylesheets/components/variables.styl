@@ -1,6 +1,7 @@
 // Variables
 
 $blue                  = #01579B
+$lightBlue             = #558AB2
 $teal                  = #1AD5B7
 $red                   = rgb(202, 45, 45)
 
@@ -10,6 +11,7 @@ $brandColorText        = #fff
 $textColor             = rgb(50, 50, 50)
 $mutedColor            = rgb(150, 150, 150)
 $fillColor             = #E7EDF0 // darker DCE5EB
+$lightFillColor        = lighten($fillColor, 50%)
 $borderColor           = darken($fillColor, 30%)
 $inputBorderColor      = darken($fillColor, 10%)
 $linkColor             = $brandColor
@@ -30,4 +32,3 @@ box-shadow(depth = 0)
 .card
   border-radius: 2px
   box-shadow()
-
