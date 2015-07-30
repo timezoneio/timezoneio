@@ -27,10 +27,12 @@ module.exports = React.createClass({
     var classes = 'avatar';
     if (this.props.size) classes += ' ' + this.props.size;
 
-    return <img src={this.props.avatar}
-                className={classes}
-                onLoad={this.handleLoadSuccess}
-                onError={this.handleLoadError} />
+    return (
+      <img src={this.props.avatar}
+           className={classes}
+           onLoad={this.handleLoadSuccess}
+           onError={this.handleLoadError} />
+     );
   }
 
 });

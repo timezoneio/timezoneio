@@ -12,6 +12,18 @@ timeUtils.getShortFormatStringFor = function(fmt) {
   return fmt === 24 ? 'H' : 'h'; // ha
 };
 
+// Get the hour in the format desired
+timeUtils.getHourFormattedString = function(hour, fmt) {
+  if (fmt === 24)
+    return hour + ':00';
+  var m = hour < 12 ? 'am' : 'pm';
+  if (hour === 0)
+    hour = 12;
+  if (hour > 12)
+    hour = hour - 12;
+  return hour + m;
+};
+
 // Round to the closest quarter hour
 timeUtils.roundToQuarterHour = function(minutes) {
   return Math.round(minutes / 60 * 4) * 15;

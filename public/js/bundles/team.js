@@ -455,10 +455,12 @@ module.exports = React.createClass({
     var classes = 'avatar';
     if (this.props.size) classes += ' ' + this.props.size;
 
-    return React.createElement("img", {src: this.props.avatar, 
-                className: classes, 
-                onLoad: this.handleLoadSuccess, 
-                onError: this.handleLoadError})
+    return (
+      React.createElement("img", {src: this.props.avatar, 
+           className: classes, 
+           onLoad: this.handleLoadSuccess, 
+           onError: this.handleLoadError})
+     );
   }
 
 });
@@ -1033,6 +1035,8 @@ module.exports = React.createClass({
 /** @jsx React.DOM */
 
 var React = require('react');
+var toolbelt = require('../utils/toolbelt.js');
+var Avatar = require('./avatar.jsx');
 var Schedule = require('./schedule.jsx');
 
 module.exports = React.createClass({
@@ -1052,25 +1056,32 @@ module.exports = React.createClass({
 
   render: function() {
 
-    if (!this.props.people || !this.props.people.length)
+    if (!this.props.groups || !this.props.groups.length)
       return this.renderEmpty();
 
-    // var commonScheduleRows =
+    console.info(this.props);
 
-    // TODO make sure sorted by timezone :)
     return (
-      React.createElement("table", {className: "meeting-planner"}, 
-        React.createElement("tr", null, 
-          this.props.people.map(function(person, idx) {
-            return (
-              React.createElement("th", {key: idx}, 
-                React.createElement("img", {src: person.avatar, 
-                   className: "avatar small", 
-                   title: person.name})
+      React.createElement("div", {className: "meeting-planner"}, 
+
+        React.createElement("div", {className: "meeting-planner-sugggested"}, 
+          this.props.suggestedTime
+        ), 
+
+        this.props.groups.map(function(group, idx) {
+          return (
+            React.createElement("div", {key: idx, 
+                 className: "meeting-planner-group"}, 
+              React.createElement("div", {className: "meeting-planner-group-people"}, 
+                group.people.map(function(p, idx) {
+                  return React.createElement(Avatar, {key: idx, 
+                                 avatar: p.avatar, 
+                                 size: 'mini'})
+                })
               )
-            );
-          })
-        )
+            )
+          );
+        })
 
       )
     );
@@ -1083,7 +1094,7 @@ module.exports = React.createClass({
 // }.bind(this))}
 
 
-},{"./schedule.jsx":13,"react":194}],11:[function(require,module,exports){
+},{"../utils/toolbelt.js":23,"./avatar.jsx":5,"./schedule.jsx":13,"react":194}],11:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -1537,6 +1548,7 @@ var KEY = module.exports = {
 var moment = require('moment-timezone');
 var toolbelt = require('../utils/toolbelt.js');
 var transform = require('../utils/transform.js');
+var timeUtils = require('../utils/time.js');
 
 
 // Constructor
@@ -1645,10 +1657,112 @@ AppState.prototype.toggleSelectPerson = function(id) {
     this._state.meeting.people.push(this.getPersonById(id));
   else
     this._state.meeting.people.splice(idx, 1);
+
+  this.organizeMeetingGroups();
+  this.findMeetingTime();
 };
 
 
-},{"../utils/toolbelt.js":23,"../utils/transform.js":24,"moment-timezone":36}],22:[function(require,module,exports){
+AppState.prototype.organizeMeetingGroups = function() {
+  var zoneGroups = toolbelt.groupBy('zone', this._state.meeting.people);
+
+  this._state.meeting.groups = Object.keys(zoneGroups)
+                                     .sort()
+                                     .map(function(z) {
+                                       var zone = parseInt(z, 10);
+                                       return {
+                                         zone: zone,
+                                         zoneHours: zone / 60,
+                                         people: zoneGroups[z]
+                                       };
+                                     });
+};
+
+var createHoursArray = function() {
+  var hours = [];
+  for (var i = 0; i < 24; i++) hours.push(i);
+  return hours;
+};
+
+var createHoursArrayForOffset = function(zoneHours) {
+  var hours = createHoursArray();
+  if (zoneHours === 0)
+    return hours;
+  if (zoneHours > 0) {
+    var end = hours.splice(24 - zoneHours);
+    return end.concat(hours);
+  } else {
+    var start = hours.splice(Math.abs(zoneHours));
+    return start.concat(hours);
+  }
+};
+
+var isWorkHour = function(hour) {
+  return hour >= 9 && hour <= 18; // 9-6
+};
+
+var getLongestContinuousSegment = function(hours) {
+  var segments = [];
+  var activeSegment = [];
+  var twoDays = hours.concat(hours);
+  for (var i = 0; i < 48; i++) {
+    var hour = twoDays[i];
+    if (hour === null && activeSegment.length) {
+      segments.push(activeSegment);
+      activeSegment = [];
+    } else if (hour !== null) {
+      activeSegment.push(hour);
+    }
+  }
+  if (activeSegment.length)
+    segments.push(activeSegment);
+
+  var longestSegment = segments.reduce(function(longest, segment) {
+    return segment.length > longest.length ? segment : longest;
+  }, []);
+
+  return longestSegment;
+};
+
+AppState.prototype.findMeetingTime = function() {
+
+  this._state.meeting.groups.forEach(function(group) {
+    group.hours = createHoursArrayForOffset(group.zoneHours);
+  });
+
+  var hoursMatrix = this._state.meeting.groups.map(function(group) {
+    return group.hours;
+  });
+
+  var gmtHours = createHoursArray();
+  var availableHoursIndexes = gmtHours.map(function(hour, idx) {
+    return hoursMatrix.reduce(function(isAvailable, hoursSet) {
+      return isAvailable && isWorkHour(hoursSet[idx]);
+    }, true);
+  });
+
+  this._state.meeting.availableHoursIndexes = availableHoursIndexes;
+
+  // Get suggested local time window
+  var localZoneHours = moment().zone() / 60;
+  var localHours = createHoursArrayForOffset(localZoneHours);
+  var localAvailableHours = localHours.map(function(hour, idx) {
+    return availableHoursIndexes[idx] ? hour : null;
+  });
+  // find biggest continuous segment
+  var suggestedTimeSegment = getLongestContinuousSegment(localAvailableHours);
+  var startHour = suggestedTimeSegment[0];
+  var endHour = suggestedTimeSegment[suggestedTimeSegment.length - 1];
+  var suggestedTime = timeUtils.getHourFormattedString(startHour) +
+                      ' - ' +
+                      timeUtils.getHourFormattedString(endHour);
+
+  this._state.meeting.suggestedTime = suggestedTime;
+
+};
+
+
+},{"../utils/time.js":22,"../utils/toolbelt.js":23,"../utils/transform.js":24,"moment-timezone":36}],22:[function(require,module,exports){
 var moment = require('moment-timezone');
 
 var timeUtils = module.exports = {};
@@ -1661,6 +1775,18 @@ timeUtils.getFormatStringFor = function(fmt) {
 // Get the time preferred format sans minutes
 timeUtils.getShortFormatStringFor = function(fmt) {
   return fmt === 24 ? 'H' : 'h'; // ha
+};
+
+// Get the hour in the format desired
+timeUtils.getHourFormattedString = function(hour, fmt) {
+  if (fmt === 24)
+    return hour + ':00';
+  var m = hour < 12 ? 'am' : 'pm';
+  if (hour === 0)
+    hour = 12;
+  if (hour > 12)
+    hour = hour - 12;
+  return hour + m;
 };
 
 // Round to the closest quarter hour
@@ -1697,6 +1823,7 @@ timeUtils.getAvailableHoursInUTC = function(tz, formatString) {
     };
   });
 };
+
 
 },{"moment-timezone":36}],23:[function(require,module,exports){
 var toolbelt = module.exports = {};
@@ -1752,6 +1879,21 @@ toolbelt.indexOf = function(query, arr) {
   return -1;
 };
 
+toolbelt.groupBy = function(key, arr) {
+  var obj = {};
+
+  for (var i = 0, len = arr.length; i < len; i++) {
+    var item = arr[i];
+    var val = item[key];
+    if (obj[val])
+      obj[val].push(item);
+    else
+      obj[val] = [item];
+  }
+
+  return obj;
+};
+
 
 },{}],24:[function(require,module,exports){
 var moment = require('moment-timezone');
@@ -1759,6 +1901,7 @@ var moment = require('moment-timezone');
 
 function appendTime(time, person) {
   person.time = moment( time ).tz( person.tz );
+  person.zone = person.time.zone();
 }
 
 function sortByTimezone(a, b){
@@ -1774,9 +1917,9 @@ module.exports = function transform(time, people) {
 
   var timezones = people.reduce(function(zones, person){
     var last = zones[ zones.length - 1 ];
-    var offset = last && last.people[0].time.zone();
+    var zone = last && last.people[0].zone;
 
-    if (last && offset === person.time.zone()) {
+    if (last && zone === person.zone) {
       last.people.push(person);
     } else {
       zones.push({

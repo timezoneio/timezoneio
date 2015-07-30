@@ -3,6 +3,7 @@ var moment = require('moment-timezone');
 
 function appendTime(time, person) {
   person.time = moment( time ).tz( person.tz );
+  person.zone = person.time.zone();
 }
 
 function sortByTimezone(a, b){
@@ -18,9 +19,9 @@ module.exports = function transform(time, people) {
 
   var timezones = people.reduce(function(zones, person){
     var last = zones[ zones.length - 1 ];
-    var offset = last && last.people[0].time.zone();
+    var zone = last && last.people[0].zone;
 
-    if (last && offset === person.time.zone()) {
+    if (last && zone === person.zone) {
       last.people.push(person);
     } else {
       zones.push({

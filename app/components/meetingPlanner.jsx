@@ -1,6 +1,8 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+var toolbelt = require('../utils/toolbelt.js');
+var Avatar = require('./avatar.jsx');
 var Schedule = require('./schedule.jsx');
 
 module.exports = React.createClass({
@@ -20,27 +22,34 @@ module.exports = React.createClass({
 
   render: function() {
 
-    if (!this.props.people || !this.props.people.length)
+    if (!this.props.groups || !this.props.groups.length)
       return this.renderEmpty();
 
-    // var commonScheduleRows =
+    console.info(this.props);
 
-    // TODO make sure sorted by timezone :)
     return (
-      <table className="meeting-planner">
-        <tr>
-          {this.props.people.map(function(person, idx) {
-            return (
-              <th key={idx}>
-                <img src={person.avatar}
-                   className="avatar small"
-                   title={person.name} />
-              </th>
-            );
-          })}
-        </tr>
+      <div className="meeting-planner">
 
-      </table>
+        <div className="meeting-planner-sugggested">
+          {this.props.suggestedTime}
+        </div>
+
+        {this.props.groups.map(function(group, idx) {
+          return (
+            <div key={idx}
+                 className="meeting-planner-group">
+              <div className="meeting-planner-group-people">
+                {group.people.map(function(p, idx) {
+                  return <Avatar key={idx}
+                                 avatar={p.avatar}
+                                 size={'mini'} />
+                })}
+              </div>
+            </div>
+          );
+        })}
+
+      </div>
     );
   }
 });

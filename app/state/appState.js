@@ -1,6 +1,7 @@
 var moment = require('moment-timezone');
 var toolbelt = require('../utils/toolbelt.js');
 var transform = require('../utils/transform.js');
+var timeUtils = require('../utils/time.js');
 
 
 // Constructor
@@ -109,4 +110,106 @@ AppState.prototype.toggleSelectPerson = function(id) {
     this._state.meeting.people.push(this.getPersonById(id));
   else
     this._state.meeting.people.splice(idx, 1);
+
+  this.organizeMeetingGroups();
+  this.findMeetingTime();
+};
+
+
+AppState.prototype.organizeMeetingGroups = function() {
+  var zoneGroups = toolbelt.groupBy('zone', this._state.meeting.people);
+
+  this._state.meeting.groups = Object.keys(zoneGroups)
+                                     .sort()
+                                     .map(function(z) {
+                                       var zone = parseInt(z, 10);
+                                       return {
+                                         zone: zone,
+                                         zoneHours: zone / 60,
+                                         people: zoneGroups[z]
+                                       };
+                                     });
+};
+
+var createHoursArray = function() {
+  var hours = [];
+  for (var i = 0; i < 24; i++) hours.push(i);
+  return hours;
+};
+
+var createHoursArrayForOffset = function(zoneHours) {
+  var hours = createHoursArray();
+  if (zoneHours === 0)
+    return hours;
+  if (zoneHours > 0) {
+    var end = hours.splice(24 - zoneHours);
+    return end.concat(hours);
+  } else {
+    var start = hours.splice(Math.abs(zoneHours));
+    return start.concat(hours);
+  }
+};
+
+var isWorkHour = function(hour) {
+  return hour >= 9 && hour <= 18; // 9-6
+};
+
+var getLongestContinuousSegment = function(hours) {
+  var segments = [];
+  var activeSegment = [];
+  var twoDays = hours.concat(hours);
+  for (var i = 0; i < 48; i++) {
+    var hour = twoDays[i];
+    if (hour === null && activeSegment.length) {
+      segments.push(activeSegment);
+      activeSegment = [];
+    } else if (hour !== null) {
+      activeSegment.push(hour);
+    }
+  }
+  if (activeSegment.length)
+    segments.push(activeSegment);
+
+  var longestSegment = segments.reduce(function(longest, segment) {
+    return segment.length > longest.length ? segment : longest;
+  }, []);
+
+  return longestSegment;
+};
+
+AppState.prototype.findMeetingTime = function() {
+
+  this._state.meeting.groups.forEach(function(group) {
+    group.hours = createHoursArrayForOffset(group.zoneHours);
+  });
+
+  var hoursMatrix = this._state.meeting.groups.map(function(group) {
+    return group.hours;
+  });
+
+  var gmtHours = createHoursArray();
+  var availableHoursIndexes = gmtHours.map(function(hour, idx) {
+    return hoursMatrix.reduce(function(isAvailable, hoursSet) {
+      return isAvailable && isWorkHour(hoursSet[idx]);
+    }, true);
+  });
+
+  this._state.meeting.availableHoursIndexes = availableHoursIndexes;
+
+  // Get suggested local time window
+  var localZoneHours = moment().zone() / 60;
+  var localHours = createHoursArrayForOffset(localZoneHours);
+  var localAvailableHours = localHours.map(function(hour, idx) {
+    return availableHoursIndexes[idx] ? hour : null;
+  });
+  // find biggest continuous segment
+  var suggestedTimeSegment = getLongestContinuousSegment(localAvailableHours);
+  var startHour = suggestedTimeSegment[0];
+  var endHour = suggestedTimeSegment[suggestedTimeSegment.length - 1];
+  var suggestedTime = timeUtils.getHourFormattedString(startHour) +
+                      ' - ' +
+                      timeUtils.getHourFormattedString(endHour);
+
+  this._state.meeting.suggestedTime = suggestedTime;
+
 };
