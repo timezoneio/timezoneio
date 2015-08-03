@@ -245,3 +245,9 @@ AppState.prototype.findMeetingTime = function() {
   });
 
 };
+
+AppState.prototype.clearMeetingGroups = function() {
+  this._state.meeting = {
+    people: []
+  };
+};

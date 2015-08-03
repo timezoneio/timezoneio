@@ -2,12 +2,18 @@
 
 var React = require('react');
 var toolbelt = require('../utils/toolbelt.js');
+var ActionCreators = require('../actions/actionCreators.js');
 var Avatar = require('./avatar.jsx');
 var Schedule = require('./schedule.jsx');
 
 module.exports = React.createClass({
 
   displayName: 'MeetingPlanner',
+
+  handleClearGroups: function(e) {
+    e.preventDefault();
+    ActionCreators.clearMeetingGroups();
+  },
 
   renderEmpty: function() {
     return (
@@ -55,6 +61,13 @@ module.exports = React.createClass({
             </div>
           );
         })}
+
+        <div className="meeting-planner-clear">
+          <a href="#"
+             onClick={this.handleClearGroups}>
+            Clear
+          </a>
+        </div>
 
       </div>
     );

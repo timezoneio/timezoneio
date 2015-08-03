@@ -67,6 +67,12 @@ var ActionCreators = module.exports = {
       actionType: ActionTypes.TOGGLE_SELECT_PERSON,
       value: userId
     });
+  },
+
+  clearMeetingGroups: function() {
+    AppDispatcher.dispatchViewAction({
+      actionType: ActionTypes.CLEAR_MEETING_GROUPS
+    });
   }
 
 };

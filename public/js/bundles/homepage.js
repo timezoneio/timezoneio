@@ -68,6 +68,12 @@ var ActionCreators = module.exports = {
       actionType: ActionTypes.TOGGLE_SELECT_PERSON,
       value: userId
     });
+  },
+
+  clearMeetingGroups: function() {
+    AppDispatcher.dispatchViewAction({
+      actionType: ActionTypes.CLEAR_MEETING_GROUPS
+    });
   }
 
 };
@@ -83,6 +89,7 @@ module.exports = keyMirror({
   ADJUST_TIME_DISPLAY: 0,
   USE_CURRENT_TIME: 0,
   TOGGLE_SELECT_PERSON: 0,
+  CLEAR_MEETING_GROUPS: 0,
 
   SHOW_MODAL: 0,
   CLOSE_MODAL: 0,

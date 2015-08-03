@@ -68,6 +68,12 @@ var ActionCreators = module.exports = {
       actionType: ActionTypes.TOGGLE_SELECT_PERSON,
       value: userId
     });
+  },
+
+  clearMeetingGroups: function() {
+    AppDispatcher.dispatchViewAction({
+      actionType: ActionTypes.CLEAR_MEETING_GROUPS
+    });
   }
 
 };
@@ -83,6 +89,7 @@ module.exports = keyMirror({
   ADJUST_TIME_DISPLAY: 0,
   USE_CURRENT_TIME: 0,
   TOGGLE_SELECT_PERSON: 0,
+  CLEAR_MEETING_GROUPS: 0,
 
   SHOW_MODAL: 0,
   CLOSE_MODAL: 0,
@@ -275,6 +282,11 @@ var handleViewAction = function(action) {
 
     case ActionTypes.TOGGLE_SELECT_PERSON:
       appState.toggleSelectPerson(value);
+      shouldRender = true;
+      break;
+
+    case ActionTypes.CLEAR_MEETING_GROUPS:
+      appState.clearMeetingGroups();
       shouldRender = true;
       break;
 
@@ -1036,12 +1048,18 @@ module.exports = React.createClass({
 
 var React = require('react');
 var toolbelt = require('../utils/toolbelt.js');
+var ActionCreators = require('../actions/actionCreators.js');
 var Avatar = require('./avatar.jsx');
 var Schedule = require('./schedule.jsx');
 
 module.exports = React.createClass({
 
   displayName: 'MeetingPlanner',
+
+  handleClearGroups: function(e) {
+    e.preventDefault();
+    ActionCreators.clearMeetingGroups();
+  },
 
   renderEmpty: function() {
     return (
@@ -1088,7 +1106,14 @@ module.exports = React.createClass({
               )
             )
           );
-        })
+        }), 
+
+        React.createElement("div", {className: "meeting-planner-clear"}, 
+          React.createElement("a", {href: "#", 
+             onClick: this.handleClearGroups}, 
+            "Clear"
+          )
+        )
 
       )
     );
@@ -1101,7 +1126,7 @@ module.exports = React.createClass({
 // }.bind(this))}
 
 
-},{"../utils/toolbelt.js":23,"./avatar.jsx":5,"./schedule.jsx":13,"react":194}],11:[function(require,module,exports){
+},{"../actions/actionCreators.js":1,"../utils/toolbelt.js":23,"./avatar.jsx":5,"./schedule.jsx":13,"react":194}],11:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -1798,6 +1823,12 @@ AppState.prototype.findMeetingTime = function() {
     group.suggestedTime = timeUtils.formatLocalTimeWindow(startHour, endHour, group.zoneHours);
   });
 
+};
+
+AppState.prototype.clearMeetingGroups = function() {
+  this._state.meeting = {
+    people: []
+  };
 };
 
 

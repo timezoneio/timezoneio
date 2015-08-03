@@ -179,6 +179,11 @@ var handleViewAction = function(action) {
       shouldRender = true;
       break;
 
+    case ActionTypes.CLEAR_MEETING_GROUPS:
+      appState.clearMeetingGroups();
+      shouldRender = true;
+      break;
+
   }
 
   if (shouldRender) renderApp();
