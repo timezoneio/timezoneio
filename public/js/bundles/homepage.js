@@ -640,6 +640,23 @@ timeUtils.getHourFormattedString = function(hour, fmt) {
   return hour + m;
 };
 
+timeUtils.gmtHoursToOffset = function(gmtHour, zoneHourOffset) {
+  var hour = gmtHour - zoneHourOffset;
+  return hour >= 0 ? hour : 24 - hour;
+};
+
+timeUtils.formatLocalTimeWindow = function(startHour, endHour, zoneHourOffset) {
+  var localStartHour = timeUtils.gmtHoursToOffset(startHour, zoneHourOffset);
+  var localEndHour = timeUtils.gmtHoursToOffset(endHour, zoneHourOffset);
+
+  if (localStartHour === localEndHour)
+    return timeUtils.getHourFormattedString(localStartHour);
+
+  return timeUtils.getHourFormattedString(localStartHour) +
+         ' - ' +
+         timeUtils.getHourFormattedString(localEndHour);
+};
+
 // Round to the closest quarter hour
 timeUtils.roundToQuarterHour = function(minutes) {
   return Math.round(minutes / 60 * 4) * 15;

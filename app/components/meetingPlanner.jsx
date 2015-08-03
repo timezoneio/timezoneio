@@ -25,19 +25,26 @@ module.exports = React.createClass({
     if (!this.props.groups || !this.props.groups.length)
       return this.renderEmpty();
 
-    console.info(this.props);
-
     return (
       <div className="meeting-planner">
 
-        <div className="meeting-planner-sugggested">
-          {this.props.suggestedTime}
-        </div>
+        { this.props.suggestedTime &&
+          <div className="meeting-planner-sugggested">
+            {this.props.suggestedTime}
+            <div className="meeting-planner-sugggested-copy">
+              Local time
+            </div>
+          </div>
+        }
+
 
         {this.props.groups.map(function(group, idx) {
           return (
             <div key={idx}
                  className="meeting-planner-group">
+              <div className="meeting-planner-group-suggested">
+                {group.suggestedTime}
+              </div>
               <div className="meeting-planner-group-people">
                 {group.people.map(function(p, idx) {
                   return <Avatar key={idx}

@@ -17,9 +17,9 @@ var AppState = module.exports = function(initialState) {
   this.updateTimezones();
 
   // DEBUG
-  Object.observe(this._state, function(changes) {
-    console.log(changes);
-  });
+  // Object.observe(this._state, function(changes) {
+  //   console.log(changes);
+  // });
 
 };
 
@@ -150,10 +150,6 @@ var createHoursArrayForOffset = function(zoneHours) {
   }
 };
 
-var isWorkHour = function(hour) {
-  return hour >= 9 && hour <= 18; // 9-6
-};
-
 var getLongestContinuousSegment = function(hours) {
   var segments = [];
   var activeSegment = [];
@@ -177,13 +173,15 @@ var getLongestContinuousSegment = function(hours) {
   return longestSegment;
 };
 
-AppState.prototype.findMeetingTime = function() {
+AppState.prototype.getGMTAvailableHoursForGroups = function(groups, workStartHour, workEndHour) {
+  if (!workStartHour) workStartHour = 9;
+  if (!workEndHour) workEndHour = 18;
 
-  this._state.meeting.groups.forEach(function(group) {
-    group.hours = createHoursArrayForOffset(group.zoneHours);
-  });
+  var isWorkHour = function(hour) {
+    return hour >= workStartHour && hour <= workEndHour;
+  };
 
-  var hoursMatrix = this._state.meeting.groups.map(function(group) {
+  var hoursMatrix = groups.map(function(group) {
     return group.hours;
   });
 
@@ -194,22 +192,56 @@ AppState.prototype.findMeetingTime = function() {
     }, true);
   });
 
-  this._state.meeting.availableHoursIndexes = availableHoursIndexes;
+  var hasAvailableHours = !!availableHoursIndexes.filter(function(isAvailable) {
+    return isAvailable;
+  }).length;
 
-  // Get suggested local time window
-  var localZoneHours = moment().zone() / 60;
-  var localHours = createHoursArrayForOffset(localZoneHours);
-  var localAvailableHours = localHours.map(function(hour, idx) {
+  // We don't expand the window beyond 6am-9pm
+  var isExpandable = workStartHour !== 6 && workEndHour !== 21;
+
+  // If there isn't any overlap time, we expand the work day by 1 hour in both directions
+  if (!hasAvailableHours && isExpandable)
+    return this.getGMTAvailableHoursForGroups(groups,
+                                              Math.max(6, workStartHour - 1),
+                                              Math.min(21, workEndHour + 1));
+
+  // this._state.meeting.availableHoursIndexes = availableHoursIndexes;
+
+  // Get the suggested metting time in hours GMT
+  var gmtAvailableHours = gmtHours.map(function(hour, idx) {
     return availableHoursIndexes[idx] ? hour : null;
   });
-  // find biggest continuous segment
-  var suggestedTimeSegment = getLongestContinuousSegment(localAvailableHours);
+
+  return gmtAvailableHours;
+};
+
+AppState.prototype.getSuggestedMeetingTimeWindow = function(groups) {
+  var gmtAvailableHours = this.getGMTAvailableHoursForGroups(groups);
+  var suggestedTimeSegment = getLongestContinuousSegment(gmtAvailableHours);
   var startHour = suggestedTimeSegment[0];
   var endHour = suggestedTimeSegment[suggestedTimeSegment.length - 1];
-  var suggestedTime = timeUtils.getHourFormattedString(startHour) +
-                      ' - ' +
-                      timeUtils.getHourFormattedString(endHour);
+  return [startHour, endHour];
+};
+
+AppState.prototype.findMeetingTime = function() {
+
+  this._state.meeting.groups.forEach(function(group) {
+    group.hours = createHoursArrayForOffset(group.zoneHours);
+  });
+
+  var suggestedTimeWindow = this.getSuggestedMeetingTimeWindow(this._state.meeting.groups);
+  var startHour = suggestedTimeWindow[0];
+  var endHour = suggestedTimeWindow[1];
+
+  // Get suggested local time
+  var localZoneHours = moment().zone() / 60;
+  var suggestedTime = timeUtils.formatLocalTimeWindow(startHour, endHour, localZoneHours);
 
   this._state.meeting.suggestedTime = suggestedTime;
+
+  // Get times for each zone
+  this._state.meeting.groups.forEach(function(group) {
+    group.suggestedTime = timeUtils.formatLocalTimeWindow(startHour, endHour, group.zoneHours);
+  });
 
 };
