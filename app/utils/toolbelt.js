@@ -50,3 +50,18 @@ toolbelt.indexOf = function(query, arr) {
 
   return -1;
 };
+
+toolbelt.groupBy = function(key, arr) {
+  var obj = {};
+
+  for (var i = 0, len = arr.length; i < len; i++) {
+    var item = arr[i];
+    var val = item[key];
+    if (obj[val])
+      obj[val].push(item);
+    else
+      obj[val] = [item];
+  }
+
+  return obj;
+};

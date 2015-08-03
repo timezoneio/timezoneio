@@ -1,0 +1,80 @@
+.meeting-planner-cta
+  margin: 2em 0 1em
+  padding: 4.6em 0.5em 1em
+  border-radius: 2px
+  color: $lightBlue
+  font-size: 13px
+  text-align: center
+  background: $lightFillColor url(/images/ui/click-avatar.png) no-repeat 50% 0.5em
+  background-size: 48px
+
+.meeting-planner-cta-text
+  margin: 0
+
+.meeting-planner
+  margin: 2em auto 1em
+  padding: 0.5em
+  border-radius: 2px
+  background: $lightFillColor
+
+.meeting-planner-sugggested
+  text-align: center
+  font-size: 1.1em
+
+.meeting-planner-sugggested-copy
+  font-size: 12px
+  color: $mutedColor
+
+.meeting-planner-group
+  margin: 0.5em 0
+
+.meeting-planner-group-suggested
+  margin: 0.1em
+  font-size: 12px
+  color: $mutedColor
+
+.meeting-planner-group-people
+  display: flex
+  flex-wrap: wrap
+
+  .avatar
+    flex-shrink: 0
+    margin: 0.1em
+
+.meeting-planner-clear
+  font-size: 12px
+  text-align: center
+
+  a
+    cancelLinkHover()
+
+
+
+
+// NOTE: Could be moved out to own component
+.schedule
+  flex: 1 30%
+  .avatar
+    margin: 0.4em auto
+
+
+.schedule--hours
+  padding: 0
+  margin: 0
+  list-style: none
+  color: lighten($textColor, 20%)
+  background-color: darken($fillColor, 5%)
+
+.schedule--hour
+  padding: 0.4em
+  margin: 0
+  width: 100%
+  min-height: 20px
+
+  background-color: transparent
+  font-size: 12px
+  line-height: 1em
+
+.schedule--hour-available
+  background-color: #fff
+  color: lighten($textColor, 10%)

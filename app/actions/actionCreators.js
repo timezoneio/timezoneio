@@ -60,6 +60,19 @@ var ActionCreators = module.exports = {
       .then(function(data) {
         return data.avatar;
       });
+  },
+
+  toggleSelectPerson: function(userId) {
+    AppDispatcher.dispatchViewAction({
+      actionType: ActionTypes.TOGGLE_SELECT_PERSON,
+      value: userId
+    });
+  },
+
+  clearMeetingGroups: function() {
+    AppDispatcher.dispatchViewAction({
+      actionType: ActionTypes.CLEAR_MEETING_GROUPS
+    });
   }
 
 };

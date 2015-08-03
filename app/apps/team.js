@@ -146,12 +146,13 @@ window.addEventListener('popstate', handlePopState);
 var handleViewAction = function(action) {
   var actionType = action.actionType;
   var value = action.value;
+  var shouldRender = false;
 
   switch (actionType) {
 
     case ActionTypes.CHANGE_TIME_FORMAT:
       appState.setTimeFormat(value);
-      renderApp();
+      shouldRender = true;
       break;
     case ActionTypes.USE_CURRENT_TIME:
       updateToCurrentTime();
@@ -173,7 +174,19 @@ var handleViewAction = function(action) {
       saveTeamInfo(value);
       break;
 
+    case ActionTypes.TOGGLE_SELECT_PERSON:
+      appState.toggleSelectPerson(value);
+      shouldRender = true;
+      break;
+
+    case ActionTypes.CLEAR_MEETING_GROUPS:
+      appState.clearMeetingGroups();
+      shouldRender = true;
+      break;
+
   }
+
+  if (shouldRender) renderApp();
 };
 
 var handleAPIAction = function(action) {

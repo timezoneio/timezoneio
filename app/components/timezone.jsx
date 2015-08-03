@@ -90,13 +90,15 @@ module.exports = React.createClass({
       </div>
       <div className="timezone-people">
         {columns.map(function(column, idx){
-          return <div className="timezone-people-column" key={"column-" + idx}>
-            {column.map(function(person){
-              // NOTE: Replace with future user id
-              var key = person.avatar.substr(person.avatar.length - 20, 20);
-              return <Person model={person} key={key} />;
-            })}
-          </div>
+          return (
+            <div className="timezone-people-column" key={"column-" + idx}>
+              {column.map(function(person){
+                // NOTE: Replace with future user id
+                var key = person.avatar.substr(person.avatar.length - 20, 20);
+                return <Person model={person} key={key} />;
+              })}
+            </div>
+          );
         })}
       </div>
     </div>;

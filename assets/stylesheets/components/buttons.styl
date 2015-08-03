@@ -17,26 +17,6 @@ button
   color: $textColor
   text-decoration: none
 
-  // Button states
-  &::after
-    content: none
-    width: inherit
-    height: inherit
-
-  &:focus
-    outline: 0
-
-  &:hover
-    background-color: darken($buttonColor, 8%)
-
-  &[disabled]
-    opacity: 0.5
-    &:hover
-      background-color: inherit
-
-  &.selected
-    background-color: darken($buttonColor, 10%)
-
   // Button sizes
   &.small
     font-size: 12px
@@ -64,6 +44,26 @@ button
 
     &:hover
       background-color: $brandColor
+
+  // Button states
+  &::after
+    content: none
+    width: inherit
+    height: inherit
+
+  &:focus
+    outline: 0
+
+  &:hover
+    background-color: darken($buttonColor, 8%)
+
+  &[disabled]
+    opacity: 0.5
+    &:hover
+      background-color: inherit
+
+  &.selected
+    background-color: darken($buttonColor, 10%)
 
 
 input[type="submit"].button

@@ -9,6 +9,8 @@ var ManageModal = require('../components/manageModal.jsx');
 
 module.exports = React.createClass({
 
+  displayName: 'Team',
+
   handleClickMask: function(e) {
     AppDispatcher.dispatchViewAction({
       actionType: ActionTypes.CLOSE_MODAL
@@ -23,7 +25,7 @@ module.exports = React.createClass({
     var modal = null;
 
     if (currentView === 'manage')
-      modal = <ManageModal {...this.props} />
+      modal = (<ManageModal {...this.props} />);
 
     return (
       <div className="modal-container"
