@@ -1823,6 +1823,8 @@ AppState.prototype.findMeetingTime = function() {
     return;
   }
 
+  console.info(suggestedTimeWindow);
+
   // Get suggested local time
   var localZoneHours = moment().zone() / 60;
   var suggestedTime = timeUtils.formatLocalTimeWindow(startHour,
@@ -1878,7 +1880,7 @@ timeUtils.getHourFormattedString = function(hour, fmt) {
 
 timeUtils.gmtHoursToOffset = function(gmtHour, zoneHourOffset) {
   var hour = gmtHour - zoneHourOffset;
-  return hour >= 0 ? hour : 24 - hour;
+  return hour >= 0 ? hour : 24 + hour;
 };
 
 timeUtils.formatLocalTimeWindow = function(startHour, endHour, zoneHourOffset, fmt) {

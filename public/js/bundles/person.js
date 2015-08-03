@@ -178,7 +178,7 @@ timeUtils.getHourFormattedString = function(hour, fmt) {
 
 timeUtils.gmtHoursToOffset = function(gmtHour, zoneHourOffset) {
   var hour = gmtHour - zoneHourOffset;
-  return hour >= 0 ? hour : 24 - hour;
+  return hour >= 0 ? hour : 24 + hour;
 };
 
 timeUtils.formatLocalTimeWindow = function(startHour, endHour, zoneHourOffset, fmt) {

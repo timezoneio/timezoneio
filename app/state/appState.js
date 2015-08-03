@@ -238,6 +238,8 @@ AppState.prototype.findMeetingTime = function() {
     return;
   }
 
+  console.info(suggestedTimeWindow);
+
   // Get suggested local time
   var localZoneHours = moment().zone() / 60;
   var suggestedTime = timeUtils.formatLocalTimeWindow(startHour,
