@@ -233,16 +233,27 @@ AppState.prototype.findMeetingTime = function() {
   var startHour = suggestedTimeWindow[0];
   var endHour = suggestedTimeWindow[1];
 
+  if (!startHour && !endHour) {
+    this._state.meeting.suggestedTime = null;
+    return;
+  }
+
   // Get suggested local time
   var localZoneHours = moment().zone() / 60;
-  var suggestedTime = timeUtils.formatLocalTimeWindow(startHour, endHour, localZoneHours);
+  var suggestedTime = timeUtils.formatLocalTimeWindow(startHour,
+                                                      endHour,
+                                                      localZoneHours,
+                                                      this._state.timeFormat);
 
   this._state.meeting.suggestedTime = suggestedTime;
 
   // Get times for each zone
   this._state.meeting.groups.forEach(function(group) {
-    group.suggestedTime = timeUtils.formatLocalTimeWindow(startHour, endHour, group.zoneHours);
-  });
+    group.suggestedTime = timeUtils.formatLocalTimeWindow(startHour,
+                                                          endHour,
+                                                          group.zoneHours,
+                                                          this._state.timeFormat);
+  }.bind(this));
 
 };
 

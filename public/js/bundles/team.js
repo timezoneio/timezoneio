@@ -1080,13 +1080,19 @@ module.exports = React.createClass({
     return (
       React.createElement("div", {className: "meeting-planner"}, 
 
-         this.props.suggestedTime &&
-          React.createElement("div", {className: "meeting-planner-sugggested"}, 
-            this.props.suggestedTime, 
-            React.createElement("div", {className: "meeting-planner-sugggested-copy"}, 
-              "Local time"
+         this.props.suggestedTime ?
+            React.createElement("div", {className: "meeting-planner-sugggested"}, 
+              this.props.suggestedTime, 
+              React.createElement("div", {className: "meeting-planner-sugggested-copy"}, 
+                "Local time"
+              )
             )
-          ), 
+          :
+            React.createElement("div", {className: "meeting-planner-sugggested"}, 
+              React.createElement("div", {className: "meeting-planner-sugggested-copy"}, 
+                "No good time window"
+              )
+            ), 
         
 
 
@@ -1812,16 +1818,27 @@ AppState.prototype.findMeetingTime = function() {
   var startHour = suggestedTimeWindow[0];
   var endHour = suggestedTimeWindow[1];
 
+  if (!startHour && !endHour) {
+    this._state.meeting.suggestedTime = null;
+    return;
+  }
+
   // Get suggested local time
   var localZoneHours = moment().zone() / 60;
-  var suggestedTime = timeUtils.formatLocalTimeWindow(startHour, endHour, localZoneHours);
+  var suggestedTime = timeUtils.formatLocalTimeWindow(startHour,
+                                                      endHour,
+                                                      localZoneHours,
+                                                      this._state.timeFormat);
 
   this._state.meeting.suggestedTime = suggestedTime;
 
   // Get times for each zone
   this._state.meeting.groups.forEach(function(group) {
-    group.suggestedTime = timeUtils.formatLocalTimeWindow(startHour, endHour, group.zoneHours);
-  });
+    group.suggestedTime = timeUtils.formatLocalTimeWindow(startHour,
+                                                          endHour,
+                                                          group.zoneHours,
+                                                          this._state.timeFormat);
+  }.bind(this));
 
 };
 
@@ -1864,16 +1881,16 @@ timeUtils.gmtHoursToOffset = function(gmtHour, zoneHourOffset) {
   return hour >= 0 ? hour : 24 - hour;
 };
 
-timeUtils.formatLocalTimeWindow = function(startHour, endHour, zoneHourOffset) {
+timeUtils.formatLocalTimeWindow = function(startHour, endHour, zoneHourOffset, fmt) {
   var localStartHour = timeUtils.gmtHoursToOffset(startHour, zoneHourOffset);
   var localEndHour = timeUtils.gmtHoursToOffset(endHour, zoneHourOffset);
 
   if (localStartHour === localEndHour)
-    return timeUtils.getHourFormattedString(localStartHour);
+    return timeUtils.getHourFormattedString(localStartHour, fmt);
 
-  return timeUtils.getHourFormattedString(localStartHour) +
+  return timeUtils.getHourFormattedString(localStartHour, fmt) +
          ' - ' +
-         timeUtils.getHourFormattedString(localEndHour);
+         timeUtils.getHourFormattedString(localEndHour, fmt);
 };
 
 // Round to the closest quarter hour

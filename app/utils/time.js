@@ -29,16 +29,16 @@ timeUtils.gmtHoursToOffset = function(gmtHour, zoneHourOffset) {
   return hour >= 0 ? hour : 24 - hour;
 };
 
-timeUtils.formatLocalTimeWindow = function(startHour, endHour, zoneHourOffset) {
+timeUtils.formatLocalTimeWindow = function(startHour, endHour, zoneHourOffset, fmt) {
   var localStartHour = timeUtils.gmtHoursToOffset(startHour, zoneHourOffset);
   var localEndHour = timeUtils.gmtHoursToOffset(endHour, zoneHourOffset);
 
   if (localStartHour === localEndHour)
-    return timeUtils.getHourFormattedString(localStartHour);
+    return timeUtils.getHourFormattedString(localStartHour, fmt);
 
-  return timeUtils.getHourFormattedString(localStartHour) +
+  return timeUtils.getHourFormattedString(localStartHour, fmt) +
          ' - ' +
-         timeUtils.getHourFormattedString(localEndHour);
+         timeUtils.getHourFormattedString(localEndHour, fmt);
 };
 
 // Round to the closest quarter hour
