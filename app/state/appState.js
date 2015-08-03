@@ -120,7 +120,6 @@ AppState.prototype.organizeMeetingGroups = function() {
   var zoneGroups = toolbelt.groupBy('zone', this._state.meeting.people);
 
   this._state.meeting.groups = Object.keys(zoneGroups)
-                                     .sort()
                                      .map(function(z) {
                                        var zone = parseInt(z, 10);
                                        return {
@@ -128,6 +127,9 @@ AppState.prototype.organizeMeetingGroups = function() {
                                          zoneHours: zone / 60,
                                          people: zoneGroups[z]
                                        };
+                                     })
+                                     .sort(function(a, b) {
+                                       return b.zone - a.zone;
                                      });
 };
 
