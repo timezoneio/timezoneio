@@ -41,9 +41,8 @@ module.exports = React.createClass({
 
         <AppSidebar {...this.props} />
 
-        <TimezoneList time={this.props.time}
-                      timeFormat={this.props.timeFormat}
-                      timezones={this.props.timezones} />
+        <TimezoneList {...this.props}
+                      showStats={true} />
 
         {this.getModal()}
 

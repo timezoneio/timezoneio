@@ -35,10 +35,19 @@ $sidebarPadding = 1em
 
 
 .timezone-list
+  position relative
   display: flex
   height: 100%;
   justify-content: center
   flex-grow: 1 // this grows, the sidebar is a fixed width
+
+.team-stats
+  position absolute
+  bottom 0.5em
+  left 0
+  right 0
+  text-align center
+  color $mutedColor
 
 .timezone
   padding: 1em

@@ -1401,19 +1401,44 @@ module.exports = React.createClass({displayName: "exports",
 var React    = require('react');
 var Timezone = require('./timezone.jsx');
 
-module.exports = React.createClass({displayName: "exports",
+module.exports = React.createClass({
+
+  displayName: 'TimezoneList',
+
+  getStats: function(people) {
+
+    var cities = people.reduce(function(list, p) {
+      if (list.indexOf(p.location.toLowerCase()) === -1)
+        list.push(p.location.toLowerCase());
+      return list;
+    }, []);
+
+    return people.length + ' people in ' + cities.length + ' cities';
+  },
+
   render: function() {
+
     var timeFormat = this.props.timeFormat || 12;
-    return React.createElement("div", {className: "timezone-list"}, 
-      this.props.timezones.map(function(timezone){
-        return React.createElement(Timezone, {key: timezone.tz, 
-                         time: this.props.time, 
-                         timeFormat: timeFormat, 
-                         model: timezone});
-      }.bind(this))
+
+    var stats = this.getStats(this.props.people);
+
+    return (
+      React.createElement("div", {className: "timezone-list"}, 
+        this.props.timezones.map(function(timezone){
+          return React.createElement(Timezone, {key: timezone.tz, 
+                           time: this.props.time, 
+                           timeFormat: timeFormat, 
+                           model: timezone})
+        }.bind(this)), 
+         this.props.showStats &&
+          React.createElement("div", {className: "team-stats"}, React.createElement("em", null, stats))
+        
+      )
     );
   }
+
 });
+
 
 },{"./timezone.jsx":15,"react":194}],17:[function(require,module,exports){
 /** @jsx React.DOM */
@@ -2096,9 +2121,8 @@ module.exports = React.createClass({
 
         React.createElement(AppSidebar, React.__spread({},  this.props)), 
 
-        React.createElement(TimezoneList, {time: this.props.time, 
-                      timeFormat: this.props.timeFormat, 
-                      timezones: this.props.timezones}), 
+        React.createElement(TimezoneList, React.__spread({},  this.props, 
+                      {showStats: true})), 
 
         this.getModal()
 
