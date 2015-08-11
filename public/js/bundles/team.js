@@ -1407,6 +1407,9 @@ module.exports = React.createClass({
 
   getStats: function(people) {
 
+    // Note the homepage doesn't provide people, only timezones
+    if (!people || !Array.isArray(people)) return;
+
     var cities = people.reduce(function(list, p) {
       if (list.indexOf(p.location.toLowerCase()) === -1)
         list.push(p.location.toLowerCase());
