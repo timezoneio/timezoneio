@@ -44,7 +44,9 @@ team.index = function(req, res, next) {
         timezones: timezones,
         timeFormat: timeFormat,
         isCurrentTime: true,
-        currentView: isAdmin ? view : DEFAULT_VIEW
+        currentView: isAdmin ? view : DEFAULT_VIEW,
+        // justCreated: true // DEBUG
+        justCreated: req.flash('justCreated')[0] === true
       });
 
     });
@@ -88,8 +90,6 @@ team.create = function(req, res, next) {
     var teamNames = teams.map(function(t) { return t.name; });
     var slug = getSlug(teamNames, numTeams, searchSlug);
 
-    // NOTE - need to test for multiple matching slugs
-
     var newTeam = new TeamModel({
       name: req.body.name,
       slug: slug
@@ -111,8 +111,8 @@ team.create = function(req, res, next) {
         }
 
         // SUCCESS!!
-
-        res.redirect(newTeam.url);
+        req.flash('justCreated', true);
+        res.redirect(newTeam.getManageUrl());
       });
 
     });

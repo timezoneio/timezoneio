@@ -93,13 +93,45 @@ module.exports = React.createClass({
       requestChange: this.handleFilterList
     };
 
+    var headerContent = {};
+
+    if (this.props.justCreated) {
+      headerContent.title = 'Getting started with ' + this.props.team.name;
+      headerContent.body = (
+        <div>
+          <p>
+            Here you can manage your team - inviting, editing and removing people as you need.
+          </p>
+          <p>
+            When you're done, you can click the button below or the X at the top right.
+            To get back here you can always click the "Manage Team" button at right on your team dashboard.
+          </p>
+        </div>
+      );
+      headerContent.closeButton = 'Show me my team!';
+    } else {
+      headerContent.title = this.props.team.name;
+      headerContent.body = (
+        <p>Edit and invite members of your team here</p>
+      );
+      headerContent.closeButton = 'Go back to my team';
+    }
+
     return (
       <div className="manage-team--container">
 
         <header className="manage-team--header">
-          <h2 className="manage-team--header-name">
-            {this.props.team.name}
+
+          <h2 className="manage-team--header-title">
+            {headerContent.title}
           </h2>
+
+          {headerContent.body}
+
+          <button onClick={this.handleClickClose}>
+            {headerContent.closeButton}
+          </button>
+
         </header>
 
         <button className="manage-team--close circle clear material-icons"

@@ -39,6 +39,10 @@ teamSchema
 
 teamSchema.methods = {
 
+  getManageUrl: function() {
+    return this.url + '/manage';
+  },
+
   isAdmin: function(user) {
     return !!user && !!this.admins.filter(function(adminId) {
       return adminId.toString() === user._id.toString();

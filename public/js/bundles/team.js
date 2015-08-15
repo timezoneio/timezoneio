@@ -954,13 +954,45 @@ module.exports = React.createClass({
       requestChange: this.handleFilterList
     };
 
+    var headerContent = {};
+
+    if (this.props.justCreated) {
+      headerContent.title = 'Getting started with ' + this.props.team.name;
+      headerContent.body = (
+        React.createElement("div", null, 
+          React.createElement("p", null, 
+            "Here you can manage your team - inviting, editing and removing people as you need."
+          ), 
+          React.createElement("p", null, 
+            "When you're done, you can click the button below or the X at the top right." + ' ' +
+            "To get back here you can always click the \"Manage Team\" button at right on your team dashboard."
+          )
+        )
+      );
+      headerContent.closeButton = 'Show me my team!';
+    } else {
+      headerContent.title = this.props.team.name;
+      headerContent.body = (
+        React.createElement("p", null, "Edit and invite members of your team here")
+      );
+      headerContent.closeButton = 'Go back to my team';
+    }
+
     return (
       React.createElement("div", {className: "manage-team--container"}, 
 
         React.createElement("header", {className: "manage-team--header"}, 
-          React.createElement("h2", {className: "manage-team--header-name"}, 
-            this.props.team.name
+
+          React.createElement("h2", {className: "manage-team--header-title"}, 
+            headerContent.title
+          ), 
+
+          headerContent.body, 
+
+          React.createElement("button", {onClick: this.handleClickClose}, 
+            headerContent.closeButton
           )
+
         ), 
 
         React.createElement("button", {className: "manage-team--close circle clear material-icons", 
