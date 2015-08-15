@@ -138,13 +138,43 @@ for hour in 0 1 2 3 4 5 6 7 22 23
   overflow: hidden
 
 
+.view-container
+  position: absolute
+  z-index: 1000
+  top: 0
+  left: 0
+  right: 0
+  width: 100%
+  min-height: 100%
+  padding: 1em
+  background: #fff
+
 // Editing modal
+.manage-team--container
+  position: relative
+  display: flex
+  align-items: stretch
+  padding: 3em 3em 0
 
-.manage-modal--team
+.manage-team--header
+  width: 40%
+
+.manage-team--header-name
+  margin: 0 1em 1em
+
+.manage-team--close
+  position: absolute
+  top: 0
+  right: 0
+
+.manage-team--subview
+  flex-grow: 1
+  position: relative
   max-height: 100%
-  overflow: scroll
 
-.manage-modal--team-header
+// .manage-team--team
+
+.manage-team--team-header
   margin-bottom: 1em
   text-align: center
 
@@ -152,28 +182,28 @@ for hour in 0 1 2 3 4 5 6 7 22 23
     width: 315px
     margin: 0 0.5em 0 2.5em
 
-// .manage-modal--team-list
+// .manage-team--team-list
 //   overflow: scroll
 
-.manage-modal--team-member
+
+.manage-team--team-member
   display: flex
   justify-content: space-between
   align-items: center
-  max-width: 80%
-  margin: 1em auto
+  padding: 0.5em 0
 
-.manage-modal--team-member-info
+.manage-team--team-member-info
   display: flex
   align-items: center
 
-.manage-modal--team-member-name
+.manage-team--team-member-name
   margin-left: 1em
 
-.manage-modal--team-member-location
+.manage-team--team-member-location
   margin-left: 0.5em
   color: $mutedColor
 
-.manage-modal--person
+.manage-team--person
   display: flex
   align-items: center
 

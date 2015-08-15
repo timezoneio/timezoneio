@@ -166,7 +166,7 @@ var handleViewAction = function(action) {
     case ActionTypes.CLOSE_MODAL:
       updateCurrentView('app', true);
       break;
-    case ActionTypes.SHOW_MODAL:
+    case ActionTypes.SHOW_VIEW:
       updateCurrentView(value, true);
       break;
 

@@ -28,7 +28,7 @@ module.exports = React.createClass({
 
   handleManageTeam: function(e) {
     AppDispatcher.dispatchViewAction({
-      actionType: ActionTypes.SHOW_MODAL,
+      actionType: ActionTypes.SHOW_VIEW,
       value: 'manage'
     });
   },
