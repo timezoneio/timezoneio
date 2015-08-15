@@ -354,7 +354,6 @@ var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
 var TimeSlider = require('./timeSlider.jsx');
 var Branding = require('./branding.jsx');
-var UserMenu = require('./userMenu.jsx');
 var MeetingPlanner = require('./meetingPlanner.jsx');
 
 module.exports = React.createClass({
@@ -416,19 +415,16 @@ module.exports = React.createClass({
         React.createElement(MeetingPlanner, React.__spread({},  this.props.meeting, 
                         {timeFormat: this.props.timeFormat})), 
 
-         this.props.isAdmin ? (
+         this.props.isAdmin && (
 
             React.createElement("div", {className: "app-sidebar--admin"}, 
-
-              React.createElement(UserMenu, React.__spread({},  this.props.user, 
-                        {pos: "bottom-left"})), 
 
               React.createElement("button", {className: "small hollow", 
                       onClick: this.handleManageTeam}, "Manage Team")
 
             )
 
-        ) : ''
+        )
 
 
       )
@@ -437,7 +433,7 @@ module.exports = React.createClass({
 });
 
 
-},{"../actions/actionTypes.js":2,"../dispatchers/appDispatcher.js":17,"../utils/time.js":21,"./branding.jsx":6,"./meetingPlanner.jsx":10,"./timeSlider.jsx":13,"./userMenu.jsx":16,"react":193}],5:[function(require,module,exports){
+},{"../actions/actionTypes.js":2,"../dispatchers/appDispatcher.js":17,"../utils/time.js":21,"./branding.jsx":6,"./meetingPlanner.jsx":10,"./timeSlider.jsx":13,"react":193}],5:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
@@ -1449,18 +1445,25 @@ module.exports = React.createClass({displayName: "exports",
     var profileUrl = '/people/' + this.props.username;
     var style = { backgroundImage: 'url(' + this.props.avatar + ')' };
 
+    var containerClasses = classNames('user-menu-container', {
+      'fixed': this.props.fixed
+    });
+
     var menuClasses = classNames('user-menu', {
-      'menu-open': this.state.open,
-      'bottom-left': this.props.pos === 'bottom-left'
+      'menu-open': this.state.open
     });
 
     return (
-      React.createElement("div", {className: "user-menu-container"}, 
+      React.createElement("div", {className: containerClasses}, 
 
         React.createElement("div", {className: menuClasses}, 
           React.createElement("a", {href: profileUrl, 
              className: "user-menu-item"}, 
             "Profile"
+          ), 
+          React.createElement("a", {href: "/team", 
+             className: "user-menu-item"}, 
+            "Add your team"
           ), 
           React.createElement("a", {href: "/logout", 
              className: "user-menu-item"}, 
@@ -1478,7 +1481,6 @@ module.exports = React.createClass({displayName: "exports",
     );
   }
 });
-
 
 
 },{"classnames":29,"react":193}],17:[function(require,module,exports){
@@ -2064,6 +2066,7 @@ var ActionTypes = require('../actions/actionTypes.js');
 var AppSidebar = require('../components/appSidebar.jsx');
 var TimezoneList = require('../components/timezoneList.jsx');
 var ManageTeam = require('../components/manageTeam.jsx');
+var UserMenu = require('../components/userMenu.jsx');
 
 module.exports = React.createClass({
 
@@ -2120,6 +2123,9 @@ module.exports = React.createClass({
         React.createElement(TimezoneList, React.__spread({},  this.props, 
                       {showStats: true})), 
 
+        React.createElement(UserMenu, React.__spread({},  this.props.user, 
+                  {fixed: true})), 
+
         this.getView()
 
       )
@@ -2128,7 +2134,7 @@ module.exports = React.createClass({
 });
 
 
-},{"../actions/actionTypes.js":2,"../components/appSidebar.jsx":4,"../components/manageTeam.jsx":9,"../components/timezoneList.jsx":15,"../dispatchers/appDispatcher.js":17,"react":193}],25:[function(require,module,exports){
+},{"../actions/actionTypes.js":2,"../components/appSidebar.jsx":4,"../components/manageTeam.jsx":9,"../components/timezoneList.jsx":15,"../components/userMenu.jsx":16,"../dispatchers/appDispatcher.js":17,"react":193}],25:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};

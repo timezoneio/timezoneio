@@ -28,18 +28,25 @@ module.exports = React.createClass({
     var profileUrl = '/people/' + this.props.username;
     var style = { backgroundImage: 'url(' + this.props.avatar + ')' };
 
+    var containerClasses = classNames('user-menu-container', {
+      'fixed': this.props.fixed
+    });
+
     var menuClasses = classNames('user-menu', {
-      'menu-open': this.state.open,
-      'bottom-left': this.props.pos === 'bottom-left'
+      'menu-open': this.state.open
     });
 
     return (
-      <div className="user-menu-container">
+      <div className={containerClasses}>
 
         <div className={menuClasses}>
           <a href={profileUrl}
              className="user-menu-item">
             Profile
+          </a>
+          <a href="/team"
+             className="user-menu-item">
+            Add your team
           </a>
           <a href="/logout"
              className="user-menu-item">
@@ -57,4 +64,3 @@ module.exports = React.createClass({
     );
   }
 });
-

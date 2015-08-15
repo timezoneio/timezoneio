@@ -520,18 +520,25 @@ module.exports = React.createClass({displayName: "exports",
     var profileUrl = '/people/' + this.props.username;
     var style = { backgroundImage: 'url(' + this.props.avatar + ')' };
 
+    var containerClasses = classNames('user-menu-container', {
+      'fixed': this.props.fixed
+    });
+
     var menuClasses = classNames('user-menu', {
-      'menu-open': this.state.open,
-      'bottom-left': this.props.pos === 'bottom-left'
+      'menu-open': this.state.open
     });
 
     return (
-      React.createElement("div", {className: "user-menu-container"}, 
+      React.createElement("div", {className: containerClasses}, 
 
         React.createElement("div", {className: menuClasses}, 
           React.createElement("a", {href: profileUrl, 
              className: "user-menu-item"}, 
             "Profile"
+          ), 
+          React.createElement("a", {href: "/team", 
+             className: "user-menu-item"}, 
+            "Add your team"
           ), 
           React.createElement("a", {href: "/logout", 
              className: "user-menu-item"}, 
@@ -549,7 +556,6 @@ module.exports = React.createClass({displayName: "exports",
     );
   }
 });
-
 
 
 },{"classnames":20,"react":183}],12:[function(require,module,exports){

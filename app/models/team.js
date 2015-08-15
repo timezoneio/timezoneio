@@ -43,11 +43,26 @@ teamSchema.methods = {
     return !!user && !!this.admins.filter(function(adminId) {
       return adminId.toString() === user._id.toString();
     }).length;
+  },
+
+  addAdmin: function(user) {
+    // NOTE - Should we check if this user is already an admin?
+    this.admins.push(user);
+    return true;
   }
 
 };
 
 teamSchema.statics = {
+
+  slugify: function(name) {
+    return name.toString().toLowerCase()
+              .replace(/\s+/g, '-')           // Replace spaces with -
+              .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+              .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+              .replace(/^-+/, '')             // Trim - from start of text
+              .replace(/-+$/, '');            // Trim - from end of text
+  },
 
   findInfoByIds: function(teamIds, done) {
     Team.find({ _id: { $in: teamIds } }, 'name slug', done);

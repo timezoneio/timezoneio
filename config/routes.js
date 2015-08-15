@@ -22,6 +22,8 @@ module.exports = function(app, passport) {
                       });
   app.get('/logout', auth.logout);
 
+  app.get('/team', team.createForm);
+  app.post('/team', team.create);
   app.get('/team/:name', team.index);
   app.get('/team/:name/:view', team.index);
 

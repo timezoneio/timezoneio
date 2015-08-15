@@ -1,6 +1,14 @@
 .user-menu-container
   position: relative
 
+  &.fixed
+    position: fixed
+    top: 0.5em
+    right: 0.5em
+
+    .header-avatar
+      box-shadow(1)
+
   .header-avatar
     cursor: pointer
 
@@ -12,10 +20,11 @@
   position: absolute
   top: - $spacing
   right: - $spacing
-  min-width: 6em
+  min-width: 10em
   padding: 130% 0.1em 0.1em
   background: #fff
-  box-shadow: 0 1px 2px rgba(0,0,0,0.3)
+  box-shadow(1)
+  // box-shadow: 0 1px 2px rgba(0,0,0,0.3)
   font-size: 0.9em
   text-align: right
 

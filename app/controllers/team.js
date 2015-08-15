@@ -53,8 +53,70 @@ team.index = function(req, res, next) {
 
 };
 
+team.createForm = function(req, res, next) {
+  res.render('createTeam', {
+    title: 'Create your team',
+    errors: req.flash('error')
+  });
+};
+
 team.create = function(req, res, next) {
 
+  if (!req.body.name) {
+    req.flash('error', 'Please provide a name');
+    return res.redirect('/team');
+  }
 
+  var searchSlug = TeamModel.slugify(req.body.name);
+
+  // Match the bare slug or the slug followed by a dash and digit
+  var reggie = new RegExp(searchSlug + '$|' + searchSlug + '-(\\d+)$');
+
+  // Run a query to figure out what to use as the slug
+  TeamModel.find({ slug: reggie }, function(err, teams) {
+    if (err) {
+      req.flash('error', err);
+      return res.redirect('/team');
+    }
+
+    var getSlug = function(teamNames, num, baseSlug) {
+      var slug = num ? baseSlug + '-' + num : baseSlug;
+      var exists = ~teamNames.indexOf(slug);
+      return exists ? getSlug(teamNames, ++num, baseSlug) : slug;
+    };
+    var numTeams = teams.length;
+    var teamNames = teams.map(function(t) { return t.name; });
+    var slug = getSlug(teamNames, numTeams, searchSlug);
+
+    // NOTE - need to test for multiple matching slugs
+
+    var newTeam = new TeamModel({
+      name: req.body.name,
+      slug: slug
+    });
+
+    newTeam.addAdmin(req.user);
+
+    newTeam.save(function(err) {
+      if (err) {
+        req.flash('error', err);
+        return res.redirect('/team');
+      }
+
+      req.user.addToTeam(newTeam);
+      req.user.save(function(err) {
+        if (err) {
+          req.flash('error', err);
+          return res.redirect('/team');
+        }
+
+        // SUCCESS!!
+
+        res.redirect(newTeam.url);
+      });
+
+    });
+
+  });
 
 };

@@ -6,6 +6,7 @@ var ActionTypes = require('../actions/actionTypes.js');
 var AppSidebar = require('../components/appSidebar.jsx');
 var TimezoneList = require('../components/timezoneList.jsx');
 var ManageTeam = require('../components/manageTeam.jsx');
+var UserMenu = require('../components/userMenu.jsx');
 
 module.exports = React.createClass({
 
@@ -61,6 +62,9 @@ module.exports = React.createClass({
 
         <TimezoneList {...this.props}
                       showStats={true} />
+
+        <UserMenu {...this.props.user}
+                  fixed={true} />
 
         {this.getView()}
 

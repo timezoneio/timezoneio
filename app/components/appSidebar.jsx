@@ -6,7 +6,6 @@ var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
 var TimeSlider = require('./timeSlider.jsx');
 var Branding = require('./branding.jsx');
-var UserMenu = require('./userMenu.jsx');
 var MeetingPlanner = require('./meetingPlanner.jsx');
 
 module.exports = React.createClass({
@@ -68,19 +67,16 @@ module.exports = React.createClass({
         <MeetingPlanner {...this.props.meeting}
                         timeFormat={this.props.timeFormat}  />
 
-        { this.props.isAdmin ? (
+        { this.props.isAdmin && (
 
             <div className="app-sidebar--admin">
-
-              <UserMenu {...this.props.user}
-                        pos="bottom-left" />
 
               <button className="small hollow"
                       onClick={this.handleManageTeam}>Manage Team</button>
 
             </div>
 
-        ) : '' }
+        )}
 
 
       </div>
