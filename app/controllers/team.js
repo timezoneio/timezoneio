@@ -93,6 +93,7 @@ team.create = function(req, res, next) {
     });
 
     newTeam.addAdmin(req.user);
+    newTeam.addTeamMember(req.user);
 
     newTeam.save(function(err) {
       if (err) {
@@ -100,17 +101,9 @@ team.create = function(req, res, next) {
         return res.redirect('/team');
       }
 
-      req.user.addToTeam(newTeam);
-      req.user.save(function(err) {
-        if (err) {
-          req.flash('error', err);
-          return res.redirect('/team');
-        }
-
-        // SUCCESS!!
-        req.flash('justCreated', true);
-        res.redirect(newTeam.getManageUrl());
-      });
+      // SUCCESS!!
+      req.flash('justCreated', true);
+      res.redirect(newTeam.getManageUrl());
 
     });
 
