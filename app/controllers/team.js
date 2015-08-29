@@ -15,25 +15,23 @@ team.index = function(req, res, next) {
   var DEFAULT_VIEW = 'app';
   var view = VALID_VIEWS.indexOf(req.params.view) > -1 ? req.params.view : DEFAULT_VIEW;
 
-  TeamModel.findOne({ slug: slug }, function(err, team) {
-    if (err) return next(err);
+  TeamModel
+    .findOne({ slug: slug })
+    .populate('people')
+    .then(function(team) {
+      // Team not found
+      if (!team) return next();
 
-    // Team not found
-    if (!team) return next();
-
-    var isAdmin = team.isAdmin(req.user);
-
-    UserModel.findAllByTeam(team._id, function(err, users) {
-      if (err) return next(err);
+      var isAdmin = team.isAdmin(req.user);
 
       // Organize into timezones
       var time = moment();
-      var timezones = transform(time, users);
+      var timezones = transform(time, team.people);
       var timeFormat = 12; // hardcode default for now
 
       var people = !isAdmin ?
-                    users :
-                    users.map(function(u) { return u.toAdminJSON(); });
+                    team.people :
+                    team.people.map(function(u) { return u.toAdminJSON(); });
 
       res.render('team', {
         title: strings.capFirst(team.name || ''),
@@ -49,9 +47,8 @@ team.index = function(req, res, next) {
         justCreated: req.flash('justCreated')[0] === true
       });
 
-    });
 
-  });
+    }, next); // error
 
 };
 
