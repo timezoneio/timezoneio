@@ -9,10 +9,7 @@ var teamSchema = new Schema({
 
   //NOTE - I think this schema works w/ the nested array of objects
   admins: [{ type: Schema.ObjectId, ref: 'User' }],
-
-  // people: [{
-  //   id: { type: Schema.ObjectId, ref: 'User' }
-  // }],
+  people: [{ type: Schema.ObjectId, ref: 'User' }],
 
   createdAt: { type : Date, default : Date.now },
   updatedAt: { type : Date, default : Date.now }
@@ -28,6 +25,7 @@ var teamSchema = new Schema({
 
 // Indexes
 teamSchema.index({ slug: 1 });
+teamSchema.index({ people: 1 });
 
 teamSchema
   .virtual('url')
@@ -50,8 +48,14 @@ teamSchema.methods = {
   },
 
   addAdmin: function(user) {
-    // NOTE - Should we check if this user is already an admin?
-    this.admins.push(user);
+    if (!~this.admins.indexOf(user._id.toString()))
+      this.admins.push(user);
+    return true;
+  },
+
+  addTeamMember: function(user) {
+    if (!~this.people.indexOf(user._id.toString()))
+      this.people.push(user);
     return true;
   }
 

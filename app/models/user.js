@@ -21,6 +21,7 @@ var userSchema = new Schema({
   location: { type: String, default: '' },
   tz: { type: String, default: '' },
 
+  // DEPRECATED
   teams: [{ type: Schema.ObjectId, ref: 'Team' }],
 
   createdAt: { type : Date, default : Date.now },
@@ -29,8 +30,7 @@ var userSchema = new Schema({
 
 
 // Indexes
-userSchema.index({ "username": 1 });
-userSchema.index({ "teams": 1 });
+userSchema.index({ username: 1 });
 
 
 // Keep these configs closer to the ones in static
