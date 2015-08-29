@@ -18,22 +18,20 @@ people.index = function(req, res, next) {
 
     if (!user) return next('User not found :(');
 
-    var teamIds = user.teams;
+    Team.findAllByUser(user)
+      .then(function(teams) {
 
-    Team.findInfoByIds(teamIds, function(err, teams) {
+        var time = moment();
+        var timeFormat = 12; // hardcode default for now
 
-      var time = moment();
-      var timeFormat = 12; // hardcode default for now
-
-      res.render('person', {
-        title: strings.capFirst(user.name || ''),
-        profileUser: user,
-        teams: teams,
-        time: time,
-        timeFormat: timeFormat
-      });
-
-    });
+        res.render('person', {
+          title: strings.capFirst(user.name || ''),
+          profileUser: user,
+          teams: teams,
+          time: time,
+          timeFormat: timeFormat
+        });
+      } /* TODO - Handle errors? */);
 
   });
 

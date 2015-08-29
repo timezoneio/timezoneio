@@ -87,7 +87,11 @@ teamSchema.statics = {
   },
 
   findInfoByIds: function(teamIds, done) {
-    Team.find({ _id: { $in: teamIds } }, 'name slug', done);
+    return Team.find({ _id: { $in: teamIds } }, 'name slug', done);
+  },
+
+  findAllByUser: function(user, done) {
+    return Team.find({ people: user._id }, done);
   }
 
 };
