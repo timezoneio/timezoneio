@@ -48,11 +48,13 @@ api.userCreate = function(req, res, next) {
     var newUser = new UserModel(validData);
 
     // Add user to team
-    newUser.addToTeam(req.team);
-
-    newUser.save(function(err) {
+    req.team.addTeamMember(newUser);
+    req.team.save(function(err) {
       if (err) return handleError(res, 'Failed to save: ' + err);
-      res.json(newUser);
+      newUser.save(function(err) {
+        if (err) return handleError(res, 'Failed to save: ' + err);
+        res.json(newUser);
+      });
     });
 
   });
@@ -117,10 +119,10 @@ api.teamRemoveMember = function(req, res, next) {
   UserModel.findOne({ _id: userId }, function(err, user) {
     if (err || !user) return handleError(res, 'Team member not found');
 
-    if (!user.removeFromTeam(team))
-      return failedToRemove();
+    team.removeAdmin(user);
+    team.removeTeamMember(user);
 
-    user.save(function(err) {
+    team.save(function(err) {
       if (err) return failedToRemove();
 
       res.json({

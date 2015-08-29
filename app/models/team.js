@@ -53,11 +53,25 @@ teamSchema.methods = {
     return true;
   },
 
+  removeAdmin: function(user) {
+    var idx = this.admins.indexOf(user._id.toString());
+    if (idx > -1)
+      this.admins.splice(idx, 1);
+    return true;
+  },
+
   addTeamMember: function(user) {
     if (!~this.people.indexOf(user._id.toString()))
       this.people.push(user);
     return true;
-  }
+  },
+
+  removeTeamMember: function(user) {
+    var idx = this.people.indexOf(user._id.toString());
+    if (idx > -1)
+      this.people.splice(idx, 1);
+    return true;
+  },
 
 };
 
