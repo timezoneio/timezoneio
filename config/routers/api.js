@@ -66,25 +66,25 @@ var requireEditPrivlidges = function(req, res, next) {
 
   if (req.activeUser._id === req.user._id) return next();
 
-  // TODO CHANGE TO SINGLE QUERY WITH MULTIPLE IDS
-  var findTeam = function(teams, idx) {
-    TeamModel.findOne({ _id: teams[idx] }, function(err, team) {
-      if (err)
-        return res.status(403).json({
-          message: 'We got team issues'
-        });
+  TeamModel.find({ people: req.activeUser._id })
+    .then(function(teams) {
 
-      if (team.isAdmin(req.user)) return next();
+      var isAdmin = teams.reduce(function(isAdmin, team) {
+        return isAdmin || team.isAdmin(req.user);
+      }, false);
 
-      if (idx + 1 < teams.length) return findTeam(teams, ++idx);
+      if (isAdmin)
+        return next();
 
       res.status(403).json({
         message: 'You\'re not an admin ;)'
       });
+    })
+    .catch(function(err) {
+      res.status(403).json({
+        message: 'We got team issues'
+      });
     });
-  };
-
-  findTeam(req.activeUser.teams, 0);
 
 };
 
