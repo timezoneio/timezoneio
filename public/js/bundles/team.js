@@ -2155,8 +2155,10 @@ module.exports = React.createClass({
         React.createElement(TimezoneList, React.__spread({},  this.props, 
                       {showStats: true})), 
 
-        React.createElement(UserMenu, React.__spread({},  this.props.user, 
-                  {fixed: true})), 
+         this.props.user &&
+          React.createElement(UserMenu, React.__spread({},  this.props.user, 
+                    {fixed: true})), 
+        
 
         this.getView()
 

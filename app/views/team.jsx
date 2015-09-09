@@ -63,8 +63,10 @@ module.exports = React.createClass({
         <TimezoneList {...this.props}
                       showStats={true} />
 
-        <UserMenu {...this.props.user}
-                  fixed={true} />
+        { this.props.user &&
+          <UserMenu {...this.props.user}
+                    fixed={true} />
+        }
 
         {this.getView()}
 
