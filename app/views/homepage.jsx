@@ -64,6 +64,9 @@ var cities = [
 ];
 
 module.exports = React.createClass({
+
+  displayName: 'Homepage',
+
   getInitialState: function() {
     return {
       timezones: demoTimezones,

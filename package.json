@@ -31,7 +31,7 @@
     "flux": "^2.0.1",
     "immutable": "^3.6.2",
     "keymirror": "^0.1.1",
-    "moment-timezone": "0.2.5",
+    "moment-timezone": "^0.4.0",
     "mongoose": "^4.0.6",
     "morgan": "^1.5.1",
     "multer": "^0.1.8",

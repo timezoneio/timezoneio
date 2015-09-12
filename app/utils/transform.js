@@ -3,11 +3,19 @@ var moment = require('moment-timezone');
 
 function appendTime(time, person) {
   person.time = moment( time ).tz( person.tz );
-  person.zone = person.time.zone();
+  person.utcOffset = person.time.utcOffset();
+  // person.zone = person.time.utcOffset();
 }
 
 function sortByTimezone(a, b){
-  return b.time.zone() - a.time.zone();
+  return a.utcOffset - b.utcOffset;
+}
+
+function sortByNameAndId(a, b) {
+  return a.name > b.name ? 1 :
+         a.name !== b.name ? -1 :
+         a._id > b._id ? 1 :
+         -1;
 }
 
 
@@ -19,9 +27,9 @@ module.exports = function transform(time, people) {
 
   var timezones = people.reduce(function(zones, person){
     var last = zones[ zones.length - 1 ];
-    var zone = last && last.people[0].zone;
+    var utcOffset = last && last.people[0].utcOffset;
 
-    if (last && zone === person.zone) {
+    if (last && utcOffset === person.utcOffset) {
       last.people.push(person);
     } else {
       zones.push({
@@ -34,6 +42,8 @@ module.exports = function transform(time, people) {
   }, []);
 
   timezones.forEach(function(timezone){
+    timezone.people.sort(sortByNameAndId);
+
     if (timezone.people.length / people.length > 0.2)
       timezone.major = true;
   });
