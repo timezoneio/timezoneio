@@ -33,7 +33,8 @@ module.exports = function render(pathName, locals, cb) {
   params.data = JSON.stringify(data || {});
 
   //NOTE - currently this.name will always be truthy
-  params.script ='bundles/' + this.name + '.js';
+  if (!locals.noScript)
+    params.script ='bundles/' + this.name + '.js';
   // params.script = this.name ?
   //                 '/js/bundles/' + this.name + '.js' :
   //                 '/js/genericPage.js';

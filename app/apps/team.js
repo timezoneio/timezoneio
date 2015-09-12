@@ -21,7 +21,7 @@ var Team = React.createFactory(require('../views/team.jsx'));
 var appState = new AppState(window.appData);
 
 
-// Add the component to the DOFM
+// Add the component to the DOM
 var targetNode = document.querySelector('#page');
 
 function renderApp() {

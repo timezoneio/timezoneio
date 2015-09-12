@@ -13,19 +13,20 @@ module.exports = React.createClass({
 
         <Header {...this.props} />
 
-        <h1 className="page-headline">Log in</h1>
+        <h1 className="page-headline">Sign up</h1>
 
         <Notification style="error"
                       text={this.props.errors} />
 
-        <form action="/login" method="post" className="login-form">
+        <form action="/signup" method="post" className="login-form">
 
           <input type="hidden" name="_csrf" value={this.props.csrf_token} />
 
           <div>
             <input type="email"
                    name="email"
-                   placeholder="email" />
+                   placeholder="email"
+                   defaultValue={this.props.email} />
           </div>
 
           <div>
@@ -35,13 +36,23 @@ module.exports = React.createClass({
           </div>
 
           <div>
+            <input type="password"
+                   name="password2"
+                   placeholder="retype password" />
+          </div>
+
+          <p className="muted form-copy">
+            Passwords should be at least 8 characters and contain a number
+          </p>
+
+          <div>
             <button type="submit" className="cta login-button">
-              Log in
+              Sign up
             </button>
           </div>
 
           <p className="txt-center">
-            Don't have an account? <a href="/signup">Sign up now!</a>
+            Already have an account? <a href="/login">Log in here!</a>
           </p>
 
         </form>

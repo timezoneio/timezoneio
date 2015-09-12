@@ -113,6 +113,7 @@ router.put(   '/team/:id', requireTeamAdmin, api.teamUpdate);
 router.delete('/team/:id/member/:userId', requireTeamAdmin, api.teamRemoveMember);
 
 router.get(   '/location/search', api.locationSearch);
+router.get(   '/location/city', api.locationGetCity);
 router.get(   '/location/timezone', api.locationGetTimezone);
 
 router.get(   '/avatar/gravatar', api.getGravatar);

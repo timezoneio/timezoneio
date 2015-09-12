@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto');
 var Schema = mongoose.Schema;
+var isValidEmail = require('../utils/strings').isValidEmail;
 
 // Inspiration: https://github.com/madhums/node-express-mongoose-demo/blob/master/app/models/user.js
 
@@ -11,13 +12,18 @@ var userSchema = new Schema({
   provider: { type: String, default: '' },
   hashedPassword: { type: String, default: '' },
   salt: { type: String, default: '' },
-  inviteCode: { type: String, default: '' },
+  inviteCode: { type: String, default: '' }, // ???
   // authToken: { type: String, default: '' },
   // facebook: {},
   // twitter: {},
   // google: {},
 
   avatar: { type: String, default: '' },
+  // Add GPS coords for smart location updating
+  coords: {
+    lat: { type: Number },
+    long: { type: Number }
+  },
   location: { type: String, default: '' },
   tz: { type: String, default: '' },
 
@@ -44,6 +50,11 @@ var PUBLIC_FIELDS = [
   'isRegistered'
 ];
 
+var OWNER_FIELDS = [
+  'coords'
+];
+
+// See toOwnerJSON below
 userSchema.set('toJSON', {
   getters: true,
   virtuals: true,
@@ -89,11 +100,6 @@ var validatePresenceOf = function (value) {
 
 // the below 5 validations only apply if you are signing up traditionally
 
-userSchema.path('name').validate(function (name) {
-  if (this.skipValidation()) return true;
-  return name.length;
-}, 'Name cannot be blank');
-
 userSchema.path('email').validate(function (email) {
   if (this.skipValidation()) return true;
   return email.length;
@@ -101,8 +107,7 @@ userSchema.path('email').validate(function (email) {
 
 userSchema.path('email').validate(function (email) {
   if (this.skipValidation()) return true;
-  var re = /.+@.+\..+/i;
-  return re.test(email);
+  return isValidEmail(email);
 }, 'Email must be valid');
 
 userSchema.path('email').validate(function (email, fn) {
@@ -117,14 +122,27 @@ userSchema.path('email').validate(function (email, fn) {
   } else fn(true);
 }, 'Email already exists');
 
+// NOTE - Disabled name + username requirements for signup flow,
+// maybe can check "onboarded" boolean in future
+userSchema.path('name').validate(function (name) {
+  return true;
+  // if (this.skipValidation()) return true;
+  // return name.length;
+}, 'Name cannot be blank');
+
 userSchema.path('username').validate(function (username) {
-  if (this.skipValidation() || this.isEmptyUser()) return true;
-  return username.length;
+  return true;
+  // if (this.skipValidation() || this.isEmptyUser()) return true;
+  // return username.length;
 }, 'Username cannot be blank');
 
 userSchema.path('username').validate(function (username, fn) {
   var User = mongoose.model('User');
-  if (this.skipValidation() || this.isEmptyUser()) fn(true);
+  if (this.skipValidation() || this.isEmptyUser())
+    return fn(true);
+
+  if (!username)
+    return fn(true);
 
   // Check only when it is a new user or when username field is modified
   if (this.isNew || this.isModified('username')) {
@@ -205,6 +223,14 @@ userSchema.methods = {
     return json;
   },
 
+  toOwnerJSON: function() {
+    var json = this.toJSON();
+    OWNER_FIELDS.forEach(function(field) {
+      json[field] = this[field];
+    }.bind(this));
+    return json;
+  },
+
   isOnTeam: function(team) {
     return !!team && !!this.teams.filter(function(t) {
       return t.toString() === team._id.toString();
@@ -231,6 +257,7 @@ userSchema.methods = {
 var WRITABLE_FIELDS = [
   'name',
   'avatar',
+  'coords',
   'location',
   'tz'
 ];
@@ -245,6 +272,17 @@ userSchema.statics = {
 
   findOneByUsername: function(username, done) {
     return User.findOne({ username: username }, done);
+  },
+
+  findOneByUsernameOrId: function(usernameOrId, done) {
+
+    // ObjectId must be 24 characters long
+    if (usernameOrId.toString().length === 24)
+      return User.findOne({
+        $or: [{ username: usernameOrId }, { _id: usernameOrId }]
+      }, done);
+
+    return this.findOneByUsername(usernameOrId, done);
   },
 
   findOneByEmail: function(email, done) {

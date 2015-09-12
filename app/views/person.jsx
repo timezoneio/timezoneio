@@ -4,12 +4,14 @@ var React = require('react');
 var moment = require('moment-timezone');
 var Header = require('../components/header.jsx');
 var timeUtils = require('../utils/time.js');
+var DEFAULT_AVATAR = require('../helpers/images').DEFAULT_AVATAR;
 
 module.exports = React.createClass({
 
   displayName: 'PersonView',
 
   getLocalTime: function() {
+    if (!this.props.profileUser.tz) return;
     var localTime = moment( this.props.time ).tz( this.props.profileUser.tz );
     var fmtString = timeUtils.getFormatStringFor(this.props.timeFormat);
     return localTime.format(fmtString);
@@ -25,7 +27,7 @@ module.exports = React.createClass({
         <div className="fw-section alt profile">
           <div className="content-container">
 
-            <img src={profileUser.avatar} className="avatar large profile-avatar"/>
+            <img src={profileUser.avatar || DEFAULT_AVATAR} className="avatar large profile-avatar"/>
 
             <div className="profile-details">
               <h2 className="profile-name">{profileUser.name}</h2>

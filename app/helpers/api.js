@@ -1,3 +1,5 @@
+// NOTE - must require fetch polyfill in app script
+require('es6-promise').polyfill();
 var qs = require('querystring');
 
 // we rely on global csrf token for now, grab first so it can't be modified

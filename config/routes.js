@@ -3,6 +3,7 @@ var base = require('../app/controllers/base.js');
 var auth = require('../app/controllers/auth.js');
 var team = require('../app/controllers/team.js');
 var people = require('../app/controllers/people.js');
+var getProfileUrl = require('../app/helpers/urls').getProfileUrl;
 
 
 module.exports = function(app, passport) {
@@ -18,16 +19,20 @@ module.exports = function(app, passport) {
                         failureFlash: 'Invalid email or password'
                       }),
                       function(req, res) {
-                        res.redirect('/people/' + req.user.username);
+                        res.redirect( getProfileUrl(req.user) );
                       });
+  app.get('/signup', auth.signup);
+  app.post('/signup', auth.create);
   app.get('/logout', auth.logout);
+
+  app.get('/get-started', people.getStarted);
+  app.get('/people/:usernameOrId', people.index);
+  app.post('/people/:usernameOrId', people.save);
 
   app.get('/team', team.createForm);
   app.post('/team', team.create);
   app.get('/team/:name', team.index);
   app.get('/team/:name/:view', team.index);
-
-  app.get('/people/:username', people.index);
 
   app.use('/api', apiRouter);
 

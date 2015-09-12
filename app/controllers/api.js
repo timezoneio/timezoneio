@@ -1,6 +1,7 @@
 var crypto = require('crypto');
 var moment = require('moment-timezone');
-var getTimezoneFromLocation = require('../helpers/getTimezoneFromLocation.js');
+var getTimezoneFromLocation = require('../helpers/getTimezoneFromLocation');
+var getCityFromCoords = require('../helpers/getCityFromCoords');
 
 var UserModel = require('../models/user.js');
 var TeamModel = require('../models/team.js');
@@ -153,6 +154,20 @@ api.locationSearch = function(req, res, next) {
     res.json({ results: locations });
   });
 
+};
+
+api.locationGetCity = function(req, res, next) {
+
+  if (!req.query.lat || !req.query.long)
+    return res.status(400).json({
+      message: 'lat and long params required'
+    });
+
+  getCityFromCoords(req.query.lat, req.query.long, function(err, city) {
+    if (err) return handleError(res, 'Error finding your city');
+
+    res.json({ city: city });
+  });
 };
 
 api.locationGetTimezone = function(req, res, next) {

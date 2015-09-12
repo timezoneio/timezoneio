@@ -2,6 +2,8 @@
 
 var React = require('react');
 var classNames = require('classnames');
+var getProfileUrl = require('../helpers/urls').getProfileUrl;
+var DEFAULT_AVATAR = require('../helpers/images').DEFAULT_AVATAR;
 
 module.exports = React.createClass({
 
@@ -25,8 +27,9 @@ module.exports = React.createClass({
 
   render: function() {
 
-    var profileUrl = '/people/' + this.props.username;
-    var style = { backgroundImage: 'url(' + this.props.avatar + ')' };
+    var profileUrl = getProfileUrl(this.props);
+    var avatarUrl = this.props.avatar || DEFAULT_AVATAR;
+    var style = { backgroundImage: 'url(' + avatarUrl + ')' };
 
     var containerClasses = classNames('user-menu-container', {
       'fixed': this.props.fixed

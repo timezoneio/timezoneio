@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>{{{title}}}</title>
-  <meta name="description" content="{{{description}}}">
+  <title>{{title}}</title>
+  <meta name="description" content="{{description}}">
   <link rel="shortcut icon" type="image/png" href="/favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="/stylesheets/index.css">
   <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <meta property="og:type" content="website"/>
-  <meta property="og:title" content="{{{title}}}"/>
-  <meta property="og:description" content="{{{description}}}"/>
-  <meta property="og:url" content="{{{url}}}"/>
+  <meta property="og:title" content="{{title}}"/>
+  <meta property="og:description" content="{{description}}"/>
+  <meta property="og:url" content="{{url}}"/>
   <meta property="og:image" content="http://timezone.io/images/homepage/og-image.jpg"/>
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
@@ -23,7 +23,9 @@
   <script>
     var appData = {{{data}}};
   </script>
-  <script src="/js/{{{script}}}"></script>
+  {{#script}}
+    <script src="/js/{{script}}"></script>
+  {{/script}}
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
