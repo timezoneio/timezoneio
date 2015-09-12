@@ -53,6 +53,10 @@ team.index = function(req, res, next) {
 };
 
 team.createForm = function(req, res, next) {
+
+  if (!req.user)
+    return res.redirect('/login');
+
   res.render('createTeam', {
     title: 'Create your team',
     errors: req.flash('error')

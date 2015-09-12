@@ -2,6 +2,7 @@ node_modules
 
 people.json
 data.js
+notes.md
 
 *.log
 public/stylesheets/*.css
