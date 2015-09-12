@@ -34,13 +34,15 @@ module.exports = React.createClass({
 
   render: function() {
 
+    var year = new Date().getFullYear();
+
     return (
       <footer className="hp-section site-footer">
 
         <div className="hp-content-container">
 
           <p>
-            © 2015 Timezone.io <br/>
+            © {year} Timezone.io <br/>
           </p>
           <p>
             {this.state.links.map(function(link, idx) {
