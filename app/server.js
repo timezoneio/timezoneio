@@ -25,7 +25,12 @@ module.exports = function() {
   var app = express();
 
   // Middleware
-  app.use(stylusMiddleware());
+
+  // In production we use a CDN
+  if (process.env.NODE_ENV !== 'production') {
+    app.use(stylusMiddleware());
+  }
+
   app.use(slashes(false));
   app.use(logger('dev'));
   app.use(express.static(path.join(__dirname, '../public')));

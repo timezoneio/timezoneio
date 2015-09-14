@@ -3,6 +3,8 @@ node_modules
 people.json
 data.js
 notes.md
+aws.json
 
 *.log
 public/stylesheets/*.css
+.awspublish-*
