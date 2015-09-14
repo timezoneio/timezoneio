@@ -5,6 +5,10 @@ var transform = require('vinyl-transform');
 var browserify = require('browserify');
 var reactify = require('reactify');
 var uglify = require('gulp-uglify');
+var stylus = require('gulp-stylus');
+var autoprefixer = require('gulp-autoprefixer');
+var cssmin = require('gulp-cssmin');
+var rev = require('gulp-rev');
 var awspublish = require('gulp-awspublish');
 
 var awsCredentials = require('./aws.json');
@@ -49,27 +53,32 @@ gulp.task('upload-images', function() {
     .pipe(awspublish.reporter());
 });
 
-// TODO - Needs stylus compile + versioning
 gulp.task('upload-css', function() {
   var publisher = awspublish.create(awsCredentials);
-  return gulp.src(['public/stylesheets/**/*'])
+  return gulp.src(['assets/stylesheets/index.styl'])
+    .pipe(stylus())
+    .pipe(autoprefixer({ browsers: ['last 2 versions'] }))
+    .pipe(cssmin())
     .pipe(rename(function (path) {
       path.dirname = 'stylesheets/' + path.dirname;
     }))
+    .pipe(rev())
     .pipe(awspublish.gzip({ ext: '.gz' }))
     .pipe(publisher.publish(s3Headers))
     .pipe(publisher.cache())
-    .pipe(awspublish.reporter());
+    .pipe(awspublish.reporter())
+    .pipe(rev.manifest())
+    .pipe(gulp.dest('./'));
 });
 
-// TODO - Needs versioning
-gulp.task('upload-js', function() {
+gulp.task('upload-js', ['browserify'], function() {
   var publisher = awspublish.create(awsCredentials);
   return gulp.src(['public/js/bundles/*.js'])
     .pipe(uglify())
     .pipe(rename(function (path) {
       path.dirname = 'js/bundles/' + path.dirname;
     }))
+    .pipe(rev())
     .pipe(awspublish.gzip({ ext: '.gz' }))
     .pipe(publisher.publish(s3Headers))
     .pipe(publisher.cache())
@@ -90,6 +99,6 @@ gulp.task('watch', function() {
   ], ['browserify']);
 });
 
-gulp.task('predeploy', ['upload-images'/*, 'upload-css'*/]);
+gulp.task('predeploy', ['browserify', 'upload-images', 'upload-css', 'upload-js']);
 
 gulp.task('default', ['browserify']);
