@@ -67,7 +67,7 @@ gulp.task('upload-css', function() {
     .pipe(publisher.publish(s3Headers))
     .pipe(publisher.cache())
     .pipe(awspublish.reporter())
-    .pipe(rev.manifest())
+    .pipe(rev.manifest({ merge: true }))
     .pipe(gulp.dest('./'));
 });
 
@@ -82,7 +82,9 @@ gulp.task('upload-js', ['browserify'], function() {
     .pipe(awspublish.gzip({ ext: '.gz' }))
     .pipe(publisher.publish(s3Headers))
     .pipe(publisher.cache())
-    .pipe(awspublish.reporter());
+    .pipe(awspublish.reporter())
+    .pipe(rev.manifest({ merge: true }))
+    .pipe(gulp.dest('./'));
 });
 
 

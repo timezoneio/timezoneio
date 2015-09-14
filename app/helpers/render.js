@@ -7,6 +7,17 @@ var path = require('path');
 var Mustache = require('mustache');
 var React = require('react');
 
+var STATIC_VERSIONS = require('../../rev-manifest.json');
+var STATIC_DOMAIN = '//s3.amazonaws.com/timezoneio/';
+var isProduction = process.env.NODE_ENV === 'production';
+
+
+var getStaticUrl = function(relUrl) {
+  if (isProduction && relUrl in STATIC_VERSIONS)
+    return STATIC_DOMAIN + STATIC_VERSIONS[relUrl];
+  return '/' + relUrl;
+};
+
 // Read the main template in once
 var template = fs.readFileSync(path.join(__dirname, '../templates/layout.hbs'), 'utf8');
 
@@ -32,8 +43,10 @@ module.exports = function render(pathName, locals, cb) {
   );
   params.data = JSON.stringify(data || {});
 
-  //NOTE - currently this.name will always be truthy
-  params.script ='bundles/' + this.name + '.js';
+  params.stylesheet = getStaticUrl('stylesheets/index.css');
+  params.script = getStaticUrl('js/bundles/' + this.name + '.js');
+
+  // IDEA for generic bundle page
   // params.script = this.name ?
   //                 '/js/bundles/' + this.name + '.js' :
   //                 '/js/genericPage.js';
