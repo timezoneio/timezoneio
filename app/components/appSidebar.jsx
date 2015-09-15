@@ -60,7 +60,7 @@ module.exports = React.createClass({
           </div>
 
           <button className="small hollow"
-                  disabled={this.props.isCurrentTime?'disabled':''}
+                  disabled={this.props.isCurrentTime ? 'disabled' : ''}
                   onClick={this.handleGotoCurrentTime}>Now</button>
         </div>
 

@@ -117,19 +117,19 @@ AppState.prototype.toggleSelectPerson = function(id) {
 
 
 AppState.prototype.organizeMeetingGroups = function() {
-  var zoneGroups = toolbelt.groupBy('zone', this._state.meeting.people);
+  var zoneGroups = toolbelt.groupBy('utcOffset', this._state.meeting.people);
 
   this._state.meeting.groups = Object.keys(zoneGroups)
-                                     .map(function(z) {
-                                       var zone = parseInt(z, 10);
+                                     .map(function(o) {
+                                       var utcOffset = parseInt(o, 10);
                                        return {
-                                         zone: zone,
-                                         zoneHours: zone / 60,
-                                         people: zoneGroups[z]
+                                         utcOffset: utcOffset,
+                                         utcOffsetHours: utcOffset / 60,
+                                         people: zoneGroups[utcOffset]
                                        };
                                      })
                                      .sort(function(a, b) {
-                                       return b.zone - a.zone;
+                                       return b.utcOffset - a.utcOffset;
                                      });
 };
 
@@ -139,16 +139,16 @@ var createHoursArray = function() {
   return hours;
 };
 
-var createHoursArrayForOffset = function(zoneHours) {
+var createHoursArrayForOffset = function(utcOffsetHours) {
   var hours = createHoursArray();
-  if (zoneHours === 0)
+  if (utcOffsetHours === 0)
     return hours;
-  if (zoneHours > 0) {
-    var end = hours.splice(24 - zoneHours);
-    return end.concat(hours);
-  } else {
-    var start = hours.splice(Math.abs(zoneHours));
+  if (utcOffsetHours > 0) {
+    var start = hours.splice(utcOffsetHours);
     return start.concat(hours);
+  } else {
+    var end = hours.splice(24 - Math.abs(utcOffsetHours));
+    return end.concat(hours);
   }
 };
 
@@ -228,7 +228,7 @@ AppState.prototype.getSuggestedMeetingTimeWindow = function(groups) {
 AppState.prototype.findMeetingTime = function() {
 
   this._state.meeting.groups.forEach(function(group) {
-    group.hours = createHoursArrayForOffset(group.zoneHours);
+    group.hours = createHoursArrayForOffset(group.utcOffsetHours);
   });
 
   var suggestedTimeWindow = this.getSuggestedMeetingTimeWindow(this._state.meeting.groups);
@@ -240,13 +240,13 @@ AppState.prototype.findMeetingTime = function() {
     return;
   }
 
-  console.info(suggestedTimeWindow);
+  // console.info(suggestedTimeWindow);
 
   // Get suggested local time
-  var localZoneHours = moment().zone() / 60;
+  var localUtcHourOffset = moment().utcOffset() / 60;
   var suggestedTime = timeUtils.formatLocalTimeWindow(startHour,
                                                       endHour,
-                                                      localZoneHours,
+                                                      localUtcHourOffset,
                                                       this._state.timeFormat);
 
   this._state.meeting.suggestedTime = suggestedTime;
@@ -255,7 +255,7 @@ AppState.prototype.findMeetingTime = function() {
   this._state.meeting.groups.forEach(function(group) {
     group.suggestedTime = timeUtils.formatLocalTimeWindow(startHour,
                                                           endHour,
-                                                          group.zoneHours,
+                                                          group.utcOffsetHours,
                                                           this._state.timeFormat);
   }.bind(this));
 

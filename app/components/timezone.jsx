@@ -51,10 +51,6 @@ module.exports = React.createClass({
 
   getPeopleColumns: function() {
 
-    this.props.model.people.sort(function(a, b){
-      return a.name > b.name ? 1 : -1;
-    });
-
     var numPeople = this.props.model.people.length;
     var numCols = Math.ceil(numPeople / PEOPLE_PER_COL);
     var numPerCol = Math.ceil(numPeople / numCols);

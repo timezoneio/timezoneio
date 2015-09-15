@@ -24,14 +24,14 @@ timeUtils.getHourFormattedString = function(hour, fmt) {
   return hour + m;
 };
 
-timeUtils.gmtHoursToOffset = function(gmtHour, zoneHourOffset) {
-  var hour = gmtHour - zoneHourOffset;
+timeUtils.gmtHoursToOffset = function(gmtHour, utcHourOffset) {
+  var hour = gmtHour + utcHourOffset;
   return hour >= 0 ? hour : 24 + hour;
 };
 
-timeUtils.formatLocalTimeWindow = function(startHour, endHour, zoneHourOffset, fmt) {
-  var localStartHour = timeUtils.gmtHoursToOffset(startHour, zoneHourOffset);
-  var localEndHour = timeUtils.gmtHoursToOffset(endHour, zoneHourOffset);
+timeUtils.formatLocalTimeWindow = function(startHour, endHour, utcHourOffset, fmt) {
+  var localStartHour = timeUtils.gmtHoursToOffset(startHour, utcHourOffset);
+  var localEndHour = timeUtils.gmtHoursToOffset(endHour, utcHourOffset);
 
   if (localStartHour === localEndHour)
     return timeUtils.getHourFormattedString(localStartHour, fmt);
