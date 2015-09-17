@@ -3,6 +3,7 @@ var base = require('../app/controllers/base.js');
 var auth = require('../app/controllers/auth.js');
 var team = require('../app/controllers/team.js');
 var people = require('../app/controllers/people.js');
+var services = require('../app/controllers/services');
 var getProfileUrl = require('../app/helpers/urls').getProfileUrl;
 
 
@@ -35,6 +36,8 @@ module.exports = function(app, passport) {
   app.get('/team/:name/:view', team.index);
 
   app.use('/api', apiRouter);
+
+  app.use('/sign-s3', services.signS3);
 
 
   /**

@@ -1,6 +1,7 @@
 {
   "env": {
-    "NODE_ENV": "development"
+    "NODE_ENV": "development",
+    "S3_BUCKET": "timezone-uploads-dev"
   },
   "ignore": ["public/**/*.js"],
   "ext": "js json hjs jsx"
