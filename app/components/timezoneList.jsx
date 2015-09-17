@@ -1,7 +1,14 @@
-/** @jsx React.DOM */
-
 var React    = require('react');
 var Timezone = require('./timezone.jsx');
+
+var count = function(metric, people) {
+  var items = people.reduce(function(list, p) {
+    if (list.indexOf(p[metric].toLowerCase()) === -1)
+      list.push(p[metric].toLowerCase());
+    return list;
+  }, []);
+  return items.length;
+};
 
 module.exports = React.createClass({
 
@@ -12,13 +19,11 @@ module.exports = React.createClass({
     // Note the homepage doesn't provide people, only timezones
     if (!people || !Array.isArray(people)) return;
 
-    var cities = people.reduce(function(list, p) {
-      if (list.indexOf(p.location.toLowerCase()) === -1)
-        list.push(p.location.toLowerCase());
-      return list;
-    }, []);
+    var numPeople = people.length;
+    var numCities = count('location', people);
+    var numTimezones = this.props.timezones.length;
 
-    return people.length + ' people in ' + cities.length + ' cities';
+    return `${numPeople} people in ${numCities} cities across ${numTimezones} timezones`;
   },
 
   render: function() {

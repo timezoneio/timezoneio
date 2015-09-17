@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var React = require('react');
 var Branding = require('./branding.jsx');
 var UserMenu = require('./userMenu.jsx');
@@ -51,4 +49,3 @@ module.exports = React.createClass({
     );
   }
 });
-

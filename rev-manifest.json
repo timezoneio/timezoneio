@@ -1,8 +1,8 @@
 {
-  "js/bundles/about.js": "js/bundles/about-41f76fb530.js.gz",
-  "js/bundles/createTeam.js": "js/bundles/createTeam-69783238b4.js.gz",
-  "js/bundles/homepage.js": "js/bundles/homepage-4ea9ef3469.js.gz",
-  "js/bundles/person.js": "js/bundles/person-bb06f90610.js.gz",
-  "js/bundles/team.js": "js/bundles/team-0d86be6ca4.js.gz",
+  "js/bundles/about.js": "js/bundles/about-f27d397210.js.gz",
+  "js/bundles/createTeam.js": "js/bundles/createTeam-640d820e47.js.gz",
+  "js/bundles/homepage.js": "js/bundles/homepage-da348059ed.js.gz",
+  "js/bundles/person.js": "js/bundles/person-b4526590ab.js.gz",
+  "js/bundles/team.js": "js/bundles/team-07deefb1d4.js.gz",
   "stylesheets/index.css": "stylesheets/index-9dde4b0885.css.gz"
 }

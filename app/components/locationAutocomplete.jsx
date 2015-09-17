@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var React = require('react');
 var classNames = require('classnames');
 var toolbelt = require('../utils/toolbelt.js');

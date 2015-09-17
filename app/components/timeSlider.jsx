@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var React = require('react');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
@@ -34,7 +32,7 @@ module.exports = React.createClass({
     };
 
     return <div className="time-slider-container">
-      <input type="range" 
+      <input type="range"
              className="time-slider"
              valueLink={valueLink} />
     </div>;

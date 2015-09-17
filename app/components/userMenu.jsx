@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var React = require('react');
 var classNames = require('classnames');
 var getProfileUrl = require('../helpers/urls').getProfileUrl;

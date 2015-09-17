@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var React = require('react');
 var Avatar = require('./avatar.jsx');
 var ActionCreators = require('../actions/actionCreators.js');
