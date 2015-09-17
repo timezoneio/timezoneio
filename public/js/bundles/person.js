@@ -1,36 +1,43 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
 var React = require('react');
 var toolbelt = require('../utils/toolbelt.js');
 var Person = React.createFactory(require('../views/person.jsx'));
 
 var targetNode = document.querySelector('#page');
 
-React.render(
-  Person(toolbelt.clone(window.appData)),
-  targetNode
-);
-
+React.render(Person(toolbelt.clone(window.appData)), targetNode);
 
 },{"../utils/toolbelt.js":6,"../views/person.jsx":7,"react":168}],2:[function(require,module,exports){
-/** @jsx React.DOM */
+"use strict";
 
 var React = require('react');
 
-module.exports = React.createClass({displayName: "exports",
-  render: function() {
-    var branding = React.createElement("h1", {className: "site-branding"}, "Timezone.io");
+module.exports = React.createClass({
+  displayName: "exports",
 
-    if (this.props.link)
-      return React.createElement("a", {href: "/", className: "site-branding-link"}, branding);
+  render: function render() {
+    var branding = React.createElement(
+      "h1",
+      { className: "site-branding" },
+      "Timezone.io"
+    );
+
+    if (this.props.link) return React.createElement(
+      "a",
+      { href: "/", className: "site-branding-link" },
+      branding
+    );
 
     return branding;
   }
 });
 
-
-
 },{"react":168}],3:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var React = require('react');
 var Branding = require('./branding.jsx');
@@ -40,79 +47,77 @@ module.exports = React.createClass({
 
   displayName: 'Header',
 
-  renderRightComponent: function() {
+  renderRightComponent: function renderRightComponent() {
 
     var buttons = [];
 
-    if (this.props.demo)
-      buttons.push(
-        React.createElement("a", {key: "demo", 
-           href: "/team/buffer", 
-           className: "button cta"}, 
-          "Live demo"
-        )
-      );
+    if (this.props.demo) buttons.push(React.createElement(
+      'a',
+      { key: 'demo',
+        href: '/team/buffer',
+        className: 'button cta' },
+      'Live demo'
+    ));
 
     if (this.props.user) {
-      buttons.push(
-        React.createElement(UserMenu, React.__spread({key: "menu"}, 
-                  this.props.user))
-      );
+      buttons.push(React.createElement(UserMenu, _extends({ key: 'menu'
+      }, this.props.user)));
     } else {
-      buttons.push(
-        React.createElement("a", {key: "login", 
-           href: "/login", 
-           className: "button hollow"}, 
-          "Login"
-        )
-      );
+      buttons.push(React.createElement(
+        'a',
+        { key: 'login',
+          href: '/login',
+          className: 'button hollow' },
+        'Login'
+      ));
     }
 
     return buttons;
   },
 
-  render: function() {
+  render: function render() {
     var link = this.props.link === false ? false : true;
-    return (
-      React.createElement("header", {className: "site-header"}, 
-        React.createElement(Branding, {link: link}), 
-        React.createElement("div", {className: "site-header--right"}, 
-          this.renderRightComponent()
-        )
+    return React.createElement(
+      'header',
+      { className: 'site-header' },
+      React.createElement(Branding, { link: link }),
+      React.createElement(
+        'div',
+        { className: 'site-header--right' },
+        this.renderRightComponent()
       )
     );
   }
 });
 
-
-
 },{"./branding.jsx":2,"./userMenu.jsx":4,"react":168}],4:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 var classNames = require('classnames');
 
-module.exports = React.createClass({displayName: "exports",
+module.exports = React.createClass({
+  displayName: 'exports',
 
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
     return { open: false };
   },
 
-  closeMenu: function(e) {
+  closeMenu: function closeMenu(e) {
     this.setState({ open: false });
   },
 
-  handleToggleMenu: function(e) {
+  handleToggleMenu: function handleToggleMenu(e) {
     e.stopPropagation();
     this.setState({ open: !this.state.open });
   },
 
-  componentDidMount: function() {
+  componentDidMount: function componentDidMount() {
     // Move this one day
     window.addEventListener('click', this.closeMenu);
   },
 
-  render: function() {
+  render: function render() {
 
     var profileUrl = '/people/' + this.props.username;
     var style = { backgroundImage: 'url(' + this.props.avatar + ')' };
@@ -125,103 +130,98 @@ module.exports = React.createClass({displayName: "exports",
       'menu-open': this.state.open
     });
 
-    return (
-      React.createElement("div", {className: containerClasses}, 
-
-        React.createElement("div", {className: menuClasses}, 
-          React.createElement("a", {href: profileUrl, 
-             className: "user-menu-item"}, 
-            "Profile"
-          ), 
-          React.createElement("a", {href: "/team", 
-             className: "user-menu-item"}, 
-            "Add your team"
-          ), 
-          React.createElement("a", {href: "/logout", 
-             className: "user-menu-item"}, 
-            "Logout"
-          )
-        ), 
-
-        React.createElement("a", {onClick: this.handleToggleMenu, 
-           className: "avatar header-avatar", 
-           style: style, 
-           name: this.props.name}
+    return React.createElement(
+      'div',
+      { className: containerClasses },
+      React.createElement(
+        'div',
+        { className: menuClasses },
+        React.createElement(
+          'a',
+          { href: profileUrl,
+            className: 'user-menu-item' },
+          'Profile'
+        ),
+        React.createElement(
+          'a',
+          { href: '/team',
+            className: 'user-menu-item' },
+          'Add your team'
+        ),
+        React.createElement(
+          'a',
+          { href: '/logout',
+            className: 'user-menu-item' },
+          'Logout'
         )
-
-      )
+      ),
+      React.createElement('a', { onClick: this.handleToggleMenu,
+        className: 'avatar header-avatar',
+        style: style,
+        name: this.props.name })
     );
   }
 });
 
-
 },{"classnames":9,"react":168}],5:[function(require,module,exports){
+'use strict';
+
 var moment = require('moment-timezone');
 
 var timeUtils = module.exports = {};
 
 // Get the time format string
-timeUtils.getFormatStringFor = function(fmt) {
+timeUtils.getFormatStringFor = function (fmt) {
   return fmt === 24 ? 'H:mm' : 'h:mm a';
 };
 
 // Get the time preferred format sans minutes
-timeUtils.getShortFormatStringFor = function(fmt) {
+timeUtils.getShortFormatStringFor = function (fmt) {
   return fmt === 24 ? 'H' : 'h'; // ha
 };
 
 // Get the hour in the format desired
-timeUtils.getHourFormattedString = function(hour, fmt) {
-  if (fmt === 24)
-    return hour + ':00';
+timeUtils.getHourFormattedString = function (hour, fmt) {
+  if (fmt === 24) return hour + ':00';
   var m = hour < 12 ? 'am' : 'pm';
-  if (hour === 0)
-    hour = 12;
-  if (hour > 12)
-    hour = hour - 12;
+  if (hour === 0) hour = 12;
+  if (hour > 12) hour = hour - 12;
   return hour + m;
 };
 
-timeUtils.gmtHoursToOffset = function(gmtHour, utcHourOffset) {
+timeUtils.gmtHoursToOffset = function (gmtHour, utcHourOffset) {
   var hour = gmtHour + utcHourOffset;
   return hour >= 0 ? hour : 24 + hour;
 };
 
-timeUtils.formatLocalTimeWindow = function(startHour, endHour, utcHourOffset, fmt) {
+timeUtils.formatLocalTimeWindow = function (startHour, endHour, utcHourOffset, fmt) {
   var localStartHour = timeUtils.gmtHoursToOffset(startHour, utcHourOffset);
   var localEndHour = timeUtils.gmtHoursToOffset(endHour, utcHourOffset);
 
-  if (localStartHour === localEndHour)
-    return timeUtils.getHourFormattedString(localStartHour, fmt);
+  if (localStartHour === localEndHour) return timeUtils.getHourFormattedString(localStartHour, fmt);
 
-  return timeUtils.getHourFormattedString(localStartHour, fmt) +
-         ' - ' +
-         timeUtils.getHourFormattedString(localEndHour, fmt);
+  return timeUtils.getHourFormattedString(localStartHour, fmt) + ' - ' + timeUtils.getHourFormattedString(localEndHour, fmt);
 };
 
 // Round to the closest quarter hour
-timeUtils.roundToQuarterHour = function(minutes) {
+timeUtils.roundToQuarterHour = function (minutes) {
   return Math.round(minutes / 60 * 4) * 15;
 };
 
-timeUtils.getHoursAsArray = function(start) {
+timeUtils.getHoursAsArray = function (start) {
   start = start || 0;
   var hours = [];
-  for (var hour = start; hour < (24 + start); hour++) {
+  for (var hour = start; hour < 24 + start; hour++) {
     hours.push(hour >= 24 ? hour - 24 : hour);
   }
   return hours;
 };
 
-timeUtils.getAvailableHoursInUTC = function(tz, formatString) {
+timeUtils.getAvailableHoursInUTC = function (tz, formatString) {
   var hours = timeUtils.getHoursAsArray(9);
-  var local = moment()
-    .tz('UTC')
-    .hours(0)
-    .minutes(0)
-    .tz(tz);
+  var local = moment().tz('UTC').hours(0).minutes(0).tz(tz);
 
-  return hours.map(function(hour) {
+  return hours.map(function (hour) {
     var localNow = moment(local).add(hour, 'h');
     var localHour = localNow.hour();
     var isAvailable = localHour >= 9 && localHour < 17; // 9 to 5
@@ -234,11 +234,12 @@ timeUtils.getAvailableHoursInUTC = function(tz, formatString) {
   });
 };
 
-
 },{"moment-timezone":11}],6:[function(require,module,exports){
+'use strict';
+
 var toolbelt = module.exports = {};
 
-toolbelt.clone = function(source) {
+toolbelt.clone = function (source) {
   if (source === null || typeof source !== 'object') {
     return source;
   }
@@ -254,59 +255,51 @@ toolbelt.clone = function(source) {
   return obj;
 };
 
-
 // Returns a new object w/ updated props from the second object
-toolbelt.extend = function(a, b) {
+toolbelt.extend = function (a, b) {
   var obj = toolbelt.clone(a);
-  Object.keys(b).forEach(function(key) {
+  Object.keys(b).forEach(function (key) {
     obj[key] = b[key];
   });
   return obj;
 };
 
-
 // Like extend, but updates the first object passed
-toolbelt.update = function(a, b) {
-  Object.keys(b).forEach(function(key) {
+toolbelt.update = function (a, b) {
+  Object.keys(b).forEach(function (key) {
     a[key] = b[key];
   });
   return a;
 };
 
-
 // For indexOf nested objects, ex.
 //   toolbelt.indexOf({ isCool: true }, [{ isCool: true }, { isCool: false }])
 //   => 0
-toolbelt.indexOf = function(query, arr) {
+toolbelt.indexOf = function (query, arr) {
   var key = typeof query === 'object' ? Object.keys(query)[0] : query;
   var value = typeof query === 'object' ? query[key] : true;
 
   for (var i = 0, len = arr.length; i < len; i++) {
-    if (arr[i][key] === value)
-      return i;
+    if (arr[i][key] === value) return i;
   }
 
   return -1;
 };
 
-toolbelt.groupBy = function(key, arr) {
+toolbelt.groupBy = function (key, arr) {
   var obj = {};
 
   for (var i = 0, len = arr.length; i < len; i++) {
     var item = arr[i];
     var val = item[key];
-    if (obj[val])
-      obj[val].push(item);
-    else
-      obj[val] = [item];
+    if (obj[val]) obj[val].push(item);else obj[val] = [item];
   }
 
   return obj;
 };
 
-
 },{}],7:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 var moment = require('moment-timezone');
@@ -317,52 +310,61 @@ module.exports = React.createClass({
 
   displayName: 'PersonView',
 
-  getLocalTime: function() {
-    var localTime = moment( this.props.time ).tz( this.props.profileUser.tz );
+  getLocalTime: function getLocalTime() {
+    var localTime = moment(this.props.time).tz(this.props.profileUser.tz);
     var fmtString = timeUtils.getFormatStringFor(this.props.timeFormat);
     return localTime.format(fmtString);
   },
 
-  render: function() {
+  render: function render() {
     var profileUser = this.props.profileUser;
-    return (
-      React.createElement("div", {className: "container profile-container"}, 
-
-        React.createElement(Header, React.__spread({},  this.props)), 
-
-        React.createElement("div", {className: "fw-section alt profile"}, 
-          React.createElement("div", {className: "content-container"}, 
-
-            React.createElement("img", {src: profileUser.avatar, className: "avatar large profile-avatar"}), 
-
-            React.createElement("div", {className: "profile-details"}, 
-              React.createElement("h2", {className: "profile-name"}, profileUser.name), 
-              React.createElement("h3", {className: "profile-location"}, 
-                profileUser.location, 
-                React.createElement("span", {className: "profile-offset"}, 
-                  this.getLocalTime()
-                )
-              ), 
-              React.createElement("p", null, 
-                this.props.teams.map(function(team, idx) {
-                  return (
-                    React.createElement("a", {key: idx, 
-                       href: team.url}, 
-                      team.name
-                    )
-                  )
-                })
+    return React.createElement(
+      'div',
+      { className: 'container profile-container' },
+      React.createElement(Header, this.props),
+      React.createElement(
+        'div',
+        { className: 'fw-section alt profile' },
+        React.createElement(
+          'div',
+          { className: 'content-container' },
+          React.createElement('img', { src: profileUser.avatar, className: 'avatar large profile-avatar' }),
+          React.createElement(
+            'div',
+            { className: 'profile-details' },
+            React.createElement(
+              'h2',
+              { className: 'profile-name' },
+              profileUser.name
+            ),
+            React.createElement(
+              'h3',
+              { className: 'profile-location' },
+              profileUser.location,
+              React.createElement(
+                'span',
+                { className: 'profile-offset' },
+                this.getLocalTime()
               )
+            ),
+            React.createElement(
+              'p',
+              null,
+              this.props.teams.map(function (team, idx) {
+                return React.createElement(
+                  'a',
+                  { key: idx,
+                    href: team.url },
+                  team.name
+                );
+              })
             )
-
           )
         )
-
       )
     );
   }
 });
-
 
 },{"../components/header.jsx":3,"../utils/time.js":5,"moment-timezone":11,"react":168}],8:[function(require,module,exports){
 // shim for using process in browser

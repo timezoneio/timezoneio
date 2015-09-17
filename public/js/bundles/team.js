@@ -1,76 +1,69 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
 var api = require('../helpers/api.js');
 
 var ActionCreators = module.exports = {
 
-  saveUserInfo: function(userId, data) {
-    return api
-      .put('/user/' + userId, data)
-      .then(function(data) {
+  saveUserInfo: function saveUserInfo(userId, data) {
+    return api.put('/user/' + userId, data).then(function (data) {
 
-        AppDispatcher.dispatchApiAction({
-          actionType: ActionTypes.UPDATED_USER_DATA,
-          value: data
-        });
-
-        return data;
+      AppDispatcher.dispatchApiAction({
+        actionType: ActionTypes.UPDATED_USER_DATA,
+        value: data
       });
+
+      return data;
+    });
   },
 
-  addNewTeamMember: function(data) {
-    return api
-      .post('/user', data)
-      .then(function(data) {
+  addNewTeamMember: function addNewTeamMember(data) {
+    return api.post('/user', data).then(function (data) {
 
-        AppDispatcher.dispatchApiAction({
-          actionType: ActionTypes.UPDATED_USER_DATA,
-          value: data
-        });
-
-        return data;
+      AppDispatcher.dispatchApiAction({
+        actionType: ActionTypes.UPDATED_USER_DATA,
+        value: data
       });
+
+      return data;
+    });
   },
 
-  removeTeamMember: function(teamId, userId) {
-    return api
-      .delete('/team/' + teamId + '/member/' + userId)
-      .then(function(data) {
+  removeTeamMember: function removeTeamMember(teamId, userId) {
+    return api['delete']('/team/' + teamId + '/member/' + userId).then(function (data) {
 
-        AppDispatcher.dispatchApiAction({
-          actionType: ActionTypes.TEAM_MEMBER_REMOVED,
-          value: data
-        });
-
-        return data;
+      AppDispatcher.dispatchApiAction({
+        actionType: ActionTypes.TEAM_MEMBER_REMOVED,
+        value: data
       });
+
+      return data;
+    });
   },
 
   // Returns promise
-  locationSearch: function(q) {
-    return api
-      .get('/location/search', { q: q })
-      .then(function(data) {
-        return data.results;
-      });
+  locationSearch: function locationSearch(q) {
+    return api.get('/location/search', { q: q }).then(function (data) {
+      return data.results;
+    });
   },
 
-  getGravatar: function(email) {
-    return api.get('/avatar/gravatar', { email: email })
-      .then(function(data) {
-        return data.avatar;
-      });
+  getGravatar: function getGravatar(email) {
+    return api.get('/avatar/gravatar', { email: email }).then(function (data) {
+      return data.avatar;
+    });
   },
 
-  toggleSelectPerson: function(userId) {
+  toggleSelectPerson: function toggleSelectPerson(userId) {
     AppDispatcher.dispatchViewAction({
       actionType: ActionTypes.TOGGLE_SELECT_PERSON,
       value: userId
     });
   },
 
-  clearMeetingGroups: function() {
+  clearMeetingGroups: function clearMeetingGroups() {
     AppDispatcher.dispatchViewAction({
       actionType: ActionTypes.CLEAR_MEETING_GROUPS
     });
@@ -78,8 +71,9 @@ var ActionCreators = module.exports = {
 
 };
 
-
 },{"../actions/actionTypes.js":2,"../dispatchers/appDispatcher.js":17,"../helpers/api.js":18}],2:[function(require,module,exports){
+'use strict';
+
 var keyMirror = require('keymirror');
 
 module.exports = keyMirror({
@@ -102,9 +96,10 @@ module.exports = keyMirror({
 
 });
 
-
 },{"keymirror":33}],3:[function(require,module,exports){
-var React  = require('react');
+'use strict';
+
+var React = require('react');
 var moment = require('moment-timezone');
 
 // Currently, the fetch API doesn't reliably parse the UTF-8 encoded json
@@ -122,29 +117,26 @@ var AppState = require('../state/appState.js');
 
 var Team = React.createFactory(require('../views/team.jsx'));
 
-
 // Application state:
 var appState = new AppState(window.appData);
-
 
 // Add the component to the DOFM
 var targetNode = document.querySelector('#page');
 
 function renderApp() {
-  React.render( Team( appState.getState() ), targetNode );
+  React.render(Team(appState.getState()), targetNode);
 }
 
 renderApp();
 
 // Allow arrow keys to change time by selecting time range input
 var KEY = {
-  LEFT:  37,
+  LEFT: 37,
   RIGHT: 39
 };
 var timeSlider = document.querySelector('.time-slider');
 
-
-var handleKeyUp = function(e) {
+var handleKeyUp = function handleKeyUp(e) {
   if (e.keyCode === KEY.RIGHT || e.keyCode === KEY.LEFT) {
     e.preventDefault();
     disableAutoUpdate();
@@ -153,17 +145,16 @@ var handleKeyUp = function(e) {
   }
 };
 
-var enableKeyTimeChange = function() {
+var enableKeyTimeChange = function enableKeyTimeChange() {
   window.addEventListener('keyup', handleKeyUp);
 };
-var disableKeyTimeChange = function() {
+var disableKeyTimeChange = function disableKeyTimeChange() {
   window.removeEventListener('keyup', handleKeyUp);
 };
 
 if (appState.getCurrentView() === 'app') {
   enableKeyTimeChange();
 }
-
 
 function updateToCurrentTime() {
   appState.updateToCurrentTime();
@@ -193,7 +184,6 @@ function updateTimeAsPercent(percentDelta) {
   renderApp();
 }
 
-
 function json(res) {
   return res.json();
 }
@@ -211,12 +201,10 @@ function saveTeamInfo(info) {
     body: JSON.stringify(info)
   };
 
-  return fetch('/api/team/' + appState.getTeam()._id, options)
-    .then(json)
-    .then(function(res){
-      console.info(res);
-      return res;
-    });
+  return fetch('/api/team/' + appState.getTeam()._id, options).then(json).then(function (res) {
+    console.info(res);
+    return res;
+  });
 }
 
 function updateCurrentView(view, shouldUpdateUrl) {
@@ -246,10 +234,9 @@ function handlePopState(e) {
   updateCurrentView(view);
 }
 
-
 window.addEventListener('popstate', handlePopState);
 
-var handleViewAction = function(action) {
+var handleViewAction = function handleViewAction(action) {
   var actionType = action.actionType;
   var value = action.value;
   var shouldRender = false;
@@ -295,7 +282,7 @@ var handleViewAction = function(action) {
   if (shouldRender) renderApp();
 };
 
-var handleAPIAction = function(action) {
+var handleAPIAction = function handleAPIAction(action) {
   var actionType = action.actionType;
   var value = action.value;
 
@@ -314,16 +301,10 @@ var handleAPIAction = function(action) {
   }
 };
 
-AppDispatcher.register(function(payload) {
+AppDispatcher.register(function (payload) {
 
-  if (payload.source === 'API_ACTION')
-    handleAPIAction(payload.action);
-  else if (payload.source === 'VIEW_ACTION')
-    handleViewAction(payload.action);
-
+  if (payload.source === 'API_ACTION') handleAPIAction(payload.action);else if (payload.source === 'VIEW_ACTION') handleViewAction(payload.action);
 });
-
-
 
 // Auto updating the time
 
@@ -344,9 +325,10 @@ function disableAutoUpdate() {
 
 enableAutoUpdate();
 
-
 },{"../actions/actionTypes.js":2,"../dispatchers/appDispatcher.js":17,"../state/appState.js":20,"../utils/time.js":21,"../utils/toolbelt.js":22,"../utils/transform.js":23,"../views/team.jsx":24,"moment-timezone":35,"react":193,"whatwg-fetch":194}],4:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var React = require('react');
 var timeUtils = require('../utils/time.js');
@@ -360,81 +342,90 @@ module.exports = React.createClass({
 
   displayName: 'AppSidebar',
 
-  handleFormatChange: function(e) {
+  handleFormatChange: function handleFormatChange(e) {
     AppDispatcher.dispatchViewAction({
       actionType: ActionTypes.CHANGE_TIME_FORMAT,
       value: +e.target.dataset.value
     });
   },
 
-  handleGotoCurrentTime: function(e) {
+  handleGotoCurrentTime: function handleGotoCurrentTime(e) {
     AppDispatcher.dispatchViewAction({
       actionType: ActionTypes.USE_CURRENT_TIME
     });
   },
 
-  handleManageTeam: function(e) {
+  handleManageTeam: function handleManageTeam(e) {
     AppDispatcher.dispatchViewAction({
       actionType: ActionTypes.SHOW_VIEW,
       value: 'manage'
     });
   },
 
-  render: function() {
+  render: function render() {
 
     var format = this.props.timeFormat;
     var formatString = timeUtils.getFormatStringFor(this.props.timeFormat);
     var displayTime = this.props.time.format(formatString);
 
-    return (
-      React.createElement("div", {className: "app-sidebar"}, 
-
-        React.createElement(Branding, {link: true}), 
-
-        React.createElement("h2", {className: "app-sidebar--time"}, displayTime), 
-
-        React.createElement(TimeSlider, {time: this.props.time, 
-                    isCurrentTime: this.props.isCurrentTime}), 
-
-        React.createElement("div", {className: "app-sidebar--button-row"}, 
-
-          React.createElement("div", {className: "button-group app-sidebar--format-select"}, 
-            React.createElement("button", {className: 'small hollow ' + (format === 12 ? 'selected' : ''), 
-                    "data-value": "12", 
-                    onClick: this.handleFormatChange}, "12"), 
-            React.createElement("button", {className: 'small hollow ' + (format === 24 ? 'selected' : ''), 
-                    "data-value": "24", 
-                    onClick: this.handleFormatChange}, "24")
-          ), 
-
-          React.createElement("button", {className: "small hollow", 
-                  disabled: this.props.isCurrentTime ? 'disabled' : '', 
-                  onClick: this.handleGotoCurrentTime}, "Now")
-        ), 
-
-        React.createElement(MeetingPlanner, React.__spread({},  this.props.meeting, 
-                        {timeFormat: this.props.timeFormat})), 
-
-         this.props.isAdmin && (
-
-            React.createElement("div", {className: "app-sidebar--admin"}, 
-
-              React.createElement("button", {className: "small hollow", 
-                      onClick: this.handleManageTeam}, "Manage Team")
-
-            )
-
+    return React.createElement(
+      'div',
+      { className: 'app-sidebar' },
+      React.createElement(Branding, { link: true }),
+      React.createElement(
+        'h2',
+        { className: 'app-sidebar--time' },
+        displayTime
+      ),
+      React.createElement(TimeSlider, { time: this.props.time,
+        isCurrentTime: this.props.isCurrentTime }),
+      React.createElement(
+        'div',
+        { className: 'app-sidebar--button-row' },
+        React.createElement(
+          'div',
+          { className: 'button-group app-sidebar--format-select' },
+          React.createElement(
+            'button',
+            { className: 'small hollow ' + (format === 12 ? 'selected' : ''),
+              'data-value': '12',
+              onClick: this.handleFormatChange },
+            '12'
+          ),
+          React.createElement(
+            'button',
+            { className: 'small hollow ' + (format === 24 ? 'selected' : ''),
+              'data-value': '24',
+              onClick: this.handleFormatChange },
+            '24'
+          )
+        ),
+        React.createElement(
+          'button',
+          { className: 'small hollow',
+            disabled: this.props.isCurrentTime ? 'disabled' : '',
+            onClick: this.handleGotoCurrentTime },
+          'Now'
         )
-
-
+      ),
+      React.createElement(MeetingPlanner, _extends({}, this.props.meeting, {
+        timeFormat: this.props.timeFormat })),
+      this.props.isAdmin && React.createElement(
+        'div',
+        { className: 'app-sidebar--admin' },
+        React.createElement(
+          'button',
+          { className: 'small hollow',
+            onClick: this.handleManageTeam },
+          'Manage Team'
+        )
       )
     );
   }
 });
 
-
 },{"../actions/actionTypes.js":2,"../dispatchers/appDispatcher.js":17,"../utils/time.js":21,"./branding.jsx":6,"./meetingPlanner.jsx":10,"./timeSlider.jsx":13,"react":193}],5:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 
@@ -442,58 +433,62 @@ module.exports = React.createClass({
 
   displayName: 'Avatar',
 
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
     return {
-      brokenImage: false,
+      brokenImage: false
     };
   },
 
-  handleLoadSuccess: function() {
-    if (this.state.brokenImage)
-      this.setState({ brokenImage: false });
+  handleLoadSuccess: function handleLoadSuccess() {
+    if (this.state.brokenImage) this.setState({ brokenImage: false });
   },
 
-  handleLoadError: function() {
-    if (!this.state.brokenImage)
-      this.setState({ brokenImage: true });
+  handleLoadError: function handleLoadError() {
+    if (!this.state.brokenImage) this.setState({ brokenImage: true });
   },
 
-  render: function() {
+  render: function render() {
 
     var classes = 'avatar';
     if (this.props.size) classes += ' ' + this.props.size;
 
-    return (
-      React.createElement("img", {src: this.props.avatar, 
-           className: classes, 
-           onLoad: this.handleLoadSuccess, 
-           onError: this.handleLoadError})
-     );
+    return React.createElement('img', { src: this.props.avatar,
+      className: classes,
+      onLoad: this.handleLoadSuccess,
+      onError: this.handleLoadError });
   }
 
 });
 
-
 },{"react":193}],6:[function(require,module,exports){
-/** @jsx React.DOM */
+"use strict";
 
 var React = require('react');
 
-module.exports = React.createClass({displayName: "exports",
-  render: function() {
-    var branding = React.createElement("h1", {className: "site-branding"}, "Timezone.io");
+module.exports = React.createClass({
+  displayName: "exports",
 
-    if (this.props.link)
-      return React.createElement("a", {href: "/", className: "site-branding-link"}, branding);
+  render: function render() {
+    var branding = React.createElement(
+      "h1",
+      { className: "site-branding" },
+      "Timezone.io"
+    );
+
+    if (this.props.link) return React.createElement(
+      "a",
+      { href: "/", className: "site-branding-link" },
+      branding
+    );
 
     return branding;
   }
 });
 
-
-
 },{"react":193}],7:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var React = require('react');
 var toolbelt = require('../utils/toolbelt.js');
@@ -508,11 +503,9 @@ module.exports = React.createClass({
 
   displayName: 'EditPerson',
 
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
     return {
-      saveButtonText: this.props.isNewUser ?
-                        ADD_BUTTON_STATES[0] :
-                        SAVE_BUTTON_STATES[0],
+      saveButtonText: this.props.isNewUser ? ADD_BUTTON_STATES[0] : SAVE_BUTTON_STATES[0],
       error: '',
 
       isNewUser: this.props.isNewUser,
@@ -525,23 +518,21 @@ module.exports = React.createClass({
     };
   },
 
-  handleChange: function(name, value) {
+  handleChange: function handleChange(name, value) {
     var newState = {};
     newState[name] = value;
     this.setState(newState);
   },
 
-  handleLocationChange: function(location, tz) {
+  handleLocationChange: function handleLocationChange(location, tz) {
     this.setState({
       location: location,
       tz: tz || this.state.tz
     });
   },
 
-  handleClickSave: function(e) {
-    var BUTTON_STATES = this.state.isNewUser ?
-                          ADD_BUTTON_STATES :
-                          SAVE_BUTTON_STATES;
+  handleClickSave: function handleClickSave(e) {
+    var BUTTON_STATES = this.state.isNewUser ? ADD_BUTTON_STATES : SAVE_BUTTON_STATES;
 
     this.setState({ saveButtonText: BUTTON_STATES[1] });
 
@@ -549,45 +540,38 @@ module.exports = React.createClass({
     delete data.error;
     delete data.saveButtonText;
 
+    var createOrUpdateUser = this.state.isNewUser ? ActionCreators.addNewTeamMember(data) : ActionCreators.saveUserInfo(this.props._id, data);
 
-    var createOrUpdateUser = this.state.isNewUser ?
-                              ActionCreators.addNewTeamMember(data) :
-                              ActionCreators.saveUserInfo(this.props._id, data);
+    createOrUpdateUser.then((function (res) {
 
-    createOrUpdateUser
-      .then(function(res) {
+      this.setState({
+        isNewUser: false,
+        error: '', // clear the error
+        saveButtonText: BUTTON_STATES[2]
+      });
 
-        this.setState({
-          isNewUser: false,
-          error: '', // clear the error
-          saveButtonText: BUTTON_STATES[2]
-        });
-
-        setTimeout(function() {
-          this.setState({ saveButtonText: SAVE_BUTTON_STATES[0] });
-        }.bind(this), 4000);
-
-      }.bind(this), function(err) {
-        this.setState({
-          error: err.message,
-          saveButtonText: BUTTON_STATES[0]
-        });
-      }.bind(this));
+      setTimeout((function () {
+        this.setState({ saveButtonText: SAVE_BUTTON_STATES[0] });
+      }).bind(this), 4000);
+    }).bind(this), (function (err) {
+      this.setState({
+        error: err.message,
+        saveButtonText: BUTTON_STATES[0]
+      });
+    }).bind(this));
   },
 
-  handleClickUseGravatar: function(e) {
-    ActionCreators.getGravatar(this.state.email)
-      .then(function(avatar) {
-        if (avatar)
-          this.setState({ avatar: avatar });
-      }.bind(this), function(err) {
-        this.setState({
-          error: err.message
-        });
-      }.bind(this));
+  handleClickUseGravatar: function handleClickUseGravatar(e) {
+    ActionCreators.getGravatar(this.state.email).then((function (avatar) {
+      if (avatar) this.setState({ avatar: avatar });
+    }).bind(this), (function (err) {
+      this.setState({
+        error: err.message
+      });
+    }).bind(this));
   },
 
-  render: function() {
+  render: function render() {
 
     var nameLink = {
       value: this.state.name,
@@ -604,80 +588,89 @@ module.exports = React.createClass({
       requestChange: this.handleChange.bind(null, 'avatar')
     };
 
-    return (
-      React.createElement("div", {className: "edit-person"}, 
-
-        React.createElement("div", {className: "edit-person--row"}, 
-           this.state.avatar ? (
-              React.createElement(Avatar, {avatar: this.state.avatar, 
-                      size: "large"})
-            ) : (
-              React.createElement("div", {className: "add-image-placeholder"}, 
-                React.createElement("small", null, "Add image below")
-              )
-            )
-          
-        ), 
-
-        React.createElement("div", {className: "edit-person--row"}, 
-          React.createElement("input", {type: "text", 
-                 name: "name", 
-                 valueLink: nameLink, 
-                 placeholder: "Name"})
-        ), 
-
-        React.createElement("div", {className: "edit-person--row"}, 
-
-          React.createElement(LocationAutocomplete, React.__spread({},  this.props, 
-                                {handleChange: this.handleLocationChange})), 
-
-          React.createElement("span", {className: "edit-person--timezone-display"}, 
-            this.state.tz
+    return React.createElement(
+      'div',
+      { className: 'edit-person' },
+      React.createElement(
+        'div',
+        { className: 'edit-person--row' },
+        this.state.avatar ? React.createElement(Avatar, { avatar: this.state.avatar,
+          size: 'large' }) : React.createElement(
+          'div',
+          { className: 'add-image-placeholder' },
+          React.createElement(
+            'small',
+            null,
+            'Add image below'
           )
-
-        ), 
-
-         //this.state.isNewUser &&
-          // FUTURE - ONLY ALLOW USER TO EDIT THEIR OWN EMAIL
-          React.createElement("div", {className: "edit-person--row"}, 
-            React.createElement("input", {type: "text", 
-                   name: "email", 
-                   valueLink: emailLink, 
-                   placeholder: "E-mail"})
-          ), 
-        
-
-        React.createElement("div", {className: "edit-person--row"}, 
-          React.createElement("input", {type: "text", 
-                 name: "avatar", 
-                 valueLink: avatarLink, 
-                 placeholder: "Avatar URL"})
-        ), 
-
-        React.createElement("div", {className: "edit-person--row"}, 
-          React.createElement("button", {onClick: this.handleClickUseGravatar}, 
-            "Use Gravatar"
-          )
-        ), 
-
-        React.createElement("div", {className: "edit-person--row"}, 
-          React.createElement("button", {onClick: this.handleClickSave}, 
-            this.state.saveButtonText
-          )
-        ), 
-
-         this.state.error &&
-            React.createElement("p", {className: "edit-person--row error"}, this.state.error)
-        
-
+        )
+      ),
+      React.createElement(
+        'div',
+        { className: 'edit-person--row' },
+        React.createElement('input', { type: 'text',
+          name: 'name',
+          valueLink: nameLink,
+          placeholder: 'Name' })
+      ),
+      React.createElement(
+        'div',
+        { className: 'edit-person--row' },
+        React.createElement(LocationAutocomplete, _extends({}, this.props, {
+          handleChange: this.handleLocationChange })),
+        React.createElement(
+          'span',
+          { className: 'edit-person--timezone-display' },
+          this.state.tz
+        )
+      ),
+      //this.state.isNewUser &&
+      // FUTURE - ONLY ALLOW USER TO EDIT THEIR OWN EMAIL
+      React.createElement(
+        'div',
+        { className: 'edit-person--row' },
+        React.createElement('input', { type: 'text',
+          name: 'email',
+          valueLink: emailLink,
+          placeholder: 'E-mail' })
+      ),
+      React.createElement(
+        'div',
+        { className: 'edit-person--row' },
+        React.createElement('input', { type: 'text',
+          name: 'avatar',
+          valueLink: avatarLink,
+          placeholder: 'Avatar URL' })
+      ),
+      React.createElement(
+        'div',
+        { className: 'edit-person--row' },
+        React.createElement(
+          'button',
+          { onClick: this.handleClickUseGravatar },
+          'Use Gravatar'
+        )
+      ),
+      React.createElement(
+        'div',
+        { className: 'edit-person--row' },
+        React.createElement(
+          'button',
+          { onClick: this.handleClickSave },
+          this.state.saveButtonText
+        )
+      ),
+      this.state.error && React.createElement(
+        'p',
+        { className: 'edit-person--row error' },
+        this.state.error
       )
     );
   }
 });
 
-
 },{"../actions/actionCreators.js":1,"../utils/toolbelt.js":22,"./avatar.jsx":5,"./locationAutocomplete.jsx":8,"react":193}],8:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 var classNames = require('classnames');
@@ -685,12 +678,11 @@ var toolbelt = require('../utils/toolbelt.js');
 var KEY = require('../helpers/keyConstants.js');
 var ActionCreators = require('../actions/actionCreators.js');
 
-
 module.exports = React.createClass({
 
   displayName: 'LocationAutocomplete',
 
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
     return {
       active: false,
       location: this.props.location || '',
@@ -698,32 +690,30 @@ module.exports = React.createClass({
     };
   },
 
-  handleFocus: function() {
+  handleFocus: function handleFocus() {
     this.setState({ active: true });
   },
 
-  handleBlur: function() {
+  handleBlur: function handleBlur() {
 
-    if (this.blurTimeout)
-      clearTimeout(this.blurTimeout);
+    if (this.blurTimeout) clearTimeout(this.blurTimeout);
 
     // Delay the close 200ms so a user can click an option
-    this.blurTimeout = setTimeout(function() {
+    this.blurTimeout = setTimeout((function () {
       this.setState({ active: false });
-    }.bind(this), 200);
+    }).bind(this), 200);
   },
 
-  handleChange: function(value) {
+  handleChange: function handleChange(value) {
 
-    if (value.length)
-      this.locationSearch(value);
+    if (value.length) this.locationSearch(value);
 
     this.setState({ location: value });
 
     this.props.handleChange(value);
   },
 
-  handleKeyDown: function(e) {
+  handleKeyDown: function handleKeyDown(e) {
     switch (e.keyCode) {
       case KEY.UP:
         this.moveSelectionUp();
@@ -737,33 +727,31 @@ module.exports = React.createClass({
     }
   },
 
-  moveSelectionUp: function() {
+  moveSelectionUp: function moveSelectionUp() {
     var results = this.state.results;
     var idx = toolbelt.indexOf('isSelected', results);
     var newSelectionIdx = idx <= 0 ? results.length - 1 : idx - 1;
 
-    if (idx > -1)
-      results[idx].isSelected = false;
+    if (idx > -1) results[idx].isSelected = false;
 
     results[newSelectionIdx].isSelected = true;
 
     this.setState({ results: results });
   },
 
-  moveSelectionDown: function() {
+  moveSelectionDown: function moveSelectionDown() {
     var results = this.state.results;
     var idx = toolbelt.indexOf('isSelected', results);
-    var newSelectionIdx = (idx === -1 || idx === results.length) ? 0 : idx + 1;
+    var newSelectionIdx = idx === -1 || idx === results.length ? 0 : idx + 1;
 
-    if (idx > -1)
-      results[idx].isSelected = false;
+    if (idx > -1) results[idx].isSelected = false;
 
     results[newSelectionIdx].isSelected = true;
 
     this.setState({ results: results });
   },
 
-  makeSelection: function() {
+  makeSelection: function makeSelection() {
     var idx = toolbelt.indexOf('isSelected', this.state.results);
     if (idx > -1) {
       var selected = this.state.results[idx];
@@ -771,7 +759,7 @@ module.exports = React.createClass({
     }
   },
 
-  saveSelection: function(name, tz) {
+  saveSelection: function saveSelection(name, tz) {
 
     // Pass it upwards
     this.props.handleChange(name, tz);
@@ -788,46 +776,44 @@ module.exports = React.createClass({
     });
   },
 
-  locationSearch: function(value) {
-    ActionCreators
-      .locationSearch(value)
-      .then(this.handleResults);
+  locationSearch: function locationSearch(value) {
+    ActionCreators.locationSearch(value).then(this.handleResults);
   },
 
-  handleResults: function(results) {
+  handleResults: function handleResults(results) {
     this.setState({ results: results });
   },
 
-  handleSelectOption: function(option, e) {
+  handleSelectOption: function handleSelectOption(option, e) {
     e.stopPropagation();
     this.saveSelection(option.name, option.tz);
   },
 
-  renderOption: function(option, idx) {
+  renderOption: function renderOption(option, idx) {
     var classes = classNames('autocomplete--option', {
       selected: option.isSelected
     });
-    return (
-      React.createElement("div", {key: idx, 
-           className: classes, 
-           onClick: this.handleSelectOption.bind(null, option)}, 
-        option.value
-      )
+    return React.createElement(
+      'div',
+      { key: idx,
+        className: classes,
+        onClick: this.handleSelectOption.bind(null, option) },
+      option.value
     );
   },
 
-  renderResults: function() {
+  renderResults: function renderResults() {
 
     if (this.state.location.length < 3 || !this.state.active) return '';
 
-    return (
-      React.createElement("div", {className: "autocomplete--results"}, 
-        this.state.results.map(this.renderOption)
-      )
+    return React.createElement(
+      'div',
+      { className: 'autocomplete--results' },
+      this.state.results.map(this.renderOption)
     );
   },
 
-  render: function() {
+  render: function render() {
 
     var classes = classNames('autocomplete', {
       'active': this.state.active
@@ -838,28 +824,26 @@ module.exports = React.createClass({
       requestChange: this.handleChange
     };
 
-    return (
-      React.createElement("div", {className: classes}, 
-
-        React.createElement("input", {className: "autocomplete--field", 
-               type: "text", 
-               name: "location", 
-               placeholder: "Location", 
-               valueLink: locationLink, 
-               onKeyDown: this.handleKeyDown, 
-               onFocus: this.handleFocus, 
-               onBlur: this.handleBlur}), 
-
-        this.renderResults()
-
-      )
+    return React.createElement(
+      'div',
+      { className: classes },
+      React.createElement('input', { className: 'autocomplete--field',
+        type: 'text',
+        name: 'location',
+        placeholder: 'Location',
+        valueLink: locationLink,
+        onKeyDown: this.handleKeyDown,
+        onFocus: this.handleFocus,
+        onBlur: this.handleBlur }),
+      this.renderResults()
     );
   }
 });
 
-
 },{"../actions/actionCreators.js":1,"../helpers/keyConstants.js":19,"../utils/toolbelt.js":22,"classnames":29,"react":193}],9:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var React = require('react');
 var classNames = require('classnames');
@@ -873,16 +857,16 @@ module.exports = React.createClass({
 
   displayName: 'ManageTeam',
 
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
     return {
       editingPerson: null,
       filterText: '',
-      filter: null,
-      // name: this.props.team.name
+      filter: null
     };
   },
 
-  handleClickClose: function(e) {
+  // name: this.props.team.name
+  handleClickClose: function handleClickClose(e) {
     AppDispatcher.dispatchViewAction({
       actionType: ActionTypes.SHOW_VIEW,
       value: 'app'
@@ -902,48 +886,48 @@ module.exports = React.createClass({
   //   });
   // },
 
-  handleClickUserEdit: function(person, e) {
+  handleClickUserEdit: function handleClickUserEdit(person, e) {
     this.setState({ editingPerson: person, newUser: false });
   },
 
-  handleClickUserRemove: function(person, e) {
+  handleClickUserRemove: function handleClickUserRemove(person, e) {
     if (confirm('Are you sure you want to delete?')) {
       ActionCreators.removeTeamMember(this.props.team._id, person._id);
     }
   },
 
-  handleClickBackToMenu: function(e) {
+  handleClickBackToMenu: function handleClickBackToMenu(e) {
     this.resetFilter();
     this.setState({ editingPerson: null });
   },
 
-  handleClickAdd: function(e) {
+  handleClickAdd: function handleClickAdd(e) {
     this.setState({ editingPerson: {}, newUser: true });
   },
 
-  handleFilterList: function(text) {
+  handleFilterList: function handleFilterList(text) {
     this.setState({
       filterText: text,
       filter: new RegExp(text.toLowerCase(), 'i')
     });
   },
 
-  resetFilter: function() {
+  resetFilter: function resetFilter() {
     this.setState({
       filterText: '',
       filter: null
     });
   },
 
-  peopleFilter: function(person) {
+  peopleFilter: function peopleFilter(person) {
     return person.name && person.name.search(this.state.filter) > -1;
   },
 
-  peopleSort: function(a, b) {
+  peopleSort: function peopleSort(a, b) {
     return a.name < b.name ? -1 : 1;
   },
 
-  render: function() {
+  render: function render() {
 
     var people = this.props.people;
     var visiblePeople = this.state.filter ? people.filter(this.peopleFilter) : people;
@@ -958,134 +942,140 @@ module.exports = React.createClass({
 
     if (this.props.justCreated) {
       headerContent.title = 'Getting started with ' + this.props.team.name;
-      headerContent.body = (
-        React.createElement("div", null, 
-          React.createElement("p", null, 
-            "Here you can manage your team - inviting, editing and removing people as you need."
-          ), 
-          React.createElement("p", null, 
-            "When you're done, you can click the button below or the X at the top right." + ' ' +
-            "To get back here you can always click the \"Manage Team\" button at right on your team dashboard."
-          )
+      headerContent.body = React.createElement(
+        'div',
+        null,
+        React.createElement(
+          'p',
+          null,
+          'Here you can manage your team - inviting, editing and removing people as you need.'
+        ),
+        React.createElement(
+          'p',
+          null,
+          'When you\'re done, you can click the button below or the X at the top right. To get back here you can always click the "Manage Team" button at right on your team dashboard.'
         )
       );
       headerContent.closeButton = 'Show me my team!';
     } else {
       headerContent.title = this.props.team.name;
-      headerContent.body = (
-        React.createElement("p", null, "Edit and invite members of your team here")
+      headerContent.body = React.createElement(
+        'p',
+        null,
+        'Edit and invite members of your team here'
       );
       headerContent.closeButton = 'Go back to my team';
     }
 
-    return (
-      React.createElement("div", {className: "manage-team--container"}, 
-
-        React.createElement("header", {className: "manage-team--header"}, 
-
-          React.createElement("h2", {className: "manage-team--header-title"}, 
-            headerContent.title
-          ), 
-
-          headerContent.body, 
-
-          React.createElement("button", {onClick: this.handleClickClose}, 
-            headerContent.closeButton
-          )
-
-        ), 
-
-        React.createElement("button", {className: "manage-team--close circle clear material-icons", 
-                name: "Close", 
-                onClick: this.handleClickClose}, 
-          "clear"
-        ), 
-
-        React.createElement("div", {className: "manage-team--subview"}, 
-
-           !this.state.editingPerson ? (
-              React.createElement("div", {className: "manage-team--team"}, 
-
-                React.createElement("div", {className: "manage-team--team-header"}, 
-
-                  React.createElement("input", {type: "search", 
-                         valueLink: filterValueLink, 
-                         placeholder: "Search"}), 
-
-                       React.createElement("button", {className: "circle material-icons md-18", 
-                          onClick: this.handleClickAdd}, 
-                    "add"
-                  )
-
-                ), 
-
-                React.createElement("div", {className: "manage-team--team-list"}, 
-
-                  sortedPeople.map(function(person, idx) {
-                    return (
-                      React.createElement("div", {key: idx, 
-                           className: "manage-team--team-member"}, 
-
-                        React.createElement("div", {className: "manage-team--team-member-info"}, 
-
-                          React.createElement(Avatar, {avatar: person.avatar, 
-                                  size: "mini"}), 
-
-                                React.createElement("span", {className: "manage-team--team-member-name"}, 
-                            person.name
-                          ), 
-                          React.createElement("span", {className: "manage-team--team-member-location"}, 
-                            person.location
-                          )
-
-                        ), 
-
-                        React.createElement("div", {className: "manage-team--team-member-actions"}, 
-                          React.createElement("button", {className: "circle clear material-icons md-18", 
-                                  name: "Edit team member", 
-                                  onClick: this.handleClickUserEdit.bind(null, person)}, 
-                            "edit"
-                          ), 
-                          React.createElement("button", {className: "circle clear material-icons md-18", 
-                                  name: "Remove from Team", 
-                                  onClick: this.handleClickUserRemove.bind(null, person)}, 
-                            "clear"
-                          )
-                        )
-
-                      )
-                    )
-                  }.bind(this))
-
-                )
-
-              )
-            ) : (
-              React.createElement("div", {className: "manage-team--person"}, 
-
-                React.createElement("button", {className: "modal--back-button clear material-icons", 
-                        onClick: this.handleClickBackToMenu}, 
-                  "arrow_back"
-                ), 
-
-                React.createElement(EditPerson, React.__spread({},  this.state.editingPerson, 
-                            {teamId: this.props.team._id, 
-                            isNewUser: this.state.newUser}))
-
-              )
-            )
-          
-
+    return React.createElement(
+      'div',
+      { className: 'manage-team--container' },
+      React.createElement(
+        'header',
+        { className: 'manage-team--header' },
+        React.createElement(
+          'h2',
+          { className: 'manage-team--header-title' },
+          headerContent.title
+        ),
+        headerContent.body,
+        React.createElement(
+          'button',
+          { onClick: this.handleClickClose },
+          headerContent.closeButton
         )
-
+      ),
+      React.createElement(
+        'button',
+        { className: 'manage-team--close circle clear material-icons',
+          name: 'Close',
+          onClick: this.handleClickClose },
+        'clear'
+      ),
+      React.createElement(
+        'div',
+        { className: 'manage-team--subview' },
+        !this.state.editingPerson ? React.createElement(
+          'div',
+          { className: 'manage-team--team' },
+          React.createElement(
+            'div',
+            { className: 'manage-team--team-header' },
+            React.createElement('input', { type: 'search',
+              valueLink: filterValueLink,
+              placeholder: 'Search' }),
+            React.createElement(
+              'button',
+              { className: 'circle material-icons md-18',
+                onClick: this.handleClickAdd },
+              'add'
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: 'manage-team--team-list' },
+            sortedPeople.map((function (person, idx) {
+              return React.createElement(
+                'div',
+                { key: idx,
+                  className: 'manage-team--team-member' },
+                React.createElement(
+                  'div',
+                  { className: 'manage-team--team-member-info' },
+                  React.createElement(Avatar, { avatar: person.avatar,
+                    size: 'mini' }),
+                  React.createElement(
+                    'span',
+                    { className: 'manage-team--team-member-name' },
+                    person.name
+                  ),
+                  React.createElement(
+                    'span',
+                    { className: 'manage-team--team-member-location' },
+                    person.location
+                  )
+                ),
+                React.createElement(
+                  'div',
+                  { className: 'manage-team--team-member-actions' },
+                  React.createElement(
+                    'button',
+                    { className: 'circle clear material-icons md-18',
+                      name: 'Edit team member',
+                      onClick: this.handleClickUserEdit.bind(null, person) },
+                    'edit'
+                  ),
+                  React.createElement(
+                    'button',
+                    { className: 'circle clear material-icons md-18',
+                      name: 'Remove from Team',
+                      onClick: this.handleClickUserRemove.bind(null, person) },
+                    'clear'
+                  )
+                )
+              );
+            }).bind(this))
+          )
+        ) : React.createElement(
+          'div',
+          { className: 'manage-team--person' },
+          React.createElement(
+            'button',
+            { className: 'modal--back-button clear material-icons',
+              onClick: this.handleClickBackToMenu },
+            'arrow_back'
+          ),
+          React.createElement(EditPerson, _extends({}, this.state.editingPerson, {
+            teamId: this.props.team._id,
+            isNewUser: this.state.newUser }))
+        )
       )
     );
   }
 });
 
-
 },{"../actions/actionCreators.js":1,"../actions/actionTypes.js":2,"../dispatchers/appDispatcher.js":17,"./avatar.jsx":5,"./editPerson.jsx":7,"classnames":29,"react":193}],10:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 var toolbelt = require('../utils/toolbelt.js');
@@ -1097,71 +1087,80 @@ module.exports = React.createClass({
 
   displayName: 'MeetingPlanner',
 
-  handleClearGroups: function(e) {
+  handleClearGroups: function handleClearGroups(e) {
     e.preventDefault();
     ActionCreators.clearMeetingGroups();
   },
 
-  renderEmpty: function() {
-    return (
-      React.createElement("div", {className: "meeting-planner-cta"}, 
-        React.createElement("p", {className: "meeting-planner-cta-text"}, 
-          "Click a team member ", React.createElement("br", null), 
-          "to plan a meeting"
-        )
+  renderEmpty: function renderEmpty() {
+    return React.createElement(
+      'div',
+      { className: 'meeting-planner-cta' },
+      React.createElement(
+        'p',
+        { className: 'meeting-planner-cta-text' },
+        'Click a team member ',
+        React.createElement('br', null),
+        'to plan a meeting'
       )
     );
   },
 
-  render: function() {
+  render: function render() {
 
-    if (!this.props.groups || !this.props.groups.length)
-      return this.renderEmpty();
+    if (!this.props.groups || !this.props.groups.length) return this.renderEmpty();
 
-    return (
-      React.createElement("div", {className: "meeting-planner"}, 
-
-         this.props.suggestedTime ?
-            React.createElement("div", {className: "meeting-planner-sugggested"}, 
-              this.props.suggestedTime, 
-              React.createElement("div", {className: "meeting-planner-sugggested-copy"}, 
-                "Local time"
-              )
-            )
-          :
-            React.createElement("div", {className: "meeting-planner-sugggested"}, 
-              React.createElement("div", {className: "meeting-planner-sugggested-copy"}, 
-                "No good time window"
-              )
-            ), 
-        
-
-
-        this.props.groups.map(function(group, idx) {
-          return (
-            React.createElement("div", {key: idx, 
-                 className: "meeting-planner-group"}, 
-              React.createElement("div", {className: "meeting-planner-group-suggested"}, 
-                group.suggestedTime
-              ), 
-              React.createElement("div", {className: "meeting-planner-group-people"}, 
-                group.people.map(function(p, idx) {
-                  return React.createElement(Avatar, {key: idx, 
-                                 avatar: p.avatar, 
-                                 size: 'mini'})
-                })
-              )
-            )
-          );
-        }), 
-
-        React.createElement("div", {className: "meeting-planner-clear"}, 
-          React.createElement("a", {href: "#", 
-             onClick: this.handleClearGroups}, 
-            "Clear"
-          )
+    return React.createElement(
+      'div',
+      { className: 'meeting-planner' },
+      this.props.suggestedTime ? React.createElement(
+        'div',
+        { className: 'meeting-planner-sugggested' },
+        this.props.suggestedTime,
+        React.createElement(
+          'div',
+          { className: 'meeting-planner-sugggested-copy' },
+          'Local time'
         )
-
+      ) : React.createElement(
+        'div',
+        { className: 'meeting-planner-sugggested' },
+        React.createElement(
+          'div',
+          { className: 'meeting-planner-sugggested-copy' },
+          'No good time window'
+        )
+      ),
+      this.props.groups.map(function (group, idx) {
+        return React.createElement(
+          'div',
+          { key: idx,
+            className: 'meeting-planner-group' },
+          React.createElement(
+            'div',
+            { className: 'meeting-planner-group-suggested' },
+            group.suggestedTime
+          ),
+          React.createElement(
+            'div',
+            { className: 'meeting-planner-group-people' },
+            group.people.map(function (p, idx) {
+              return React.createElement(Avatar, { key: idx,
+                avatar: p.avatar,
+                size: 'mini' });
+            })
+          )
+        );
+      }),
+      React.createElement(
+        'div',
+        { className: 'meeting-planner-clear' },
+        React.createElement(
+          'a',
+          { href: '#',
+            onClick: this.handleClearGroups },
+          'Clear'
+        )
       )
     );
   }
@@ -1172,9 +1171,8 @@ module.exports = React.createClass({
 //                    timeFormat={this.props.timeFormat} />;
 // }.bind(this))}
 
-
 },{"../actions/actionCreators.js":1,"../utils/toolbelt.js":22,"./avatar.jsx":5,"./schedule.jsx":12,"react":193}],11:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 var Avatar = require('./avatar.jsx');
@@ -1184,19 +1182,29 @@ module.exports = React.createClass({
 
   displayName: 'Person',
 
-  handleToggleSelected: function() {
+  handleToggleSelected: function handleToggleSelected() {
     ActionCreators.toggleSelectPerson(this.props.model._id);
   },
-  render: function() {
+  render: function render() {
     var person = this.props.model;
-    return (
-      React.createElement("div", {className: "person", 
-           key: person._id, 
-           onClick: this.handleToggleSelected}, 
-        React.createElement(Avatar, {avatar: person.avatar}), 
-        React.createElement("div", {className: "person-info"}, 
-          React.createElement("p", {className: "person-name"}, person.name), 
-          React.createElement("p", {className: "person-city"}, person.location)
+    return React.createElement(
+      'div',
+      { className: 'person',
+        key: person._id,
+        onClick: this.handleToggleSelected },
+      React.createElement(Avatar, { avatar: person.avatar }),
+      React.createElement(
+        'div',
+        { className: 'person-info' },
+        React.createElement(
+          'p',
+          { className: 'person-name' },
+          person.name
+        ),
+        React.createElement(
+          'p',
+          { className: 'person-city' },
+          person.location
         )
       )
     );
@@ -1204,59 +1212,64 @@ module.exports = React.createClass({
 
 });
 
-
 },{"../actions/actionCreators.js":1,"./avatar.jsx":5,"react":193}],12:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 var cx = require('react/lib/cx.js');
 var timeUtils = require('../utils/time.js');
 
-module.exports = React.createClass({displayName: "exports",
-  render: function() {
-    
+module.exports = React.createClass({
+  displayName: 'exports',
+
+  render: function render() {
+
     var person = this.props.person;
     var formatString = timeUtils.getShortFormatStringFor(this.props.timeFormat);
     var hours = timeUtils.getAvailableHoursInUTC(person.tz, formatString);
 
-    return (
-      React.createElement("div", {className: "schedule"}, 
-        React.createElement("img", {src: person.avatar, 
-             className: "avatar small", 
-             title: person.name}), 
-        React.createElement("ul", {className: "schedule--hours"}, 
-          hours.map(function(hour, idx) {
-            var classes = cx({
-              'schedule--hour': true,
-              'schedule--hour-available': hour.isAvailable
-            });
-            return (
-              React.createElement("li", {className: classes, key: 'sch' + person.id + idx}, 
-                hour.isAvailable ? hour.localTime : ''
-              )
-            );
-          })
-        )
+    return React.createElement(
+      'div',
+      { className: 'schedule' },
+      React.createElement('img', { src: person.avatar,
+        className: 'avatar small',
+        title: person.name }),
+      React.createElement(
+        'ul',
+        { className: 'schedule--hours' },
+        hours.map(function (hour, idx) {
+          var classes = cx({
+            'schedule--hour': true,
+            'schedule--hour-available': hour.isAvailable
+          });
+          return React.createElement(
+            'li',
+            { className: classes, key: 'sch' + person.id + idx },
+            hour.isAvailable ? hour.localTime : ''
+          );
+        })
       )
     );
   }
 });
 
 },{"../utils/time.js":21,"react":193,"react/lib/cx.js":150}],13:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
 
-module.exports = React.createClass({displayName: "exports",
-  getInitialState: function() {
+module.exports = React.createClass({
+  displayName: 'exports',
+
+  getInitialState: function getInitialState() {
     return {
       value: 50,
       isCurrentTime: this.props.isCurrentTime
     };
   },
-  handleChange: function(value) {
+  handleChange: function handleChange(value) {
     value = +value;
     var percentDelta = 2 * (value - 50) / 100;
 
@@ -1271,23 +1284,25 @@ module.exports = React.createClass({displayName: "exports",
       value: percentDelta
     });
   },
-  render: function() {
+  render: function render() {
 
     var valueLink = {
       value: this.props.isCurrentTime ? 50 : this.state.value,
       requestChange: this.handleChange
     };
 
-    return React.createElement("div", {className: "time-slider-container"}, 
-      React.createElement("input", {type: "range", 
-             className: "time-slider", 
-             valueLink: valueLink})
+    return React.createElement(
+      'div',
+      { className: 'time-slider-container' },
+      React.createElement('input', { type: 'range',
+        className: 'time-slider',
+        valueLink: valueLink })
     );
   }
 });
 
 },{"../actions/actionTypes.js":2,"../dispatchers/appDispatcher.js":17,"react":193}],14:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 var moment = require('moment-timezone');
@@ -1296,72 +1311,61 @@ var timeUtils = require('../utils/time.js');
 
 var PEOPLE_PER_COL = 8;
 
-module.exports = React.createClass({displayName: "exports",
+module.exports = React.createClass({
+  displayName: 'exports',
 
-  getCountsOf: function(list, param) {
-    return list
-      .map(function(el) {
-        return el[param];
-      })
-      .sort()
-      .reduce(function(counts, el) {
-        if (!counts[el])
-          counts[el] = 1;
-        else
-          counts[el]++;
-        return counts;
-      }, {});
+  getCountsOf: function getCountsOf(list, param) {
+    return list.map(function (el) {
+      return el[param];
+    }).sort().reduce(function (counts, el) {
+      if (!counts[el]) counts[el] = 1;else counts[el]++;
+      return counts;
+    }, {});
   },
 
-  getHighestOccuring: function(counts) {
+  getHighestOccuring: function getHighestOccuring(counts) {
     var keys = Object.keys(counts);
-    return keys.reduce(function(prev, curr){
+    return keys.reduce(function (prev, curr) {
       return counts[curr] > counts[prev] ? curr : prev;
     }, keys[0]);
   },
 
-  getTopTimezone: function() {
+  getTopTimezone: function getTopTimezone() {
 
     var tzCounts = this.getCountsOf(this.props.model.people, 'tz');
     var topTz = this.getHighestOccuring(tzCounts);
 
-    return topTz.replace(/.+\//g, '').replace(/_/g,' ');
+    return topTz.replace(/.+\//g, '').replace(/_/g, ' ');
   },
 
-  getTopCity: function() {
+  getTopCity: function getTopCity() {
 
     var cityCounts = this.getCountsOf(this.props.model.people, 'location');
     var topCity = this.getHighestOccuring(cityCounts);
 
-    return cityCounts[topCity] === 1 && this.props.model.people.length > 1 ?
-      this.getTopTimezone() :
-      topCity;
+    return cityCounts[topCity] === 1 && this.props.model.people.length > 1 ? this.getTopTimezone() : topCity;
   },
 
-  getPeopleColumns: function() {
+  getPeopleColumns: function getPeopleColumns() {
 
     var numPeople = this.props.model.people.length;
     var numCols = Math.ceil(numPeople / PEOPLE_PER_COL);
     var numPerCol = Math.ceil(numPeople / numCols);
 
-    return this.props.model.people.reduce(function(cols, person){
-      if (cols[cols.length - 1] &&
-          cols[cols.length - 1].length  < numPerCol)
-        cols[cols.length - 1].push(person);
-      else
-        cols.push([ person ]);
+    return this.props.model.people.reduce(function (cols, person) {
+      if (cols[cols.length - 1] && cols[cols.length - 1].length < numPerCol) cols[cols.length - 1].push(person);else cols.push([person]);
       return cols;
     }, []);
   },
 
-  render: function() {
+  render: function render() {
 
     // We clone the time object itself so the this time is bound to
     // the global app time
-    var localTime   = moment( this.props.time ).tz( this.props.model.tz );
-    var fmtString   = timeUtils.getFormatStringFor(this.props.timeFormat);
+    var localTime = moment(this.props.time).tz(this.props.model.tz);
+    var fmtString = timeUtils.getFormatStringFor(this.props.timeFormat);
     var displayTime = localTime.format(fmtString);
-    var offset      = localTime.format('Z');
+    var offset = localTime.format('Z');
 
     var timezoneClasses = 'timezone timezone-hour-' + localTime.hour();
 
@@ -1370,105 +1374,132 @@ module.exports = React.createClass({displayName: "exports",
     var topCity = this.getTopCity();
     var columns = this.getPeopleColumns();
 
-    return (
-      React.createElement("div", {className: timezoneClasses}, 
-        React.createElement("div", {className: "timezone-header"}, 
-          React.createElement("h3", {className: "timezone-time"}, displayTime), 
-          React.createElement("p", {className: "timezone-name"}, topCity), 
-          React.createElement("p", {className: "timezone-offset"}, offset)
-        ), 
-        React.createElement("div", {className: "timezone-people"}, 
-          columns.map(function(column, idx){
-            return (
-              React.createElement("div", {className: "timezone-people-column", key: "column-" + idx}, 
-                column.map(function(person) {
-                  return React.createElement(Person, {model: person, key: person._id});
-                })
-              )
-            );
-          })
+    return React.createElement(
+      'div',
+      { className: timezoneClasses },
+      React.createElement(
+        'div',
+        { className: 'timezone-header' },
+        React.createElement(
+          'h3',
+          { className: 'timezone-time' },
+          displayTime
+        ),
+        React.createElement(
+          'p',
+          { className: 'timezone-name' },
+          topCity
+        ),
+        React.createElement(
+          'p',
+          { className: 'timezone-offset' },
+          offset
         )
+      ),
+      React.createElement(
+        'div',
+        { className: 'timezone-people' },
+        columns.map(function (column, idx) {
+          return React.createElement(
+            'div',
+            { className: 'timezone-people-column', key: "column-" + idx },
+            column.map(function (person) {
+              return React.createElement(Person, { model: person, key: person._id });
+            })
+          );
+        })
       )
     );
   }
 });
 
-
 },{"../utils/time.js":21,"./person.jsx":11,"moment-timezone":35,"react":193}],15:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
-var React    = require('react');
+var React = require('react');
 var Timezone = require('./timezone.jsx');
+
+var count = function count(metric, people) {
+  var items = people.reduce(function (list, p) {
+    if (list.indexOf(p[metric].toLowerCase()) === -1) list.push(p[metric].toLowerCase());
+    return list;
+  }, []);
+  return items.length;
+};
 
 module.exports = React.createClass({
 
   displayName: 'TimezoneList',
 
-  getStats: function(people) {
+  getStats: function getStats(people) {
 
     // Note the homepage doesn't provide people, only timezones
     if (!people || !Array.isArray(people)) return;
 
-    var cities = people.reduce(function(list, p) {
-      if (list.indexOf(p.location.toLowerCase()) === -1)
-        list.push(p.location.toLowerCase());
-      return list;
-    }, []);
+    var numPeople = people.length;
+    var numCities = count('location', people);
+    var numTimezones = this.props.timezones.length;
 
-    return people.length + ' people in ' + cities.length + ' cities';
+    return numPeople + ' people in ' + numCities + ' cities across ' + numTimezones + ' timezones';
   },
 
-  render: function() {
+  render: function render() {
 
     var timeFormat = this.props.timeFormat || 12;
 
     var stats = this.getStats(this.props.people);
 
-    return (
-      React.createElement("div", {className: "timezone-list"}, 
-        this.props.timezones.map(function(timezone){
-          return React.createElement(Timezone, {key: timezone.tz, 
-                           time: this.props.time, 
-                           timeFormat: timeFormat, 
-                           model: timezone})
-        }.bind(this)), 
-         this.props.showStats &&
-          React.createElement("div", {className: "team-stats"}, React.createElement("em", null, stats))
-        
+    return React.createElement(
+      'div',
+      { className: 'timezone-list' },
+      this.props.timezones.map((function (timezone) {
+        return React.createElement(Timezone, { key: timezone.tz,
+          time: this.props.time,
+          timeFormat: timeFormat,
+          model: timezone });
+      }).bind(this)),
+      this.props.showStats && React.createElement(
+        'div',
+        { className: 'team-stats' },
+        React.createElement(
+          'em',
+          null,
+          stats
+        )
       )
     );
   }
 
 });
 
-
 },{"./timezone.jsx":14,"react":193}],16:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 var classNames = require('classnames');
 
-module.exports = React.createClass({displayName: "exports",
+module.exports = React.createClass({
+  displayName: 'exports',
 
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
     return { open: false };
   },
 
-  closeMenu: function(e) {
+  closeMenu: function closeMenu(e) {
     this.setState({ open: false });
   },
 
-  handleToggleMenu: function(e) {
+  handleToggleMenu: function handleToggleMenu(e) {
     e.stopPropagation();
     this.setState({ open: !this.state.open });
   },
 
-  componentDidMount: function() {
+  componentDidMount: function componentDidMount() {
     // Move this one day
     window.addEventListener('click', this.closeMenu);
   },
 
-  render: function() {
+  render: function render() {
 
     var profileUrl = '/people/' + this.props.username;
     var style = { backgroundImage: 'url(' + this.props.avatar + ')' };
@@ -1481,50 +1512,55 @@ module.exports = React.createClass({displayName: "exports",
       'menu-open': this.state.open
     });
 
-    return (
-      React.createElement("div", {className: containerClasses}, 
-
-        React.createElement("div", {className: menuClasses}, 
-          React.createElement("a", {href: profileUrl, 
-             className: "user-menu-item"}, 
-            "Profile"
-          ), 
-          React.createElement("a", {href: "/team", 
-             className: "user-menu-item"}, 
-            "Add your team"
-          ), 
-          React.createElement("a", {href: "/logout", 
-             className: "user-menu-item"}, 
-            "Logout"
-          )
-        ), 
-
-        React.createElement("a", {onClick: this.handleToggleMenu, 
-           className: "avatar header-avatar", 
-           style: style, 
-           name: this.props.name}
+    return React.createElement(
+      'div',
+      { className: containerClasses },
+      React.createElement(
+        'div',
+        { className: menuClasses },
+        React.createElement(
+          'a',
+          { href: profileUrl,
+            className: 'user-menu-item' },
+          'Profile'
+        ),
+        React.createElement(
+          'a',
+          { href: '/team',
+            className: 'user-menu-item' },
+          'Add your team'
+        ),
+        React.createElement(
+          'a',
+          { href: '/logout',
+            className: 'user-menu-item' },
+          'Logout'
         )
-
-      )
+      ),
+      React.createElement('a', { onClick: this.handleToggleMenu,
+        className: 'avatar header-avatar',
+        style: style,
+        name: this.props.name })
     );
   }
 });
 
-
 },{"classnames":29,"react":193}],17:[function(require,module,exports){
+'use strict';
+
 var Dispatcher = require('flux').Dispatcher;
 
 var AppDispatcher = new Dispatcher();
 module.exports = AppDispatcher;
 
-AppDispatcher.dispatchViewAction = function(action) {
+AppDispatcher.dispatchViewAction = function (action) {
   this.dispatch({
     source: 'VIEW_ACTION',
     action: action
   });
 };
 
-AppDispatcher.dispatchApiAction = function(action) {
+AppDispatcher.dispatchApiAction = function (action) {
   this.dispatch({
     source: 'API_ACTION',
     action: action
@@ -1533,42 +1569,42 @@ AppDispatcher.dispatchApiAction = function(action) {
 
 module.exports = AppDispatcher;
 
-
 },{"flux":30}],18:[function(require,module,exports){
+'use strict';
+
 var qs = require('querystring');
 
 // we rely on global csrf token for now, grab first so it can't be modified
 var CSRF = typeof window !== 'undefined' && window.appData.csrf_token;
 
 // TOOD - Need promise polyfill
-var status = function(res) {
+var status = function status(res) {
   if (res.status >= 200 && res.status < 300) {
     return Promise.resolve(res);
   } else {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       res.json().then(reject, reject);
     });
   }
 };
 
-var json = function(res) {
+var json = function json(res) {
   return res.json();
 };
 
-var getData = function(data) {
+var getData = function getData(data) {
   if (!data) data = {};
   data._csrf = CSRF;
   return data;
 };
 
-var appendQueryString = function(url, data) {
+var appendQueryString = function appendQueryString(url, data) {
   return url + '?' + qs.stringify(data);
 };
 
-var getOptions = function(method, data) {
+var getOptions = function getOptions(method, data) {
 
-  if (method === 'GET')
-    return { credentials: 'include' };
+  if (method === 'GET') return { credentials: 'include' };
 
   return {
     method: method || 'POST',
@@ -1583,50 +1619,43 @@ var getOptions = function(method, data) {
 
 var api = module.exports = {
 
-  get: function(url, data) {
-    return fetch('/api' + appendQueryString(url, data), getOptions('GET'))
-      .then(status)
-      .then(json);
+  get: function get(url, data) {
+    return fetch('/api' + appendQueryString(url, data), getOptions('GET')).then(status).then(json);
   },
 
-  post: function(url, data) {
-    return fetch('/api' + url, getOptions('POST', data))
-      .then(status)
-      .then(json);
+  post: function post(url, data) {
+    return fetch('/api' + url, getOptions('POST', data)).then(status).then(json);
   },
 
-  put: function(url, data) {
-    return fetch('/api' + url, getOptions('PUT', data))
-      .then(status)
-      .then(json);
+  put: function put(url, data) {
+    return fetch('/api' + url, getOptions('PUT', data)).then(status).then(json);
   },
 
-  delete: function(url, data) {
-    return fetch('/api' + url, getOptions('DELETE', data))
-      .then(status)
-      .then(json);
+  'delete': function _delete(url, data) {
+    return fetch('/api' + url, getOptions('DELETE', data)).then(status).then(json);
   }
 
 };
 
-
 },{"querystring":28}],19:[function(require,module,exports){
+"use strict";
+
 var KEY = module.exports = {
   ENTER: 13,
   UP: 38,
   DOWN: 40
 };
 
-
 },{}],20:[function(require,module,exports){
+'use strict';
+
 var moment = require('moment-timezone');
 var toolbelt = require('../utils/toolbelt.js');
 var transform = require('../utils/transform.js');
 var timeUtils = require('../utils/time.js');
 
-
 // Constructor
-var AppState = module.exports = function(initialState) {
+var AppState = module.exports = function (initialState) {
 
   this._state = toolbelt.clone(window.appData);
 
@@ -1641,62 +1670,59 @@ var AppState = module.exports = function(initialState) {
   // Object.observe(this._state, function(changes) {
   //   console.log(changes);
   // });
-
 };
 
-
-AppState.prototype.getState = function() {
+AppState.prototype.getState = function () {
   return this._state;
 };
 
-AppState.prototype.getCSRF = function() {
+AppState.prototype.getCSRF = function () {
   return this._state.csrf_token;
 };
 
-AppState.prototype.getTeam = function() {
+AppState.prototype.getTeam = function () {
   return this._state.team;
 };
 
-AppState.prototype.getPersonById = function(id) {
-  return this._state.people.filter(function(p) { return p._id === id; })[0];
+AppState.prototype.getPersonById = function (id) {
+  return this._state.people.filter(function (p) {
+    return p._id === id;
+  })[0];
 };
 
-AppState.prototype.updateTimezones = function() {
+AppState.prototype.updateTimezones = function () {
   this._state.timezones = transform(this._state.time, this._state.people);
 };
 
-
 // Assumes time is not current :/
-AppState.prototype.setTime = function(timeMoment) {
+AppState.prototype.setTime = function (timeMoment) {
   this._state.time = timeMoment;
   this._state.isCurrentTime = false;
 };
 
-AppState.prototype.updateToCurrentTime = function() {
+AppState.prototype.updateToCurrentTime = function () {
   var now = moment();
 
-  if (now.hour() === this._state.time.hour() &&
-      now.minute() === this._state.time.minute())
-    return;
+  if (now.hour() === this._state.time.hour() && now.minute() === this._state.time.minute()) return;
 
-  this._state.time.hour( now.hour() );
-  this._state.time.minute( now.minute() );
+  this._state.time.hour(now.hour());
+  this._state.time.minute(now.minute());
   this._state.isCurrentTime = true;
 };
 
-AppState.prototype.setTimeFormat = function(format) {
+AppState.prototype.setTimeFormat = function (format) {
   this._state.timeFormat = format;
 };
 
-AppState.prototype.getCurrentView = function() {
+AppState.prototype.getCurrentView = function () {
   return this._state.currentView;
 };
 
-AppState.prototype.setCurrentView = function(view) {
+AppState.prototype.setCurrentView = function (view) {
   this._state.currentView = view;
 };
 
-AppState.prototype.updateUserData = function(data) {
+AppState.prototype.updateUserData = function (data) {
   if (this._state.user._id === data._id) {
     toolbelt.update(this._state.user, data);
   }
@@ -1715,55 +1741,50 @@ AppState.prototype.updateUserData = function(data) {
   this.updateTimezones();
 };
 
-AppState.prototype.removeTeamMember = function(data) {
-  var idx = this._state.people.map(function(p) { return p._id; })
-                              .indexOf(data.usedId);
+AppState.prototype.removeTeamMember = function (data) {
+  var idx = this._state.people.map(function (p) {
+    return p._id;
+  }).indexOf(data.usedId);
   if (idx > -1) {
     this._state.people.splice(idx, 1);
     this.updateTimezones();
   }
 };
 
-AppState.prototype.toggleSelectPerson = function(id) {
-  var idx = this._state.meeting.people.map(function(p) { return p._id; })
-                                      .indexOf(id);
-  if (idx === -1)
-    this._state.meeting.people.push(this.getPersonById(id));
-  else
-    this._state.meeting.people.splice(idx, 1);
+AppState.prototype.toggleSelectPerson = function (id) {
+  var idx = this._state.meeting.people.map(function (p) {
+    return p._id;
+  }).indexOf(id);
+  if (idx === -1) this._state.meeting.people.push(this.getPersonById(id));else this._state.meeting.people.splice(idx, 1);
 
   this.organizeMeetingGroups();
   this.findMeetingTime();
 };
 
-
-AppState.prototype.organizeMeetingGroups = function() {
+AppState.prototype.organizeMeetingGroups = function () {
   var zoneGroups = toolbelt.groupBy('utcOffset', this._state.meeting.people);
 
-  this._state.meeting.groups = Object.keys(zoneGroups)
-                                     .map(function(o) {
-                                       var utcOffset = parseInt(o, 10);
-                                       return {
-                                         utcOffset: utcOffset,
-                                         utcOffsetHours: utcOffset / 60,
-                                         people: zoneGroups[utcOffset]
-                                       };
-                                     })
-                                     .sort(function(a, b) {
-                                       return b.utcOffset - a.utcOffset;
-                                     });
+  this._state.meeting.groups = Object.keys(zoneGroups).map(function (o) {
+    var utcOffset = parseInt(o, 10);
+    return {
+      utcOffset: utcOffset,
+      utcOffsetHours: utcOffset / 60,
+      people: zoneGroups[utcOffset]
+    };
+  }).sort(function (a, b) {
+    return b.utcOffset - a.utcOffset;
+  });
 };
 
-var createHoursArray = function() {
+var createHoursArray = function createHoursArray() {
   var hours = [];
   for (var i = 0; i < 24; i++) hours.push(i);
   return hours;
 };
 
-var createHoursArrayForOffset = function(utcOffsetHours) {
+var createHoursArrayForOffset = function createHoursArrayForOffset(utcOffsetHours) {
   var hours = createHoursArray();
-  if (utcOffsetHours === 0)
-    return hours;
+  if (utcOffsetHours === 0) return hours;
   if (utcOffsetHours > 0) {
     var start = hours.splice(utcOffsetHours);
     return start.concat(hours);
@@ -1773,7 +1794,7 @@ var createHoursArrayForOffset = function(utcOffsetHours) {
   }
 };
 
-var getLongestContinuousSegment = function(hours) {
+var getLongestContinuousSegment = function getLongestContinuousSegment(hours) {
   var segments = [];
   var activeSegment = [];
   var twoDays = hours.concat(hours);
@@ -1786,36 +1807,35 @@ var getLongestContinuousSegment = function(hours) {
       activeSegment.push(hour);
     }
   }
-  if (activeSegment.length)
-    segments.push(activeSegment);
+  if (activeSegment.length) segments.push(activeSegment);
 
-  var longestSegment = segments.reduce(function(longest, segment) {
+  var longestSegment = segments.reduce(function (longest, segment) {
     return segment.length > longest.length ? segment : longest;
   }, []);
 
   return longestSegment;
 };
 
-AppState.prototype.getGMTAvailableHoursForGroups = function(groups, workStartHour, workEndHour) {
+AppState.prototype.getGMTAvailableHoursForGroups = function (groups, workStartHour, workEndHour) {
   if (!workStartHour) workStartHour = 9;
   if (!workEndHour) workEndHour = 18;
 
-  var isWorkHour = function(hour) {
+  var isWorkHour = function isWorkHour(hour) {
     return hour >= workStartHour && hour <= workEndHour;
   };
 
-  var hoursMatrix = groups.map(function(group) {
+  var hoursMatrix = groups.map(function (group) {
     return group.hours;
   });
 
   var gmtHours = createHoursArray();
-  var availableHoursIndexes = gmtHours.map(function(hour, idx) {
-    return hoursMatrix.reduce(function(isAvailable, hoursSet) {
+  var availableHoursIndexes = gmtHours.map(function (hour, idx) {
+    return hoursMatrix.reduce(function (isAvailable, hoursSet) {
       return isAvailable && isWorkHour(hoursSet[idx]);
     }, true);
   });
 
-  var hasAvailableHours = !!availableHoursIndexes.filter(function(isAvailable) {
+  var hasAvailableHours = !!availableHoursIndexes.filter(function (isAvailable) {
     return isAvailable;
   }).length;
 
@@ -1823,22 +1843,19 @@ AppState.prototype.getGMTAvailableHoursForGroups = function(groups, workStartHou
   var isExpandable = workStartHour !== 6 && workEndHour !== 21;
 
   // If there isn't any overlap time, we expand the work day by 1 hour in both directions
-  if (!hasAvailableHours && isExpandable)
-    return this.getGMTAvailableHoursForGroups(groups,
-                                              Math.max(6, workStartHour - 1),
-                                              Math.min(21, workEndHour + 1));
+  if (!hasAvailableHours && isExpandable) return this.getGMTAvailableHoursForGroups(groups, Math.max(6, workStartHour - 1), Math.min(21, workEndHour + 1));
 
   // this._state.meeting.availableHoursIndexes = availableHoursIndexes;
 
   // Get the suggested metting time in hours GMT
-  var gmtAvailableHours = gmtHours.map(function(hour, idx) {
+  var gmtAvailableHours = gmtHours.map(function (hour, idx) {
     return availableHoursIndexes[idx] ? hour : null;
   });
 
   return gmtAvailableHours;
 };
 
-AppState.prototype.getSuggestedMeetingTimeWindow = function(groups) {
+AppState.prototype.getSuggestedMeetingTimeWindow = function (groups) {
   var gmtAvailableHours = this.getGMTAvailableHoursForGroups(groups);
   var suggestedTimeSegment = getLongestContinuousSegment(gmtAvailableHours);
   var startHour = suggestedTimeSegment[0];
@@ -1846,9 +1863,9 @@ AppState.prototype.getSuggestedMeetingTimeWindow = function(groups) {
   return [startHour, endHour];
 };
 
-AppState.prototype.findMeetingTime = function() {
+AppState.prototype.findMeetingTime = function () {
 
-  this._state.meeting.groups.forEach(function(group) {
+  this._state.meeting.groups.forEach(function (group) {
     group.hours = createHoursArrayForOffset(group.utcOffsetHours);
   });
 
@@ -1865,97 +1882,81 @@ AppState.prototype.findMeetingTime = function() {
 
   // Get suggested local time
   var localUtcHourOffset = moment().utcOffset() / 60;
-  var suggestedTime = timeUtils.formatLocalTimeWindow(startHour,
-                                                      endHour,
-                                                      localUtcHourOffset,
-                                                      this._state.timeFormat);
+  var suggestedTime = timeUtils.formatLocalTimeWindow(startHour, endHour, localUtcHourOffset, this._state.timeFormat);
 
   this._state.meeting.suggestedTime = suggestedTime;
 
   // Get times for each zone
-  this._state.meeting.groups.forEach(function(group) {
-    group.suggestedTime = timeUtils.formatLocalTimeWindow(startHour,
-                                                          endHour,
-                                                          group.utcOffsetHours,
-                                                          this._state.timeFormat);
-  }.bind(this));
-
+  this._state.meeting.groups.forEach((function (group) {
+    group.suggestedTime = timeUtils.formatLocalTimeWindow(startHour, endHour, group.utcOffsetHours, this._state.timeFormat);
+  }).bind(this));
 };
 
-AppState.prototype.clearMeetingGroups = function() {
+AppState.prototype.clearMeetingGroups = function () {
   this._state.meeting = {
     people: []
   };
 };
 
-
 },{"../utils/time.js":21,"../utils/toolbelt.js":22,"../utils/transform.js":23,"moment-timezone":35}],21:[function(require,module,exports){
+'use strict';
+
 var moment = require('moment-timezone');
 
 var timeUtils = module.exports = {};
 
 // Get the time format string
-timeUtils.getFormatStringFor = function(fmt) {
+timeUtils.getFormatStringFor = function (fmt) {
   return fmt === 24 ? 'H:mm' : 'h:mm a';
 };
 
 // Get the time preferred format sans minutes
-timeUtils.getShortFormatStringFor = function(fmt) {
+timeUtils.getShortFormatStringFor = function (fmt) {
   return fmt === 24 ? 'H' : 'h'; // ha
 };
 
 // Get the hour in the format desired
-timeUtils.getHourFormattedString = function(hour, fmt) {
-  if (fmt === 24)
-    return hour + ':00';
+timeUtils.getHourFormattedString = function (hour, fmt) {
+  if (fmt === 24) return hour + ':00';
   var m = hour < 12 ? 'am' : 'pm';
-  if (hour === 0)
-    hour = 12;
-  if (hour > 12)
-    hour = hour - 12;
+  if (hour === 0) hour = 12;
+  if (hour > 12) hour = hour - 12;
   return hour + m;
 };
 
-timeUtils.gmtHoursToOffset = function(gmtHour, utcHourOffset) {
+timeUtils.gmtHoursToOffset = function (gmtHour, utcHourOffset) {
   var hour = gmtHour + utcHourOffset;
   return hour >= 0 ? hour : 24 + hour;
 };
 
-timeUtils.formatLocalTimeWindow = function(startHour, endHour, utcHourOffset, fmt) {
+timeUtils.formatLocalTimeWindow = function (startHour, endHour, utcHourOffset, fmt) {
   var localStartHour = timeUtils.gmtHoursToOffset(startHour, utcHourOffset);
   var localEndHour = timeUtils.gmtHoursToOffset(endHour, utcHourOffset);
 
-  if (localStartHour === localEndHour)
-    return timeUtils.getHourFormattedString(localStartHour, fmt);
+  if (localStartHour === localEndHour) return timeUtils.getHourFormattedString(localStartHour, fmt);
 
-  return timeUtils.getHourFormattedString(localStartHour, fmt) +
-         ' - ' +
-         timeUtils.getHourFormattedString(localEndHour, fmt);
+  return timeUtils.getHourFormattedString(localStartHour, fmt) + ' - ' + timeUtils.getHourFormattedString(localEndHour, fmt);
 };
 
 // Round to the closest quarter hour
-timeUtils.roundToQuarterHour = function(minutes) {
+timeUtils.roundToQuarterHour = function (minutes) {
   return Math.round(minutes / 60 * 4) * 15;
 };
 
-timeUtils.getHoursAsArray = function(start) {
+timeUtils.getHoursAsArray = function (start) {
   start = start || 0;
   var hours = [];
-  for (var hour = start; hour < (24 + start); hour++) {
+  for (var hour = start; hour < 24 + start; hour++) {
     hours.push(hour >= 24 ? hour - 24 : hour);
   }
   return hours;
 };
 
-timeUtils.getAvailableHoursInUTC = function(tz, formatString) {
+timeUtils.getAvailableHoursInUTC = function (tz, formatString) {
   var hours = timeUtils.getHoursAsArray(9);
-  var local = moment()
-    .tz('UTC')
-    .hours(0)
-    .minutes(0)
-    .tz(tz);
+  var local = moment().tz('UTC').hours(0).minutes(0).tz(tz);
 
-  return hours.map(function(hour) {
+  return hours.map(function (hour) {
     var localNow = moment(local).add(hour, 'h');
     var localHour = localNow.hour();
     var isAvailable = localHour >= 9 && localHour < 17; // 9 to 5
@@ -1968,11 +1969,12 @@ timeUtils.getAvailableHoursInUTC = function(tz, formatString) {
   });
 };
 
-
 },{"moment-timezone":35}],22:[function(require,module,exports){
+'use strict';
+
 var toolbelt = module.exports = {};
 
-toolbelt.clone = function(source) {
+toolbelt.clone = function (source) {
   if (source === null || typeof source !== 'object') {
     return source;
   }
@@ -1988,78 +1990,67 @@ toolbelt.clone = function(source) {
   return obj;
 };
 
-
 // Returns a new object w/ updated props from the second object
-toolbelt.extend = function(a, b) {
+toolbelt.extend = function (a, b) {
   var obj = toolbelt.clone(a);
-  Object.keys(b).forEach(function(key) {
+  Object.keys(b).forEach(function (key) {
     obj[key] = b[key];
   });
   return obj;
 };
 
-
 // Like extend, but updates the first object passed
-toolbelt.update = function(a, b) {
-  Object.keys(b).forEach(function(key) {
+toolbelt.update = function (a, b) {
+  Object.keys(b).forEach(function (key) {
     a[key] = b[key];
   });
   return a;
 };
 
-
 // For indexOf nested objects, ex.
 //   toolbelt.indexOf({ isCool: true }, [{ isCool: true }, { isCool: false }])
 //   => 0
-toolbelt.indexOf = function(query, arr) {
+toolbelt.indexOf = function (query, arr) {
   var key = typeof query === 'object' ? Object.keys(query)[0] : query;
   var value = typeof query === 'object' ? query[key] : true;
 
   for (var i = 0, len = arr.length; i < len; i++) {
-    if (arr[i][key] === value)
-      return i;
+    if (arr[i][key] === value) return i;
   }
 
   return -1;
 };
 
-toolbelt.groupBy = function(key, arr) {
+toolbelt.groupBy = function (key, arr) {
   var obj = {};
 
   for (var i = 0, len = arr.length; i < len; i++) {
     var item = arr[i];
     var val = item[key];
-    if (obj[val])
-      obj[val].push(item);
-    else
-      obj[val] = [item];
+    if (obj[val]) obj[val].push(item);else obj[val] = [item];
   }
 
   return obj;
 };
 
-
 },{}],23:[function(require,module,exports){
+'use strict';
+
 var moment = require('moment-timezone');
 
-
 function appendTime(time, person) {
-  person.time = moment( time ).tz( person.tz );
+  person.time = moment(time).tz(person.tz);
   person.utcOffset = person.time.utcOffset();
   // person.zone = person.time.utcOffset();
 }
 
-function sortByTimezone(a, b){
+function sortByTimezone(a, b) {
   return a.utcOffset - b.utcOffset;
 }
 
 function sortByNameAndId(a, b) {
-  return a.name > b.name ? 1 :
-         a.name !== b.name ? -1 :
-         a._id > b._id ? 1 :
-         -1;
+  return a.name > b.name ? 1 : a.name !== b.name ? -1 : a._id > b._id ? 1 : -1;
 }
-
 
 module.exports = function transform(time, people) {
 
@@ -2067,8 +2058,8 @@ module.exports = function transform(time, people) {
   people.forEach(appendTime.bind(null, time));
   people.sort(sortByTimezone);
 
-  var timezones = people.reduce(function(zones, person){
-    var last = zones[ zones.length - 1 ];
+  var timezones = people.reduce(function (zones, person) {
+    var last = zones[zones.length - 1];
     var utcOffset = last && last.people[0].utcOffset;
 
     if (last && utcOffset === person.utcOffset) {
@@ -2076,27 +2067,26 @@ module.exports = function transform(time, people) {
     } else {
       zones.push({
         tz: person.tz,
-        people: [ person ]
+        people: [person]
       });
     }
 
     return zones;
   }, []);
 
-  timezones.forEach(function(timezone){
+  timezones.forEach(function (timezone) {
     timezone.people.sort(sortByNameAndId);
 
-    if (timezone.people.length / people.length > 0.2)
-      timezone.major = true;
+    if (timezone.people.length / people.length > 0.2) timezone.major = true;
   });
 
   return timezones;
-
 };
 
-
 },{"moment-timezone":35}],24:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var React = require('react');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
@@ -2110,13 +2100,13 @@ module.exports = React.createClass({
 
   displayName: 'Team',
 
-  handleClickMask: function(e) {
+  handleClickMask: function handleClickMask(e) {
     AppDispatcher.dispatchViewAction({
       actionType: ActionTypes.CLOSE_MODAL
     });
   },
 
-  getModal: function() {
+  getModal: function getModal() {
     return;
     var currentView = this.props.currentView;
 
@@ -2127,52 +2117,43 @@ module.exports = React.createClass({
     // if (currentView === 'manage')
     //   modal = (<ManageModal {...this.props} />);
 
-    return (
-      React.createElement("div", {className: "modal-container", 
-           onClick: this.handleClickMask}, 
-        modal
-      )
+    return React.createElement(
+      'div',
+      { className: 'modal-container',
+        onClick: this.handleClickMask },
+      modal
     );
   },
 
-  getView: function() {
+  getView: function getView() {
     var currentView = this.props.currentView;
 
     if (currentView === 'app') return;
 
     var view = null;
 
-    if (currentView === 'manage')
-      view = React.createElement(ManageTeam, React.__spread({},  this.props));
+    if (currentView === 'manage') view = React.createElement(ManageTeam, this.props);
 
-    return (
-      React.createElement("div", {className: "view-container"}, 
-        view
-      )
+    return React.createElement(
+      'div',
+      { className: 'view-container' },
+      view
     );
   },
 
-  render: function() {
-    return (
-      React.createElement("div", {className: "container app-container"}, 
-
-        React.createElement(AppSidebar, React.__spread({},  this.props)), 
-
-        React.createElement(TimezoneList, React.__spread({},  this.props, 
-                      {showStats: true})), 
-
-         this.props.user &&
-          React.createElement(UserMenu, React.__spread({},  this.props.user, 
-                    {fixed: true})), 
-        
-
-        this.getView()
-
-      )
+  render: function render() {
+    return React.createElement(
+      'div',
+      { className: 'container app-container' },
+      React.createElement(AppSidebar, this.props),
+      React.createElement(TimezoneList, _extends({}, this.props, {
+        showStats: true })),
+      this.props.user && React.createElement(UserMenu, _extends({}, this.props.user, {
+        fixed: true })),
+      this.getView()
     );
   }
 });
-
 
 },{"../actions/actionTypes.js":2,"../components/appSidebar.jsx":4,"../components/manageTeam.jsx":9,"../components/timezoneList.jsx":15,"../components/userMenu.jsx":16,"../dispatchers/appDispatcher.js":17,"react":193}],25:[function(require,module,exports){
 // shim for using process in browser

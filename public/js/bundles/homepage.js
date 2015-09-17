@@ -1,76 +1,69 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
 var api = require('../helpers/api.js');
 
 var ActionCreators = module.exports = {
 
-  saveUserInfo: function(userId, data) {
-    return api
-      .put('/user/' + userId, data)
-      .then(function(data) {
+  saveUserInfo: function saveUserInfo(userId, data) {
+    return api.put('/user/' + userId, data).then(function (data) {
 
-        AppDispatcher.dispatchApiAction({
-          actionType: ActionTypes.UPDATED_USER_DATA,
-          value: data
-        });
-
-        return data;
+      AppDispatcher.dispatchApiAction({
+        actionType: ActionTypes.UPDATED_USER_DATA,
+        value: data
       });
+
+      return data;
+    });
   },
 
-  addNewTeamMember: function(data) {
-    return api
-      .post('/user', data)
-      .then(function(data) {
+  addNewTeamMember: function addNewTeamMember(data) {
+    return api.post('/user', data).then(function (data) {
 
-        AppDispatcher.dispatchApiAction({
-          actionType: ActionTypes.UPDATED_USER_DATA,
-          value: data
-        });
-
-        return data;
+      AppDispatcher.dispatchApiAction({
+        actionType: ActionTypes.UPDATED_USER_DATA,
+        value: data
       });
+
+      return data;
+    });
   },
 
-  removeTeamMember: function(teamId, userId) {
-    return api
-      .delete('/team/' + teamId + '/member/' + userId)
-      .then(function(data) {
+  removeTeamMember: function removeTeamMember(teamId, userId) {
+    return api['delete']('/team/' + teamId + '/member/' + userId).then(function (data) {
 
-        AppDispatcher.dispatchApiAction({
-          actionType: ActionTypes.TEAM_MEMBER_REMOVED,
-          value: data
-        });
-
-        return data;
+      AppDispatcher.dispatchApiAction({
+        actionType: ActionTypes.TEAM_MEMBER_REMOVED,
+        value: data
       });
+
+      return data;
+    });
   },
 
   // Returns promise
-  locationSearch: function(q) {
-    return api
-      .get('/location/search', { q: q })
-      .then(function(data) {
-        return data.results;
-      });
+  locationSearch: function locationSearch(q) {
+    return api.get('/location/search', { q: q }).then(function (data) {
+      return data.results;
+    });
   },
 
-  getGravatar: function(email) {
-    return api.get('/avatar/gravatar', { email: email })
-      .then(function(data) {
-        return data.avatar;
-      });
+  getGravatar: function getGravatar(email) {
+    return api.get('/avatar/gravatar', { email: email }).then(function (data) {
+      return data.avatar;
+    });
   },
 
-  toggleSelectPerson: function(userId) {
+  toggleSelectPerson: function toggleSelectPerson(userId) {
     AppDispatcher.dispatchViewAction({
       actionType: ActionTypes.TOGGLE_SELECT_PERSON,
       value: userId
     });
   },
 
-  clearMeetingGroups: function() {
+  clearMeetingGroups: function clearMeetingGroups() {
     AppDispatcher.dispatchViewAction({
       actionType: ActionTypes.CLEAR_MEETING_GROUPS
     });
@@ -78,8 +71,9 @@ var ActionCreators = module.exports = {
 
 };
 
-
 },{"../actions/actionTypes.js":2,"../dispatchers/appDispatcher.js":12,"../helpers/api.js":13}],2:[function(require,module,exports){
+'use strict';
+
 var keyMirror = require('keymirror');
 
 module.exports = keyMirror({
@@ -102,22 +96,19 @@ module.exports = keyMirror({
 
 });
 
-
 },{"keymirror":24}],3:[function(require,module,exports){
-var React  = require('react');
+'use strict';
+
+var React = require('react');
 
 var Homepage = React.createFactory(require('../views/homepage.jsx'));
 
 var targetNode = document.querySelector('#page');
 
-React.render(
-  Homepage(appData),
-  targetNode
-);
-
+React.render(Homepage(appData), targetNode);
 
 },{"../views/homepage.jsx":15,"react":183}],4:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 
@@ -125,125 +116,127 @@ module.exports = React.createClass({
 
   displayName: 'Avatar',
 
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
     return {
-      brokenImage: false,
+      brokenImage: false
     };
   },
 
-  handleLoadSuccess: function() {
-    if (this.state.brokenImage)
-      this.setState({ brokenImage: false });
+  handleLoadSuccess: function handleLoadSuccess() {
+    if (this.state.brokenImage) this.setState({ brokenImage: false });
   },
 
-  handleLoadError: function() {
-    if (!this.state.brokenImage)
-      this.setState({ brokenImage: true });
+  handleLoadError: function handleLoadError() {
+    if (!this.state.brokenImage) this.setState({ brokenImage: true });
   },
 
-  render: function() {
+  render: function render() {
 
     var classes = 'avatar';
     if (this.props.size) classes += ' ' + this.props.size;
 
-    return (
-      React.createElement("img", {src: this.props.avatar, 
-           className: classes, 
-           onLoad: this.handleLoadSuccess, 
-           onError: this.handleLoadError})
-     );
+    return React.createElement('img', { src: this.props.avatar,
+      className: classes,
+      onLoad: this.handleLoadSuccess,
+      onError: this.handleLoadError });
   }
 
 });
 
-
 },{"react":183}],5:[function(require,module,exports){
-/** @jsx React.DOM */
+"use strict";
 
 var React = require('react');
 
-module.exports = React.createClass({displayName: "exports",
-  render: function() {
-    var branding = React.createElement("h1", {className: "site-branding"}, "Timezone.io");
+module.exports = React.createClass({
+  displayName: "exports",
 
-    if (this.props.link)
-      return React.createElement("a", {href: "/", className: "site-branding-link"}, branding);
+  render: function render() {
+    var branding = React.createElement(
+      "h1",
+      { className: "site-branding" },
+      "Timezone.io"
+    );
+
+    if (this.props.link) return React.createElement(
+      "a",
+      { href: "/", className: "site-branding-link" },
+      branding
+    );
 
     return branding;
   }
 });
 
-
-
 },{"react":183}],6:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 
-var links = [
-  {
-    url: '/about',
-    text: 'About'
-  },
-  {
-    url: '/team/buffer',
-    text: 'Demo'
-  },
-  {
-    url: '/login',
-    text: 'Login'
-  },
-  {
-    url: '/roadmap',
-    text: 'Roadmap'
-  },
-];
-
+var links = [{
+  url: '/about',
+  text: 'About'
+}, {
+  url: '/team/buffer',
+  text: 'Demo'
+}, {
+  url: '/login',
+  text: 'Login'
+}, {
+  url: '/roadmap',
+  text: 'Roadmap'
+}];
 
 module.exports = React.createClass({
 
   displayName: 'Footer',
 
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
     return {
       links: links
     };
   },
 
-  render: function() {
+  render: function render() {
 
     var year = new Date().getFullYear();
 
-    return (
-      React.createElement("footer", {className: "hp-section site-footer"}, 
-
-        React.createElement("div", {className: "hp-content-container"}, 
-
-          React.createElement("p", null, 
-            "© ", year, " Timezone.io ", React.createElement("br", null)
-          ), 
-          React.createElement("p", null, 
-            this.state.links.map(function(link, idx) {
-              return (
-                React.createElement("a", {key: idx, 
-                   href: link.url, 
-                   className: "footer-link"}, 
-                  link.text
-                )
-              );
-            })
-          )
-
+    return React.createElement(
+      'footer',
+      { className: 'hp-section site-footer' },
+      React.createElement(
+        'div',
+        { className: 'hp-content-container' },
+        React.createElement(
+          'p',
+          null,
+          '© ',
+          year,
+          ' Timezone.io ',
+          React.createElement('br', null)
+        ),
+        React.createElement(
+          'p',
+          null,
+          this.state.links.map(function (link, idx) {
+            return React.createElement(
+              'a',
+              { key: idx,
+                href: link.url,
+                className: 'footer-link' },
+              link.text
+            );
+          })
         )
-
       )
     );
   }
 });
 
-
 },{"react":183}],7:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var React = require('react');
 var Branding = require('./branding.jsx');
@@ -253,54 +246,51 @@ module.exports = React.createClass({
 
   displayName: 'Header',
 
-  renderRightComponent: function() {
+  renderRightComponent: function renderRightComponent() {
 
     var buttons = [];
 
-    if (this.props.demo)
-      buttons.push(
-        React.createElement("a", {key: "demo", 
-           href: "/team/buffer", 
-           className: "button cta"}, 
-          "Live demo"
-        )
-      );
+    if (this.props.demo) buttons.push(React.createElement(
+      'a',
+      { key: 'demo',
+        href: '/team/buffer',
+        className: 'button cta' },
+      'Live demo'
+    ));
 
     if (this.props.user) {
-      buttons.push(
-        React.createElement(UserMenu, React.__spread({key: "menu"}, 
-                  this.props.user))
-      );
+      buttons.push(React.createElement(UserMenu, _extends({ key: 'menu'
+      }, this.props.user)));
     } else {
-      buttons.push(
-        React.createElement("a", {key: "login", 
-           href: "/login", 
-           className: "button hollow"}, 
-          "Login"
-        )
-      );
+      buttons.push(React.createElement(
+        'a',
+        { key: 'login',
+          href: '/login',
+          className: 'button hollow' },
+        'Login'
+      ));
     }
 
     return buttons;
   },
 
-  render: function() {
+  render: function render() {
     var link = this.props.link === false ? false : true;
-    return (
-      React.createElement("header", {className: "site-header"}, 
-        React.createElement(Branding, {link: link}), 
-        React.createElement("div", {className: "site-header--right"}, 
-          this.renderRightComponent()
-        )
+    return React.createElement(
+      'header',
+      { className: 'site-header' },
+      React.createElement(Branding, { link: link }),
+      React.createElement(
+        'div',
+        { className: 'site-header--right' },
+        this.renderRightComponent()
       )
     );
   }
 });
 
-
-
 },{"./branding.jsx":5,"./userMenu.jsx":11,"react":183}],8:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 var Avatar = require('./avatar.jsx');
@@ -310,19 +300,29 @@ module.exports = React.createClass({
 
   displayName: 'Person',
 
-  handleToggleSelected: function() {
+  handleToggleSelected: function handleToggleSelected() {
     ActionCreators.toggleSelectPerson(this.props.model._id);
   },
-  render: function() {
+  render: function render() {
     var person = this.props.model;
-    return (
-      React.createElement("div", {className: "person", 
-           key: person._id, 
-           onClick: this.handleToggleSelected}, 
-        React.createElement(Avatar, {avatar: person.avatar}), 
-        React.createElement("div", {className: "person-info"}, 
-          React.createElement("p", {className: "person-name"}, person.name), 
-          React.createElement("p", {className: "person-city"}, person.location)
+    return React.createElement(
+      'div',
+      { className: 'person',
+        key: person._id,
+        onClick: this.handleToggleSelected },
+      React.createElement(Avatar, { avatar: person.avatar }),
+      React.createElement(
+        'div',
+        { className: 'person-info' },
+        React.createElement(
+          'p',
+          { className: 'person-name' },
+          person.name
+        ),
+        React.createElement(
+          'p',
+          { className: 'person-city' },
+          person.location
         )
       )
     );
@@ -330,9 +330,8 @@ module.exports = React.createClass({
 
 });
 
-
 },{"../actions/actionCreators.js":1,"./avatar.jsx":4,"react":183}],9:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 var moment = require('moment-timezone');
@@ -341,72 +340,61 @@ var timeUtils = require('../utils/time.js');
 
 var PEOPLE_PER_COL = 8;
 
-module.exports = React.createClass({displayName: "exports",
+module.exports = React.createClass({
+  displayName: 'exports',
 
-  getCountsOf: function(list, param) {
-    return list
-      .map(function(el) {
-        return el[param];
-      })
-      .sort()
-      .reduce(function(counts, el) {
-        if (!counts[el])
-          counts[el] = 1;
-        else
-          counts[el]++;
-        return counts;
-      }, {});
+  getCountsOf: function getCountsOf(list, param) {
+    return list.map(function (el) {
+      return el[param];
+    }).sort().reduce(function (counts, el) {
+      if (!counts[el]) counts[el] = 1;else counts[el]++;
+      return counts;
+    }, {});
   },
 
-  getHighestOccuring: function(counts) {
+  getHighestOccuring: function getHighestOccuring(counts) {
     var keys = Object.keys(counts);
-    return keys.reduce(function(prev, curr){
+    return keys.reduce(function (prev, curr) {
       return counts[curr] > counts[prev] ? curr : prev;
     }, keys[0]);
   },
 
-  getTopTimezone: function() {
+  getTopTimezone: function getTopTimezone() {
 
     var tzCounts = this.getCountsOf(this.props.model.people, 'tz');
     var topTz = this.getHighestOccuring(tzCounts);
 
-    return topTz.replace(/.+\//g, '').replace(/_/g,' ');
+    return topTz.replace(/.+\//g, '').replace(/_/g, ' ');
   },
 
-  getTopCity: function() {
+  getTopCity: function getTopCity() {
 
     var cityCounts = this.getCountsOf(this.props.model.people, 'location');
     var topCity = this.getHighestOccuring(cityCounts);
 
-    return cityCounts[topCity] === 1 && this.props.model.people.length > 1 ?
-      this.getTopTimezone() :
-      topCity;
+    return cityCounts[topCity] === 1 && this.props.model.people.length > 1 ? this.getTopTimezone() : topCity;
   },
 
-  getPeopleColumns: function() {
+  getPeopleColumns: function getPeopleColumns() {
 
     var numPeople = this.props.model.people.length;
     var numCols = Math.ceil(numPeople / PEOPLE_PER_COL);
     var numPerCol = Math.ceil(numPeople / numCols);
 
-    return this.props.model.people.reduce(function(cols, person){
-      if (cols[cols.length - 1] &&
-          cols[cols.length - 1].length  < numPerCol)
-        cols[cols.length - 1].push(person);
-      else
-        cols.push([ person ]);
+    return this.props.model.people.reduce(function (cols, person) {
+      if (cols[cols.length - 1] && cols[cols.length - 1].length < numPerCol) cols[cols.length - 1].push(person);else cols.push([person]);
       return cols;
     }, []);
   },
 
-  render: function() {
+  render: function render() {
 
     // We clone the time object itself so the this time is bound to
     // the global app time
-    var localTime   = moment( this.props.time ).tz( this.props.model.tz );
-    var fmtString   = timeUtils.getFormatStringFor(this.props.timeFormat);
+    var localTime = moment(this.props.time).tz(this.props.model.tz);
+    var fmtString = timeUtils.getFormatStringFor(this.props.timeFormat);
     var displayTime = localTime.format(fmtString);
-    var offset      = localTime.format('Z');
+    var offset = localTime.format('Z');
 
     var timezoneClasses = 'timezone timezone-hour-' + localTime.hour();
 
@@ -415,105 +403,132 @@ module.exports = React.createClass({displayName: "exports",
     var topCity = this.getTopCity();
     var columns = this.getPeopleColumns();
 
-    return (
-      React.createElement("div", {className: timezoneClasses}, 
-        React.createElement("div", {className: "timezone-header"}, 
-          React.createElement("h3", {className: "timezone-time"}, displayTime), 
-          React.createElement("p", {className: "timezone-name"}, topCity), 
-          React.createElement("p", {className: "timezone-offset"}, offset)
-        ), 
-        React.createElement("div", {className: "timezone-people"}, 
-          columns.map(function(column, idx){
-            return (
-              React.createElement("div", {className: "timezone-people-column", key: "column-" + idx}, 
-                column.map(function(person) {
-                  return React.createElement(Person, {model: person, key: person._id});
-                })
-              )
-            );
-          })
+    return React.createElement(
+      'div',
+      { className: timezoneClasses },
+      React.createElement(
+        'div',
+        { className: 'timezone-header' },
+        React.createElement(
+          'h3',
+          { className: 'timezone-time' },
+          displayTime
+        ),
+        React.createElement(
+          'p',
+          { className: 'timezone-name' },
+          topCity
+        ),
+        React.createElement(
+          'p',
+          { className: 'timezone-offset' },
+          offset
         )
+      ),
+      React.createElement(
+        'div',
+        { className: 'timezone-people' },
+        columns.map(function (column, idx) {
+          return React.createElement(
+            'div',
+            { className: 'timezone-people-column', key: "column-" + idx },
+            column.map(function (person) {
+              return React.createElement(Person, { model: person, key: person._id });
+            })
+          );
+        })
       )
     );
   }
 });
 
-
 },{"../utils/time.js":14,"./person.jsx":8,"moment-timezone":26,"react":183}],10:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
-var React    = require('react');
+var React = require('react');
 var Timezone = require('./timezone.jsx');
+
+var count = function count(metric, people) {
+  var items = people.reduce(function (list, p) {
+    if (list.indexOf(p[metric].toLowerCase()) === -1) list.push(p[metric].toLowerCase());
+    return list;
+  }, []);
+  return items.length;
+};
 
 module.exports = React.createClass({
 
   displayName: 'TimezoneList',
 
-  getStats: function(people) {
+  getStats: function getStats(people) {
 
     // Note the homepage doesn't provide people, only timezones
     if (!people || !Array.isArray(people)) return;
 
-    var cities = people.reduce(function(list, p) {
-      if (list.indexOf(p.location.toLowerCase()) === -1)
-        list.push(p.location.toLowerCase());
-      return list;
-    }, []);
+    var numPeople = people.length;
+    var numCities = count('location', people);
+    var numTimezones = this.props.timezones.length;
 
-    return people.length + ' people in ' + cities.length + ' cities';
+    return numPeople + ' people in ' + numCities + ' cities across ' + numTimezones + ' timezones';
   },
 
-  render: function() {
+  render: function render() {
 
     var timeFormat = this.props.timeFormat || 12;
 
     var stats = this.getStats(this.props.people);
 
-    return (
-      React.createElement("div", {className: "timezone-list"}, 
-        this.props.timezones.map(function(timezone){
-          return React.createElement(Timezone, {key: timezone.tz, 
-                           time: this.props.time, 
-                           timeFormat: timeFormat, 
-                           model: timezone})
-        }.bind(this)), 
-         this.props.showStats &&
-          React.createElement("div", {className: "team-stats"}, React.createElement("em", null, stats))
-        
+    return React.createElement(
+      'div',
+      { className: 'timezone-list' },
+      this.props.timezones.map((function (timezone) {
+        return React.createElement(Timezone, { key: timezone.tz,
+          time: this.props.time,
+          timeFormat: timeFormat,
+          model: timezone });
+      }).bind(this)),
+      this.props.showStats && React.createElement(
+        'div',
+        { className: 'team-stats' },
+        React.createElement(
+          'em',
+          null,
+          stats
+        )
       )
     );
   }
 
 });
 
-
 },{"./timezone.jsx":9,"react":183}],11:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 var classNames = require('classnames');
 
-module.exports = React.createClass({displayName: "exports",
+module.exports = React.createClass({
+  displayName: 'exports',
 
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
     return { open: false };
   },
 
-  closeMenu: function(e) {
+  closeMenu: function closeMenu(e) {
     this.setState({ open: false });
   },
 
-  handleToggleMenu: function(e) {
+  handleToggleMenu: function handleToggleMenu(e) {
     e.stopPropagation();
     this.setState({ open: !this.state.open });
   },
 
-  componentDidMount: function() {
+  componentDidMount: function componentDidMount() {
     // Move this one day
     window.addEventListener('click', this.closeMenu);
   },
 
-  render: function() {
+  render: function render() {
 
     var profileUrl = '/people/' + this.props.username;
     var style = { backgroundImage: 'url(' + this.props.avatar + ')' };
@@ -526,50 +541,55 @@ module.exports = React.createClass({displayName: "exports",
       'menu-open': this.state.open
     });
 
-    return (
-      React.createElement("div", {className: containerClasses}, 
-
-        React.createElement("div", {className: menuClasses}, 
-          React.createElement("a", {href: profileUrl, 
-             className: "user-menu-item"}, 
-            "Profile"
-          ), 
-          React.createElement("a", {href: "/team", 
-             className: "user-menu-item"}, 
-            "Add your team"
-          ), 
-          React.createElement("a", {href: "/logout", 
-             className: "user-menu-item"}, 
-            "Logout"
-          )
-        ), 
-
-        React.createElement("a", {onClick: this.handleToggleMenu, 
-           className: "avatar header-avatar", 
-           style: style, 
-           name: this.props.name}
+    return React.createElement(
+      'div',
+      { className: containerClasses },
+      React.createElement(
+        'div',
+        { className: menuClasses },
+        React.createElement(
+          'a',
+          { href: profileUrl,
+            className: 'user-menu-item' },
+          'Profile'
+        ),
+        React.createElement(
+          'a',
+          { href: '/team',
+            className: 'user-menu-item' },
+          'Add your team'
+        ),
+        React.createElement(
+          'a',
+          { href: '/logout',
+            className: 'user-menu-item' },
+          'Logout'
         )
-
-      )
+      ),
+      React.createElement('a', { onClick: this.handleToggleMenu,
+        className: 'avatar header-avatar',
+        style: style,
+        name: this.props.name })
     );
   }
 });
 
-
 },{"classnames":20,"react":183}],12:[function(require,module,exports){
+'use strict';
+
 var Dispatcher = require('flux').Dispatcher;
 
 var AppDispatcher = new Dispatcher();
 module.exports = AppDispatcher;
 
-AppDispatcher.dispatchViewAction = function(action) {
+AppDispatcher.dispatchViewAction = function (action) {
   this.dispatch({
     source: 'VIEW_ACTION',
     action: action
   });
 };
 
-AppDispatcher.dispatchApiAction = function(action) {
+AppDispatcher.dispatchApiAction = function (action) {
   this.dispatch({
     source: 'API_ACTION',
     action: action
@@ -578,42 +598,42 @@ AppDispatcher.dispatchApiAction = function(action) {
 
 module.exports = AppDispatcher;
 
-
 },{"flux":21}],13:[function(require,module,exports){
+'use strict';
+
 var qs = require('querystring');
 
 // we rely on global csrf token for now, grab first so it can't be modified
 var CSRF = typeof window !== 'undefined' && window.appData.csrf_token;
 
 // TOOD - Need promise polyfill
-var status = function(res) {
+var status = function status(res) {
   if (res.status >= 200 && res.status < 300) {
     return Promise.resolve(res);
   } else {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       res.json().then(reject, reject);
     });
   }
 };
 
-var json = function(res) {
+var json = function json(res) {
   return res.json();
 };
 
-var getData = function(data) {
+var getData = function getData(data) {
   if (!data) data = {};
   data._csrf = CSRF;
   return data;
 };
 
-var appendQueryString = function(url, data) {
+var appendQueryString = function appendQueryString(url, data) {
   return url + '?' + qs.stringify(data);
 };
 
-var getOptions = function(method, data) {
+var getOptions = function getOptions(method, data) {
 
-  if (method === 'GET')
-    return { credentials: 'include' };
+  if (method === 'GET') return { credentials: 'include' };
 
   return {
     method: method || 'POST',
@@ -628,100 +648,83 @@ var getOptions = function(method, data) {
 
 var api = module.exports = {
 
-  get: function(url, data) {
-    return fetch('/api' + appendQueryString(url, data), getOptions('GET'))
-      .then(status)
-      .then(json);
+  get: function get(url, data) {
+    return fetch('/api' + appendQueryString(url, data), getOptions('GET')).then(status).then(json);
   },
 
-  post: function(url, data) {
-    return fetch('/api' + url, getOptions('POST', data))
-      .then(status)
-      .then(json);
+  post: function post(url, data) {
+    return fetch('/api' + url, getOptions('POST', data)).then(status).then(json);
   },
 
-  put: function(url, data) {
-    return fetch('/api' + url, getOptions('PUT', data))
-      .then(status)
-      .then(json);
+  put: function put(url, data) {
+    return fetch('/api' + url, getOptions('PUT', data)).then(status).then(json);
   },
 
-  delete: function(url, data) {
-    return fetch('/api' + url, getOptions('DELETE', data))
-      .then(status)
-      .then(json);
+  'delete': function _delete(url, data) {
+    return fetch('/api' + url, getOptions('DELETE', data)).then(status).then(json);
   }
 
 };
 
-
 },{"querystring":19}],14:[function(require,module,exports){
+'use strict';
+
 var moment = require('moment-timezone');
 
 var timeUtils = module.exports = {};
 
 // Get the time format string
-timeUtils.getFormatStringFor = function(fmt) {
+timeUtils.getFormatStringFor = function (fmt) {
   return fmt === 24 ? 'H:mm' : 'h:mm a';
 };
 
 // Get the time preferred format sans minutes
-timeUtils.getShortFormatStringFor = function(fmt) {
+timeUtils.getShortFormatStringFor = function (fmt) {
   return fmt === 24 ? 'H' : 'h'; // ha
 };
 
 // Get the hour in the format desired
-timeUtils.getHourFormattedString = function(hour, fmt) {
-  if (fmt === 24)
-    return hour + ':00';
+timeUtils.getHourFormattedString = function (hour, fmt) {
+  if (fmt === 24) return hour + ':00';
   var m = hour < 12 ? 'am' : 'pm';
-  if (hour === 0)
-    hour = 12;
-  if (hour > 12)
-    hour = hour - 12;
+  if (hour === 0) hour = 12;
+  if (hour > 12) hour = hour - 12;
   return hour + m;
 };
 
-timeUtils.gmtHoursToOffset = function(gmtHour, utcHourOffset) {
+timeUtils.gmtHoursToOffset = function (gmtHour, utcHourOffset) {
   var hour = gmtHour + utcHourOffset;
   return hour >= 0 ? hour : 24 + hour;
 };
 
-timeUtils.formatLocalTimeWindow = function(startHour, endHour, utcHourOffset, fmt) {
+timeUtils.formatLocalTimeWindow = function (startHour, endHour, utcHourOffset, fmt) {
   var localStartHour = timeUtils.gmtHoursToOffset(startHour, utcHourOffset);
   var localEndHour = timeUtils.gmtHoursToOffset(endHour, utcHourOffset);
 
-  if (localStartHour === localEndHour)
-    return timeUtils.getHourFormattedString(localStartHour, fmt);
+  if (localStartHour === localEndHour) return timeUtils.getHourFormattedString(localStartHour, fmt);
 
-  return timeUtils.getHourFormattedString(localStartHour, fmt) +
-         ' - ' +
-         timeUtils.getHourFormattedString(localEndHour, fmt);
+  return timeUtils.getHourFormattedString(localStartHour, fmt) + ' - ' + timeUtils.getHourFormattedString(localEndHour, fmt);
 };
 
 // Round to the closest quarter hour
-timeUtils.roundToQuarterHour = function(minutes) {
+timeUtils.roundToQuarterHour = function (minutes) {
   return Math.round(minutes / 60 * 4) * 15;
 };
 
-timeUtils.getHoursAsArray = function(start) {
+timeUtils.getHoursAsArray = function (start) {
   start = start || 0;
   var hours = [];
-  for (var hour = start; hour < (24 + start); hour++) {
+  for (var hour = start; hour < 24 + start; hour++) {
     hours.push(hour >= 24 ? hour - 24 : hour);
   }
   return hours;
 };
 
-timeUtils.getAvailableHoursInUTC = function(tz, formatString) {
+timeUtils.getAvailableHoursInUTC = function (tz, formatString) {
   var hours = timeUtils.getHoursAsArray(9);
-  var local = moment()
-    .tz('UTC')
-    .hours(0)
-    .minutes(0)
-    .tz(tz);
+  var local = moment().tz('UTC').hours(0).minutes(0).tz(tz);
 
-  return hours.map(function(hour) {
+  return hours.map(function (hour) {
     var localNow = moment(local).add(hour, 'h');
     var localHour = localNow.hour();
     var isAvailable = localHour >= 9 && localHour < 17; // 9 to 5
@@ -734,78 +737,54 @@ timeUtils.getAvailableHoursInUTC = function(tz, formatString) {
   });
 };
 
-
 },{"moment-timezone":26}],15:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var React = require('react');
 var Header = require('../components/header.jsx');
 var Footer = require('../components/footer.jsx');
 var TimezoneList = require('../components/timezoneList.jsx');
 
-var demoTimezones = [
-  {
+var demoTimezones = [{
+  tz: 'America/Los_Angeles',
+  people: [{
+    name: 'Mary',
     tz: 'America/Los_Angeles',
-    people: [
-      {
-        name: 'Mary',
-        tz: 'America/Los_Angeles',
-        location: 'San Francisco',
-        avatar: '/images/avatars/mary.jpg'
-      }
-    ]
-  },
-  {
+    location: 'San Francisco',
+    avatar: '/images/avatars/mary.jpg'
+  }]
+}, {
+  tz: 'America/New_York',
+  people: [{
+    name: 'Dan',
     tz: 'America/New_York',
-    people: [
-      {
-        name: 'Dan',
-        tz: 'America/New_York',
-        location: 'New York',
-        avatar: '/images/avatars/dan.jpg'
-      },
-      {
-        name: 'Sunil',
-        tz: 'America/New_York',
-        location: 'DC',
-        avatar: '/images/avatars/sunil.png'
-      }
-    ]
-  },
-  {
+    location: 'New York',
+    avatar: '/images/avatars/dan.jpg'
+  }, {
+    name: 'Sunil',
+    tz: 'America/New_York',
+    location: 'DC',
+    avatar: '/images/avatars/sunil.png'
+  }]
+}, {
+  tz: 'Europe/Rome',
+  people: [{
+    name: 'Carolyn',
     tz: 'Europe/Rome',
-    people: [
-      {
-        name: 'Carolyn',
-        tz: 'Europe/Rome',
-        location: 'Venice',
-        avatar: 'http://www.gravatar.com/avatar/17d551ff33a7b03d93bbd1f8fa18d4f5?s=200'
-      }
-    ]
-  }
-];
+    location: 'Venice',
+    avatar: 'http://www.gravatar.com/avatar/17d551ff33a7b03d93bbd1f8fa18d4f5?s=200'
+  }]
+}];
 
-var cities = [
-  'London',
-  'New York',
-  'Santiago',
-  'Melbourne',
-  'Berlin',
-  'Idaho',
-  'Cape Town',
-  'Osaka',
-  'LA',
-  'Chang Mai',
-  'Ubud',
-  'Bangalore',
-  'Stockholm'
-];
+var cities = ['London', 'New York', 'Santiago', 'Melbourne', 'Berlin', 'Idaho', 'Cape Town', 'Osaka', 'LA', 'Chang Mai', 'Ubud', 'Bangalore', 'Stockholm'];
 
 module.exports = React.createClass({
 
   displayName: 'Homepage',
 
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
     return {
       timezones: demoTimezones,
       searchCities: cities,
@@ -813,164 +792,207 @@ module.exports = React.createClass({
       searchCity: cities[0]
     };
   },
-  showNextSearchCity: function() {
+  showNextSearchCity: function showNextSearchCity() {
 
     var TYPE_DELAY = 100;
     var BACKSPACE_DELAY = 60;
     var CITY_DELAY = 1000;
 
-    var backspace = function() {
+    var backspace = (function () {
       var partial = this.state.searchCity;
-      if (!partial.length)
-        return setTimeout(nextCity, BACKSPACE_DELAY);
+      if (!partial.length) return setTimeout(nextCity, BACKSPACE_DELAY);
 
       partial = partial.substr(0, partial.length - 1);
       this.setState({ searchCity: partial });
       setTimeout(backspace, BACKSPACE_DELAY);
-    }.bind(this);
+    }).bind(this);
 
-    var nextCity = function() {
-      var nextIdx = this.state.searchCityIdx + 1 >= this.state.searchCities.length ?
-                    0 :
-                    this.state.searchCityIdx + 1;
+    var nextCity = (function () {
+      var nextIdx = this.state.searchCityIdx + 1 >= this.state.searchCities.length ? 0 : this.state.searchCityIdx + 1;
       this.setState({ searchCityIdx: nextIdx });
       setTimeout(type, TYPE_DELAY);
-    }.bind(this);
+    }).bind(this);
 
-    var type = function() {
+    var type = (function () {
       var full = this.state.searchCities[this.state.searchCityIdx];
-      if (this.state.searchCity === full)
-        return setTimeout(backspace, CITY_DELAY);
+      if (this.state.searchCity === full) return setTimeout(backspace, CITY_DELAY);
 
       var partial = this.state.searchCity;
       partial = full.substr(0, partial.length + 1);
       this.setState({ searchCity: partial });
       setTimeout(type, TYPE_DELAY);
-    }.bind(this);
+    }).bind(this);
 
     // Start it!
     backspace();
   },
-  componentDidMount: function() {
+  componentDidMount: function componentDidMount() {
     // Probably bad practice, but whatever
     setTimeout(this.showNextSearchCity, 2000);
   },
-  render: function() {
+  render: function render() {
     var honeyPotStyle = { "position": "absolute", "left": "-5000px" };
-    return (
-      React.createElement("div", {className: "container"}, 
-
-        React.createElement(Header, React.__spread({},  this.props, 
-                {demo: true, 
-                link: false})), 
-
-        React.createElement("div", {className: "hp-section demo"}, 
-
-          React.createElement("h2", {className: "hp-headline"}, 
-            "Keep track where and ", React.createElement("em", null, "when"), " your team is."
-          ), 
-          React.createElement("div", {className: "hp-demo"}, 
-            React.createElement(TimezoneList, {time: this.props.time, 
-                          timeFormat: this.state.timeFormat, 
-                          timezones: this.state.timezones})
-          )
-
-        ), 
-
-        React.createElement("div", {className: "hp-section alt"}, 
-
-          React.createElement("div", {className: "hp-content-container"}, 
-
-            React.createElement("h3", {className: "hp-pitch"}, 
-              "Easily plan meetings + calls with your remote, nomadic team without having to Google ", React.createElement("br", null), 
-              React.createElement("span", {className: "hp-pitch-search"}, "time in ", this.state.searchCity), React.createElement("br", null), 
-              React.createElement("em", null, "...ever again.")
+    return React.createElement(
+      'div',
+      { className: 'container' },
+      React.createElement(Header, _extends({}, this.props, {
+        demo: true,
+        link: false })),
+      React.createElement(
+        'div',
+        { className: 'hp-section demo' },
+        React.createElement(
+          'h2',
+          { className: 'hp-headline' },
+          'Keep track where and ',
+          React.createElement(
+            'em',
+            null,
+            'when'
+          ),
+          ' your team is.'
+        ),
+        React.createElement(
+          'div',
+          { className: 'hp-demo' },
+          React.createElement(TimezoneList, { time: this.props.time,
+            timeFormat: this.state.timeFormat,
+            timezones: this.state.timezones })
+        )
+      ),
+      React.createElement(
+        'div',
+        { className: 'hp-section alt' },
+        React.createElement(
+          'div',
+          { className: 'hp-content-container' },
+          React.createElement(
+            'h3',
+            { className: 'hp-pitch' },
+            'Easily plan meetings + calls with your remote, nomadic team without having to Google ',
+            React.createElement('br', null),
+            React.createElement(
+              'span',
+              { className: 'hp-pitch-search' },
+              'time in ',
+              this.state.searchCity
+            ),
+            React.createElement('br', null),
+            React.createElement(
+              'em',
+              null,
+              '...ever again.'
             )
-
           )
-
-        ), 
-
-        React.createElement("div", {className: "hp-section"}, 
-
-          React.createElement("div", {className: "hp-content-container"}, 
-
-            React.createElement("p", {className: "hp-description"}, 
-              "Modern global teams have awesome people spread across multiple timezones." + ' ' +
-              "Lots of teams have ", React.createElement("em", null, "digital nomads"), " changing locations faster than" + ' ' +
-              "we can keep up with. Often it gets tricky to remember what time it is" + ' ' +
-              "where your teammates are. That's why we built ", React.createElement("strong", null, "Timezone.io"), "."
-            ), 
-
-            React.createElement("h3", {className: "hp-description"}, 
-              "So, what's next?"
-            ), 
-
-            React.createElement("p", {className: "hp-description"}, 
-              "We're starting off with a simple, clear way to display where your team is by timezone." + ' ' +
-              "Next we'll add some ways to automatically update people's locations." + ' ' +
-              "We have a few ideas we're been thinking about, but we'd love to hear" + ' ' +
-              "what you would work best for you: Update your location using the" + ' ' +
-              "location of your last Tweet? Want to use Slackbot or Hubot?" + ' ' +
-              "What about a command line utility? We can't wait to hear your ideas!"
-            ), 
-
-            React.createElement("h4", {className: "hp-description"}, 
-              "Send your wants, needs and encouragement over to ", React.createElement("a", {href: "https://twitter.com/timezoneio"}, 
-              React.createElement("strong", null, "@timezone.io"), " on Twitter"), " and if you would like to" + ' ' +
-              "be notified when you can sign up, add your email address below:"
-            ), 
-
-            React.createElement("div", {className: "hp-description"}, 
-
-              React.createElement("div", {id: "mc_embed_signup"}, 
-              React.createElement("form", {action: "//timezone.us10.list-manage.com/subscribe/post?u=34f393bbea3791dbad5109a7b&id=cb191e06bc", 
-                    method: "post", 
-                    id: "mc-embedded-subscribe-form", 
-                    name: "mc-embedded-subscribe-form", 
-                    className: "validate", 
-                    target: "_blank", 
-                    noValidate: true}, 
-                React.createElement("div", {id: "mc_embed_signup_scroll"}, 
-
-                  React.createElement("div", {className: "mc-field-group"}, 
-                    React.createElement("input", {type: "email", 
-                           defaultValue: "", 
-                           name: "EMAIL", 
-                           placeholder: "email address", 
-                           className: "required email", 
-                           id: "mce-EMAIL"})
-                  ), 
-                  React.createElement("div", {id: "mce-responses", className: "clear"}, 
-                    React.createElement("div", {className: "response", id: "mce-error-response", style: {display: "none"}}), 
-                    React.createElement("div", {className: "response", id: "mce-success-response", style: {display: "none"}})
-                  ), 
-                  React.createElement("div", {style: honeyPotStyle}, 
-                    React.createElement("input", {type: "text", name: "b_34f393bbea3791dbad5109a7b_cb191e06bc", tabIndex: "-1", defaultValue: ""})
-                  ), 
-                  React.createElement("div", {className: "clear"}, 
-                    React.createElement("input", {type: "submit", 
-                          value: "Sign up for Early Access", 
-                          name: "subscribe", 
-                          id: "mc-embedded-subscribe", 
-                          className: "button cta"})
+        )
+      ),
+      React.createElement(
+        'div',
+        { className: 'hp-section' },
+        React.createElement(
+          'div',
+          { className: 'hp-content-container' },
+          React.createElement(
+            'p',
+            { className: 'hp-description' },
+            'Modern global teams have awesome people spread across multiple timezones. Lots of teams have ',
+            React.createElement(
+              'em',
+              null,
+              'digital nomads'
+            ),
+            ' changing locations faster than we can keep up with. Often it gets tricky to remember what time it is where your teammates are. That\'s why we built ',
+            React.createElement(
+              'strong',
+              null,
+              'Timezone.io'
+            ),
+            '.'
+          ),
+          React.createElement(
+            'h3',
+            { className: 'hp-description' },
+            'So, what\'s next?'
+          ),
+          React.createElement(
+            'p',
+            { className: 'hp-description' },
+            'We\'re starting off with a simple, clear way to display where your team is by timezone. Next we\'ll add some ways to automatically update people\'s locations. We have a few ideas we\'re been thinking about, but we\'d love to hear what you would work best for you: Update your location using the location of your last Tweet? Want to use Slackbot or Hubot? What about a command line utility? We can\'t wait to hear your ideas!'
+          ),
+          React.createElement(
+            'h4',
+            { className: 'hp-description' },
+            'Send your wants, needs and encouragement over to ',
+            React.createElement(
+              'a',
+              { href: 'https://twitter.com/timezoneio' },
+              React.createElement(
+                'strong',
+                null,
+                '@timezone.io'
+              ),
+              ' on Twitter'
+            ),
+            ' and if you would like to be notified when you can sign up, add your email address below:'
+          ),
+          React.createElement(
+            'div',
+            { className: 'hp-description' },
+            React.createElement(
+              'div',
+              { id: 'mc_embed_signup' },
+              React.createElement(
+                'form',
+                { action: '//timezone.us10.list-manage.com/subscribe/post?u=34f393bbea3791dbad5109a7b&id=cb191e06bc',
+                  method: 'post',
+                  id: 'mc-embedded-subscribe-form',
+                  name: 'mc-embedded-subscribe-form',
+                  className: 'validate',
+                  target: '_blank',
+                  noValidate: true },
+                React.createElement(
+                  'div',
+                  { id: 'mc_embed_signup_scroll' },
+                  React.createElement(
+                    'div',
+                    { className: 'mc-field-group' },
+                    React.createElement('input', { type: 'email',
+                      defaultValue: '',
+                      name: 'EMAIL',
+                      placeholder: 'email address',
+                      className: 'required email',
+                      id: 'mce-EMAIL' })
+                  ),
+                  React.createElement(
+                    'div',
+                    { id: 'mce-responses', className: 'clear' },
+                    React.createElement('div', { className: 'response', id: 'mce-error-response', style: { display: "none" } }),
+                    React.createElement('div', { className: 'response', id: 'mce-success-response', style: { display: "none" } })
+                  ),
+                  React.createElement(
+                    'div',
+                    { style: honeyPotStyle },
+                    React.createElement('input', { type: 'text', name: 'b_34f393bbea3791dbad5109a7b_cb191e06bc', tabIndex: '-1', defaultValue: '' })
+                  ),
+                  React.createElement(
+                    'div',
+                    { className: 'clear' },
+                    React.createElement('input', { type: 'submit',
+                      value: 'Sign up for Early Access',
+                      name: 'subscribe',
+                      id: 'mc-embedded-subscribe',
+                      className: 'button cta' })
                   )
                 )
               )
-              )
             )
-
           )
-
-        ), 
-
-        React.createElement(Footer, null)
-
-      )
+        )
+      ),
+      React.createElement(Footer, null)
     );
   }
 });
-
 
 },{"../components/footer.jsx":6,"../components/header.jsx":7,"../components/timezoneList.jsx":10,"react":183}],16:[function(require,module,exports){
 // shim for using process in browser

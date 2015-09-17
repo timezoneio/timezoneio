@@ -1,4 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
 var keyMirror = require('keymirror');
 
 module.exports = keyMirror({
@@ -21,107 +23,111 @@ module.exports = keyMirror({
 
 });
 
-
 },{"keymirror":15}],2:[function(require,module,exports){
+'use strict';
+
 var React = require('react');
 var toolbelt = require('../utils/toolbelt.js');
 var CreateTeam = React.createFactory(require('../views/createTeam.jsx'));
 
 var targetNode = document.querySelector('#page');
 
-React.render(
-  CreateTeam(toolbelt.clone(window.appData)),
-  targetNode
-);
-
+React.render(CreateTeam(toolbelt.clone(window.appData)), targetNode);
 
 },{"../utils/toolbelt.js":8,"../views/createTeam.jsx":9,"react":170}],3:[function(require,module,exports){
-/** @jsx React.DOM */
+"use strict";
 
 var React = require('react');
 
-module.exports = React.createClass({displayName: "exports",
-  render: function() {
-    var branding = React.createElement("h1", {className: "site-branding"}, "Timezone.io");
+module.exports = React.createClass({
+  displayName: "exports",
 
-    if (this.props.link)
-      return React.createElement("a", {href: "/", className: "site-branding-link"}, branding);
+  render: function render() {
+    var branding = React.createElement(
+      "h1",
+      { className: "site-branding" },
+      "Timezone.io"
+    );
+
+    if (this.props.link) return React.createElement(
+      "a",
+      { href: "/", className: "site-branding-link" },
+      branding
+    );
 
     return branding;
   }
 });
 
-
-
 },{"react":170}],4:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 
-var links = [
-  {
-    url: '/about',
-    text: 'About'
-  },
-  {
-    url: '/team/buffer',
-    text: 'Demo'
-  },
-  {
-    url: '/login',
-    text: 'Login'
-  },
-  {
-    url: '/roadmap',
-    text: 'Roadmap'
-  },
-];
-
+var links = [{
+  url: '/about',
+  text: 'About'
+}, {
+  url: '/team/buffer',
+  text: 'Demo'
+}, {
+  url: '/login',
+  text: 'Login'
+}, {
+  url: '/roadmap',
+  text: 'Roadmap'
+}];
 
 module.exports = React.createClass({
 
   displayName: 'Footer',
 
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
     return {
       links: links
     };
   },
 
-  render: function() {
+  render: function render() {
 
     var year = new Date().getFullYear();
 
-    return (
-      React.createElement("footer", {className: "hp-section site-footer"}, 
-
-        React.createElement("div", {className: "hp-content-container"}, 
-
-          React.createElement("p", null, 
-            "© ", year, " Timezone.io ", React.createElement("br", null)
-          ), 
-          React.createElement("p", null, 
-            this.state.links.map(function(link, idx) {
-              return (
-                React.createElement("a", {key: idx, 
-                   href: link.url, 
-                   className: "footer-link"}, 
-                  link.text
-                )
-              );
-            })
-          )
-
+    return React.createElement(
+      'footer',
+      { className: 'hp-section site-footer' },
+      React.createElement(
+        'div',
+        { className: 'hp-content-container' },
+        React.createElement(
+          'p',
+          null,
+          '© ',
+          year,
+          ' Timezone.io ',
+          React.createElement('br', null)
+        ),
+        React.createElement(
+          'p',
+          null,
+          this.state.links.map(function (link, idx) {
+            return React.createElement(
+              'a',
+              { key: idx,
+                href: link.url,
+                className: 'footer-link' },
+              link.text
+            );
+          })
         )
-
       )
     );
   }
 });
 
-
 },{"react":170}],5:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var React = require('react');
 var Branding = require('./branding.jsx');
@@ -131,79 +137,77 @@ module.exports = React.createClass({
 
   displayName: 'Header',
 
-  renderRightComponent: function() {
+  renderRightComponent: function renderRightComponent() {
 
     var buttons = [];
 
-    if (this.props.demo)
-      buttons.push(
-        React.createElement("a", {key: "demo", 
-           href: "/team/buffer", 
-           className: "button cta"}, 
-          "Live demo"
-        )
-      );
+    if (this.props.demo) buttons.push(React.createElement(
+      'a',
+      { key: 'demo',
+        href: '/team/buffer',
+        className: 'button cta' },
+      'Live demo'
+    ));
 
     if (this.props.user) {
-      buttons.push(
-        React.createElement(UserMenu, React.__spread({key: "menu"}, 
-                  this.props.user))
-      );
+      buttons.push(React.createElement(UserMenu, _extends({ key: 'menu'
+      }, this.props.user)));
     } else {
-      buttons.push(
-        React.createElement("a", {key: "login", 
-           href: "/login", 
-           className: "button hollow"}, 
-          "Login"
-        )
-      );
+      buttons.push(React.createElement(
+        'a',
+        { key: 'login',
+          href: '/login',
+          className: 'button hollow' },
+        'Login'
+      ));
     }
 
     return buttons;
   },
 
-  render: function() {
+  render: function render() {
     var link = this.props.link === false ? false : true;
-    return (
-      React.createElement("header", {className: "site-header"}, 
-        React.createElement(Branding, {link: link}), 
-        React.createElement("div", {className: "site-header--right"}, 
-          this.renderRightComponent()
-        )
+    return React.createElement(
+      'header',
+      { className: 'site-header' },
+      React.createElement(Branding, { link: link }),
+      React.createElement(
+        'div',
+        { className: 'site-header--right' },
+        this.renderRightComponent()
       )
     );
   }
 });
 
-
-
 },{"./branding.jsx":3,"./userMenu.jsx":6,"react":170}],6:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 var classNames = require('classnames');
 
-module.exports = React.createClass({displayName: "exports",
+module.exports = React.createClass({
+  displayName: 'exports',
 
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
     return { open: false };
   },
 
-  closeMenu: function(e) {
+  closeMenu: function closeMenu(e) {
     this.setState({ open: false });
   },
 
-  handleToggleMenu: function(e) {
+  handleToggleMenu: function handleToggleMenu(e) {
     e.stopPropagation();
     this.setState({ open: !this.state.open });
   },
 
-  componentDidMount: function() {
+  componentDidMount: function componentDidMount() {
     // Move this one day
     window.addEventListener('click', this.closeMenu);
   },
 
-  render: function() {
+  render: function render() {
 
     var profileUrl = '/people/' + this.props.username;
     var style = { backgroundImage: 'url(' + this.props.avatar + ')' };
@@ -216,50 +220,55 @@ module.exports = React.createClass({displayName: "exports",
       'menu-open': this.state.open
     });
 
-    return (
-      React.createElement("div", {className: containerClasses}, 
-
-        React.createElement("div", {className: menuClasses}, 
-          React.createElement("a", {href: profileUrl, 
-             className: "user-menu-item"}, 
-            "Profile"
-          ), 
-          React.createElement("a", {href: "/team", 
-             className: "user-menu-item"}, 
-            "Add your team"
-          ), 
-          React.createElement("a", {href: "/logout", 
-             className: "user-menu-item"}, 
-            "Logout"
-          )
-        ), 
-
-        React.createElement("a", {onClick: this.handleToggleMenu, 
-           className: "avatar header-avatar", 
-           style: style, 
-           name: this.props.name}
+    return React.createElement(
+      'div',
+      { className: containerClasses },
+      React.createElement(
+        'div',
+        { className: menuClasses },
+        React.createElement(
+          'a',
+          { href: profileUrl,
+            className: 'user-menu-item' },
+          'Profile'
+        ),
+        React.createElement(
+          'a',
+          { href: '/team',
+            className: 'user-menu-item' },
+          'Add your team'
+        ),
+        React.createElement(
+          'a',
+          { href: '/logout',
+            className: 'user-menu-item' },
+          'Logout'
         )
-
-      )
+      ),
+      React.createElement('a', { onClick: this.handleToggleMenu,
+        className: 'avatar header-avatar',
+        style: style,
+        name: this.props.name })
     );
   }
 });
 
-
 },{"classnames":11,"react":170}],7:[function(require,module,exports){
+'use strict';
+
 var Dispatcher = require('flux').Dispatcher;
 
 var AppDispatcher = new Dispatcher();
 module.exports = AppDispatcher;
 
-AppDispatcher.dispatchViewAction = function(action) {
+AppDispatcher.dispatchViewAction = function (action) {
   this.dispatch({
     source: 'VIEW_ACTION',
     action: action
   });
 };
 
-AppDispatcher.dispatchApiAction = function(action) {
+AppDispatcher.dispatchApiAction = function (action) {
   this.dispatch({
     source: 'API_ACTION',
     action: action
@@ -268,11 +277,12 @@ AppDispatcher.dispatchApiAction = function(action) {
 
 module.exports = AppDispatcher;
 
-
 },{"flux":12}],8:[function(require,module,exports){
+'use strict';
+
 var toolbelt = module.exports = {};
 
-toolbelt.clone = function(source) {
+toolbelt.clone = function (source) {
   if (source === null || typeof source !== 'object') {
     return source;
   }
@@ -288,59 +298,51 @@ toolbelt.clone = function(source) {
   return obj;
 };
 
-
 // Returns a new object w/ updated props from the second object
-toolbelt.extend = function(a, b) {
+toolbelt.extend = function (a, b) {
   var obj = toolbelt.clone(a);
-  Object.keys(b).forEach(function(key) {
+  Object.keys(b).forEach(function (key) {
     obj[key] = b[key];
   });
   return obj;
 };
 
-
 // Like extend, but updates the first object passed
-toolbelt.update = function(a, b) {
-  Object.keys(b).forEach(function(key) {
+toolbelt.update = function (a, b) {
+  Object.keys(b).forEach(function (key) {
     a[key] = b[key];
   });
   return a;
 };
 
-
 // For indexOf nested objects, ex.
 //   toolbelt.indexOf({ isCool: true }, [{ isCool: true }, { isCool: false }])
 //   => 0
-toolbelt.indexOf = function(query, arr) {
+toolbelt.indexOf = function (query, arr) {
   var key = typeof query === 'object' ? Object.keys(query)[0] : query;
   var value = typeof query === 'object' ? query[key] : true;
 
   for (var i = 0, len = arr.length; i < len; i++) {
-    if (arr[i][key] === value)
-      return i;
+    if (arr[i][key] === value) return i;
   }
 
   return -1;
 };
 
-toolbelt.groupBy = function(key, arr) {
+toolbelt.groupBy = function (key, arr) {
   var obj = {};
 
   for (var i = 0, len = arr.length; i < len; i++) {
     var item = arr[i];
     var val = item[key];
-    if (obj[val])
-      obj[val].push(item);
-    else
-      obj[val] = [item];
+    if (obj[val]) obj[val].push(item);else obj[val] = [item];
   }
 
   return obj;
 };
 
-
 },{}],9:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
@@ -353,50 +355,51 @@ module.exports = React.createClass({
 
   displayName: 'CreateTeam',
 
-  render: function() {
-    return (
-      React.createElement("div", {className: "container"}, 
-
-        React.createElement(Header, React.__spread({},  this.props)), 
-
-        React.createElement("div", {className: "page-content"}, 
-
-          React.createElement("h2", null, 
-            "Create your team"
-          ), 
-
-          React.createElement("form", {action: "/team", method: "post", className: ""}, 
-
-            React.createElement("input", {type: "hidden", name: "_csrf", value: this.props.csrf_token}), 
-
-             (this.props.errors && this.props.errors.length) ? (
-                React.createElement("p", {className: "form-error"}, 
-                  this.props.errors.join('<br>')
-                )
-            ) : '', 
-
-            React.createElement("p", null, "First, name your team"), 
-
-            React.createElement("input", {type: "text", 
-                   name: "name", 
-                   placeholder: "My awesome team"}), 
-
-            React.createElement("p", null, "Next, we'll ask you to add your team members"), 
-
-            React.createElement("button", {type: "submit", className: "cta"}, 
-              "Let's do it"
-            )
-
+  render: function render() {
+    return React.createElement(
+      'div',
+      { className: 'container' },
+      React.createElement(Header, this.props),
+      React.createElement(
+        'div',
+        { className: 'page-content' },
+        React.createElement(
+          'h2',
+          null,
+          'Create your team'
+        ),
+        React.createElement(
+          'form',
+          { action: '/team', method: 'post', className: '' },
+          React.createElement('input', { type: 'hidden', name: '_csrf', value: this.props.csrf_token }),
+          this.props.errors && this.props.errors.length ? React.createElement(
+            'p',
+            { className: 'form-error' },
+            this.props.errors.join('<br>')
+          ) : '',
+          React.createElement(
+            'p',
+            null,
+            'First, name your team'
+          ),
+          React.createElement('input', { type: 'text',
+            name: 'name',
+            placeholder: 'My awesome team' }),
+          React.createElement(
+            'p',
+            null,
+            'Next, we\'ll ask you to add your team members'
+          ),
+          React.createElement(
+            'button',
+            { type: 'submit', className: 'cta' },
+            'Let\'s do it'
           )
-
         )
-
-
       )
     );
   }
 });
-
 
 },{"../actions/actionTypes.js":1,"../components/footer.jsx":4,"../components/header.jsx":5,"../components/userMenu.jsx":6,"../dispatchers/appDispatcher.js":7,"react":170}],10:[function(require,module,exports){
 // shim for using process in browser

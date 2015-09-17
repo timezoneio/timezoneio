@@ -1,103 +1,108 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var React  = require('react');
+'use strict';
+
+var React = require('react');
 
 var About = React.createFactory(require('../views/about.jsx'));
 
 var targetNode = document.querySelector('#page');
 
-React.render(
-  About(appData),
-  targetNode
-);
-
+React.render(About(appData), targetNode);
 
 },{"../views/about.jsx":6,"react":163}],2:[function(require,module,exports){
-/** @jsx React.DOM */
+"use strict";
 
 var React = require('react');
 
-module.exports = React.createClass({displayName: "exports",
-  render: function() {
-    var branding = React.createElement("h1", {className: "site-branding"}, "Timezone.io");
+module.exports = React.createClass({
+  displayName: "exports",
 
-    if (this.props.link)
-      return React.createElement("a", {href: "/", className: "site-branding-link"}, branding);
+  render: function render() {
+    var branding = React.createElement(
+      "h1",
+      { className: "site-branding" },
+      "Timezone.io"
+    );
+
+    if (this.props.link) return React.createElement(
+      "a",
+      { href: "/", className: "site-branding-link" },
+      branding
+    );
 
     return branding;
   }
 });
 
-
-
 },{"react":163}],3:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 
-var links = [
-  {
-    url: '/about',
-    text: 'About'
-  },
-  {
-    url: '/team/buffer',
-    text: 'Demo'
-  },
-  {
-    url: '/login',
-    text: 'Login'
-  },
-  {
-    url: '/roadmap',
-    text: 'Roadmap'
-  },
-];
-
+var links = [{
+  url: '/about',
+  text: 'About'
+}, {
+  url: '/team/buffer',
+  text: 'Demo'
+}, {
+  url: '/login',
+  text: 'Login'
+}, {
+  url: '/roadmap',
+  text: 'Roadmap'
+}];
 
 module.exports = React.createClass({
 
   displayName: 'Footer',
 
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
     return {
       links: links
     };
   },
 
-  render: function() {
+  render: function render() {
 
     var year = new Date().getFullYear();
 
-    return (
-      React.createElement("footer", {className: "hp-section site-footer"}, 
-
-        React.createElement("div", {className: "hp-content-container"}, 
-
-          React.createElement("p", null, 
-            "© ", year, " Timezone.io ", React.createElement("br", null)
-          ), 
-          React.createElement("p", null, 
-            this.state.links.map(function(link, idx) {
-              return (
-                React.createElement("a", {key: idx, 
-                   href: link.url, 
-                   className: "footer-link"}, 
-                  link.text
-                )
-              );
-            })
-          )
-
+    return React.createElement(
+      'footer',
+      { className: 'hp-section site-footer' },
+      React.createElement(
+        'div',
+        { className: 'hp-content-container' },
+        React.createElement(
+          'p',
+          null,
+          '© ',
+          year,
+          ' Timezone.io ',
+          React.createElement('br', null)
+        ),
+        React.createElement(
+          'p',
+          null,
+          this.state.links.map(function (link, idx) {
+            return React.createElement(
+              'a',
+              { key: idx,
+                href: link.url,
+                className: 'footer-link' },
+              link.text
+            );
+          })
         )
-
       )
     );
   }
 });
 
-
 },{"react":163}],4:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var React = require('react');
 var Branding = require('./branding.jsx');
@@ -107,79 +112,77 @@ module.exports = React.createClass({
 
   displayName: 'Header',
 
-  renderRightComponent: function() {
+  renderRightComponent: function renderRightComponent() {
 
     var buttons = [];
 
-    if (this.props.demo)
-      buttons.push(
-        React.createElement("a", {key: "demo", 
-           href: "/team/buffer", 
-           className: "button cta"}, 
-          "Live demo"
-        )
-      );
+    if (this.props.demo) buttons.push(React.createElement(
+      'a',
+      { key: 'demo',
+        href: '/team/buffer',
+        className: 'button cta' },
+      'Live demo'
+    ));
 
     if (this.props.user) {
-      buttons.push(
-        React.createElement(UserMenu, React.__spread({key: "menu"}, 
-                  this.props.user))
-      );
+      buttons.push(React.createElement(UserMenu, _extends({ key: 'menu'
+      }, this.props.user)));
     } else {
-      buttons.push(
-        React.createElement("a", {key: "login", 
-           href: "/login", 
-           className: "button hollow"}, 
-          "Login"
-        )
-      );
+      buttons.push(React.createElement(
+        'a',
+        { key: 'login',
+          href: '/login',
+          className: 'button hollow' },
+        'Login'
+      ));
     }
 
     return buttons;
   },
 
-  render: function() {
+  render: function render() {
     var link = this.props.link === false ? false : true;
-    return (
-      React.createElement("header", {className: "site-header"}, 
-        React.createElement(Branding, {link: link}), 
-        React.createElement("div", {className: "site-header--right"}, 
-          this.renderRightComponent()
-        )
+    return React.createElement(
+      'header',
+      { className: 'site-header' },
+      React.createElement(Branding, { link: link }),
+      React.createElement(
+        'div',
+        { className: 'site-header--right' },
+        this.renderRightComponent()
       )
     );
   }
 });
 
-
-
 },{"./branding.jsx":2,"./userMenu.jsx":5,"react":163}],5:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 var classNames = require('classnames');
 
-module.exports = React.createClass({displayName: "exports",
+module.exports = React.createClass({
+  displayName: 'exports',
 
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
     return { open: false };
   },
 
-  closeMenu: function(e) {
+  closeMenu: function closeMenu(e) {
     this.setState({ open: false });
   },
 
-  handleToggleMenu: function(e) {
+  handleToggleMenu: function handleToggleMenu(e) {
     e.stopPropagation();
     this.setState({ open: !this.state.open });
   },
 
-  componentDidMount: function() {
+  componentDidMount: function componentDidMount() {
     // Move this one day
     window.addEventListener('click', this.closeMenu);
   },
 
-  render: function() {
+  render: function render() {
 
     var profileUrl = '/people/' + this.props.username;
     var style = { backgroundImage: 'url(' + this.props.avatar + ')' };
@@ -192,38 +195,43 @@ module.exports = React.createClass({displayName: "exports",
       'menu-open': this.state.open
     });
 
-    return (
-      React.createElement("div", {className: containerClasses}, 
-
-        React.createElement("div", {className: menuClasses}, 
-          React.createElement("a", {href: profileUrl, 
-             className: "user-menu-item"}, 
-            "Profile"
-          ), 
-          React.createElement("a", {href: "/team", 
-             className: "user-menu-item"}, 
-            "Add your team"
-          ), 
-          React.createElement("a", {href: "/logout", 
-             className: "user-menu-item"}, 
-            "Logout"
-          )
-        ), 
-
-        React.createElement("a", {onClick: this.handleToggleMenu, 
-           className: "avatar header-avatar", 
-           style: style, 
-           name: this.props.name}
+    return React.createElement(
+      'div',
+      { className: containerClasses },
+      React.createElement(
+        'div',
+        { className: menuClasses },
+        React.createElement(
+          'a',
+          { href: profileUrl,
+            className: 'user-menu-item' },
+          'Profile'
+        ),
+        React.createElement(
+          'a',
+          { href: '/team',
+            className: 'user-menu-item' },
+          'Add your team'
+        ),
+        React.createElement(
+          'a',
+          { href: '/logout',
+            className: 'user-menu-item' },
+          'Logout'
         )
-
-      )
+      ),
+      React.createElement('a', { onClick: this.handleToggleMenu,
+        className: 'avatar header-avatar',
+        style: style,
+        name: this.props.name })
     );
   }
 });
 
-
 },{"classnames":8,"react":163}],6:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var React = require('react');
 var Header = require('../components/header.jsx');
@@ -233,55 +241,75 @@ module.exports = React.createClass({
 
   displayName: 'About',
 
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
     return {};
   },
 
-  getMailTo: function() {
-    if (typeof window === 'object')
-      return 'mailto:hi@timezone.io';
+  getMailTo: function getMailTo() {
+    if (typeof window === 'object') return 'mailto:hi@timezone.io';
     return '';
   },
 
-  render: function() {
+  render: function render() {
 
-    return (
-      React.createElement("div", {className: "container ensure-full-height about-page"}, 
-
-        React.createElement(Header, React.__spread({},  this.props, 
-                {demo: true})), 
-
-        React.createElement("div", {className: "hp-section"}, 
-
-          React.createElement("h2", {className: "hp-headline"}, 
-            "About"
-          ), 
-
-          React.createElement("div", {className: "hp-content-container", 
-               style: { textAlign: 'center'}}, 
-
-            React.createElement("p", null, 
-              "Timezone.io was created by ", React.createElement("a", {href: "https://twitter.com/djfarrelly"}, "Dan Farrelly"), React.createElement("br", null), 
-               "while working on the amazing remote ", React.createElement("a", {href: "https://buffer.com"}, "Buffer"), " team."
-            ), 
-
-            React.createElement("p", null, 
-              "Have a question, suggestion or criticism? ", React.createElement("br", null), 
-              React.createElement("a", {href: this.getMailTo()}, "Email"), " or ", React.createElement("a", {href: "https://twitter.com/timezoneio"}, "Twitter")
+    return React.createElement(
+      'div',
+      { className: 'container ensure-full-height about-page' },
+      React.createElement(Header, _extends({}, this.props, {
+        demo: true })),
+      React.createElement(
+        'div',
+        { className: 'hp-section' },
+        React.createElement(
+          'h2',
+          { className: 'hp-headline' },
+          'About'
+        ),
+        React.createElement(
+          'div',
+          { className: 'hp-content-container',
+            style: { textAlign: 'center' } },
+          React.createElement(
+            'p',
+            null,
+            'Timezone.io was created by ',
+            React.createElement(
+              'a',
+              { href: 'https://twitter.com/djfarrelly' },
+              'Dan Farrelly'
+            ),
+            React.createElement('br', null),
+            'while working on the amazing remote ',
+            React.createElement(
+              'a',
+              { href: 'https://buffer.com' },
+              'Buffer'
+            ),
+            ' team.'
+          ),
+          React.createElement(
+            'p',
+            null,
+            'Have a question, suggestion or criticism? ',
+            React.createElement('br', null),
+            React.createElement(
+              'a',
+              { href: this.getMailTo() },
+              'Email'
+            ),
+            ' or ',
+            React.createElement(
+              'a',
+              { href: 'https://twitter.com/timezoneio' },
+              'Twitter'
             )
-
           )
-
-        ), 
-
-
-        React.createElement(Footer, null)
-
-      )
+        )
+      ),
+      React.createElement(Footer, null)
     );
   }
 });
-
 
 },{"../components/footer.jsx":3,"../components/header.jsx":4,"react":163}],7:[function(require,module,exports){
 // shim for using process in browser

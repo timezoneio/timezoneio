@@ -3,7 +3,7 @@ var plumber = require('gulp-plumber');
 var rename = require('gulp-rename');
 var transform = require('vinyl-transform');
 var browserify = require('browserify');
-var reactify = require('reactify');
+var babelify = require('babelify');
 var uglify = require('gulp-uglify');
 var stylus = require('gulp-stylus');
 var autoprefixer = require('gulp-autoprefixer');
@@ -18,7 +18,7 @@ gulp.task('browserify', function() {
 
   var browserified = transform(function(filename) {
     return browserify(filename)
-      .transform(reactify)
+      .transform(babelify)
       .bundle();
   });
 

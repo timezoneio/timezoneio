@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var React = require('react');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');

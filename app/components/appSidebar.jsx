@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var React = require('react');
 var timeUtils = require('../utils/time.js');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
