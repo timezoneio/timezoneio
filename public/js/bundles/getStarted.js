@@ -1,73 +1,75 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 // Currently, the fetch API doesn't reliably parse the UTF-8 encoded json
 // correctly. Here we just force the polyfill
+'use strict';
+
 window.fetch = null;
 require('whatwg-fetch');
-var React  = require('react');
+var React = require('react');
 var clone = require('../utils/toolbelt.js').clone;
 var location = require('../helpers/location');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var GetStarted = React.createFactory(require('../views/getStarted.jsx'));
 
-
 // Application state:
 var state = new clone(window.appData);
-
 
 // Add the component to the DOM
 var targetNode = document.querySelector('#page');
 
 function renderApp() {
-  React.render( GetStarted( state ), targetNode );
+  React.render(GetStarted(state), targetNode);
 }
 
 renderApp();
 
 // Request the user's locaiton
-location.getCurrentPosition()
-  .then(function(coords) {
+location.getCurrentPosition().then(function (coords) {
 
-    state.user.coords = {
-      lat: coords.latitude,
-      long: coords.longitude
-    };
+  state.user.coords = {
+    lat: coords.latitude,
+    long: coords.longitude
+  };
 
-    // Run in parallel
-    return Promise.all([
-      location.getCityFromCoords(state.user.coords),
-      location.getTimezomeFromCoords(state.user.coords)
-    ]);
-  })
-  .then(function(values) {
-    state.user.location = values[0];
-    state.user.tz = values[1];
-    renderApp();
-  })
-  .catch(function(err) {
-    console.error(err);
-  });
-
+  // Run in parallel
+  return Promise.all([location.getCityFromCoords(state.user.coords), location.getTimezomeFromCoords(state.user.coords)]);
+}).then(function (values) {
+  state.user.location = values[0];
+  state.user.tz = values[1];
+  renderApp();
+})['catch'](function (err) {
+  console.error(err);
+});
 
 },{"../dispatchers/appDispatcher.js":5,"../helpers/location":8,"../utils/toolbelt.js":10,"../views/getStarted.jsx":11,"react":175,"whatwg-fetch":176}],2:[function(require,module,exports){
-/** @jsx React.DOM */
+"use strict";
 
 var React = require('react');
 
-module.exports = React.createClass({displayName: "exports",
-  render: function() {
-    var branding = React.createElement("h1", {className: "site-branding"}, "Timezone.io");
+module.exports = React.createClass({
+  displayName: "exports",
 
-    if (this.props.link)
-      return React.createElement("a", {href: "/", className: "site-branding-link"}, branding);
+  render: function render() {
+    var branding = React.createElement(
+      "h1",
+      { className: "site-branding" },
+      "Timezone.io"
+    );
+
+    if (this.props.link) return React.createElement(
+      "a",
+      { href: "/", className: "site-branding-link" },
+      branding
+    );
 
     return branding;
   }
 });
 
-
-
 },{"react":175}],3:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var React = require('react');
 var Branding = require('./branding.jsx');
@@ -77,81 +79,79 @@ module.exports = React.createClass({
 
   displayName: 'Header',
 
-  renderRightComponent: function() {
+  renderRightComponent: function renderRightComponent() {
 
     var buttons = [];
 
-    if (this.props.demo)
-      buttons.push(
-        React.createElement("a", {key: "demo", 
-           href: "/team/buffer", 
-           className: "button cta"}, 
-          "Live demo"
-        )
-      );
+    if (this.props.demo) buttons.push(React.createElement(
+      'a',
+      { key: 'demo',
+        href: '/team/buffer',
+        className: 'button cta' },
+      'Live demo'
+    ));
 
     if (this.props.user) {
-      buttons.push(
-        React.createElement(UserMenu, React.__spread({key: "menu"}, 
-                  this.props.user))
-      );
+      buttons.push(React.createElement(UserMenu, _extends({ key: 'menu'
+      }, this.props.user)));
     } else {
-      buttons.push(
-        React.createElement("a", {key: "login", 
-           href: "/login", 
-           className: "button hollow"}, 
-          "Login"
-        )
-      );
+      buttons.push(React.createElement(
+        'a',
+        { key: 'login',
+          href: '/login',
+          className: 'button hollow' },
+        'Login'
+      ));
     }
 
     return buttons;
   },
 
-  render: function() {
+  render: function render() {
     var link = this.props.link === false ? false : true;
-    return (
-      React.createElement("header", {className: "site-header"}, 
-        React.createElement(Branding, {link: link}), 
-        React.createElement("div", {className: "site-header--right"}, 
-          this.renderRightComponent()
-        )
+    return React.createElement(
+      'header',
+      { className: 'site-header' },
+      React.createElement(Branding, { link: link }),
+      React.createElement(
+        'div',
+        { className: 'site-header--right' },
+        this.renderRightComponent()
       )
     );
   }
 });
 
-
-
 },{"./branding.jsx":2,"./userMenu.jsx":4,"react":175}],4:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 var classNames = require('classnames');
 var getProfileUrl = require('../helpers/urls').getProfileUrl;
 var DEFAULT_AVATAR = require('../helpers/images').DEFAULT_AVATAR;
 
-module.exports = React.createClass({displayName: "exports",
+module.exports = React.createClass({
+  displayName: 'exports',
 
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
     return { open: false };
   },
 
-  closeMenu: function(e) {
+  closeMenu: function closeMenu(e) {
     this.setState({ open: false });
   },
 
-  handleToggleMenu: function(e) {
+  handleToggleMenu: function handleToggleMenu(e) {
     e.stopPropagation();
     this.setState({ open: !this.state.open });
   },
 
-  componentDidMount: function() {
+  componentDidMount: function componentDidMount() {
     // Move this one day
     window.addEventListener('click', this.closeMenu);
   },
 
-  render: function() {
+  render: function render() {
 
     var profileUrl = getProfileUrl(this.props);
     var avatarUrl = this.props.avatar || DEFAULT_AVATAR;
@@ -165,50 +165,55 @@ module.exports = React.createClass({displayName: "exports",
       'menu-open': this.state.open
     });
 
-    return (
-      React.createElement("div", {className: containerClasses}, 
-
-        React.createElement("div", {className: menuClasses}, 
-          React.createElement("a", {href: profileUrl, 
-             className: "user-menu-item"}, 
-            "Profile"
-          ), 
-          React.createElement("a", {href: "/team", 
-             className: "user-menu-item"}, 
-            "Add your team"
-          ), 
-          React.createElement("a", {href: "/logout", 
-             className: "user-menu-item"}, 
-            "Logout"
-          )
-        ), 
-
-        React.createElement("a", {onClick: this.handleToggleMenu, 
-           className: "avatar header-avatar", 
-           style: style, 
-           name: this.props.name}
+    return React.createElement(
+      'div',
+      { className: containerClasses },
+      React.createElement(
+        'div',
+        { className: menuClasses },
+        React.createElement(
+          'a',
+          { href: profileUrl,
+            className: 'user-menu-item' },
+          'Profile'
+        ),
+        React.createElement(
+          'a',
+          { href: '/team',
+            className: 'user-menu-item' },
+          'Add your team'
+        ),
+        React.createElement(
+          'a',
+          { href: '/logout',
+            className: 'user-menu-item' },
+          'Logout'
         )
-
-      )
+      ),
+      React.createElement('a', { onClick: this.handleToggleMenu,
+        className: 'avatar header-avatar',
+        style: style,
+        name: this.props.name })
     );
   }
 });
 
-
 },{"../helpers/images":7,"../helpers/urls":9,"classnames":16,"react":175}],5:[function(require,module,exports){
+'use strict';
+
 var Dispatcher = require('flux').Dispatcher;
 
 var AppDispatcher = new Dispatcher();
 module.exports = AppDispatcher;
 
-AppDispatcher.dispatchViewAction = function(action) {
+AppDispatcher.dispatchViewAction = function (action) {
   this.dispatch({
     source: 'VIEW_ACTION',
     action: action
   });
 };
 
-AppDispatcher.dispatchApiAction = function(action) {
+AppDispatcher.dispatchApiAction = function (action) {
   this.dispatch({
     source: 'API_ACTION',
     action: action
@@ -217,9 +222,10 @@ AppDispatcher.dispatchApiAction = function(action) {
 
 module.exports = AppDispatcher;
 
-
 },{"flux":18}],6:[function(require,module,exports){
 // NOTE - must require fetch polyfill in app script
+'use strict';
+
 require('es6-promise').polyfill();
 var qs = require('querystring');
 
@@ -227,34 +233,33 @@ var qs = require('querystring');
 var CSRF = typeof window !== 'undefined' && window.appData.csrf_token;
 
 // TOOD - Need promise polyfill
-var status = function(res) {
+var status = function status(res) {
   if (res.status >= 200 && res.status < 300) {
     return Promise.resolve(res);
   } else {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       res.json().then(reject, reject);
     });
   }
 };
 
-var json = function(res) {
+var json = function json(res) {
   return res.json();
 };
 
-var getData = function(data) {
+var getData = function getData(data) {
   if (!data) data = {};
   data._csrf = CSRF;
   return data;
 };
 
-var appendQueryString = function(url, data) {
+var appendQueryString = function appendQueryString(url, data) {
   return url + '?' + qs.stringify(data);
 };
 
-var getOptions = function(method, data) {
+var getOptions = function getOptions(method, data) {
 
-  if (method === 'GET')
-    return { credentials: 'include' };
+  if (method === 'GET') return { credentials: 'include' };
 
   return {
     method: method || 'POST',
@@ -269,107 +274,96 @@ var getOptions = function(method, data) {
 
 var api = module.exports = {
 
-  get: function(url, data) {
-    return fetch('/api' + appendQueryString(url, data), getOptions('GET'))
-      .then(status)
-      .then(json);
+  get: function get(url, data) {
+    return fetch('/api' + appendQueryString(url, data), getOptions('GET')).then(status).then(json);
   },
 
-  post: function(url, data) {
-    return fetch('/api' + url, getOptions('POST', data))
-      .then(status)
-      .then(json);
+  post: function post(url, data) {
+    return fetch('/api' + url, getOptions('POST', data)).then(status).then(json);
   },
 
-  put: function(url, data) {
-    return fetch('/api' + url, getOptions('PUT', data))
-      .then(status)
-      .then(json);
+  put: function put(url, data) {
+    return fetch('/api' + url, getOptions('PUT', data)).then(status).then(json);
   },
 
-  delete: function(url, data) {
-    return fetch('/api' + url, getOptions('DELETE', data))
-      .then(status)
-      .then(json);
+  'delete': function _delete(url, data) {
+    return fetch('/api' + url, getOptions('DELETE', data)).then(status).then(json);
   }
 
 };
 
-
 },{"es6-promise":17,"querystring":15}],7:[function(require,module,exports){
+'use strict';
+
 var imageHelpers = module.exports = {};
 
 imageHelpers.DEFAULT_AVATAR = '/images/avatars/default.png';
 
-
 },{}],8:[function(require,module,exports){
+'use strict';
+
 require('es6-promise').polyfill();
 var api = require('./api');
 
-var toRad = function(n) {
+var toRad = function toRad(n) {
   return n * Math.PI / 180;
 };
 
 var location = module.exports = {};
 
 // Returns Promise
-location.getCurrentPosition = function() {
-  return new Promise(function(resolve, reject) {
-    navigator.geolocation.getCurrentPosition(function(position) {
+location.getCurrentPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(function (position) {
       resolve(position.coords);
-    }, function() {
+    }, function () {
       reject(err.message);
     });
   });
 };
 
 // Returns Promise
-location.getCityFromCoords = function(coords) {
-  return api
-    .get('/location/city', coords)
-    .then(function(data) {
-      return data.city;
-    });
+location.getCityFromCoords = function (coords) {
+  return api.get('/location/city', coords).then(function (data) {
+    return data.city;
+  });
 };
 
-location.getTimezomeFromCoords = function(coords) {
-  return api
-    .get('/location/timezone', coords)
-    .then(function(data) {
-      return data.tz;
-    });
+location.getTimezomeFromCoords = function (coords) {
+  return api.get('/location/timezone', coords).then(function (data) {
+    return data.tz;
+  });
 };
 
 // Get the distance in kilometers between two sets of coordinates
 // Returns integer
-location.calculateDistance = function(lat1, long1, lat2, long2) {
+location.calculateDistance = function (lat1, long1, lat2, long2) {
   var R = 6371; // km
-  var dLat = toRad(lat2-lat1);
-  var dLong = toRad(long2-long1);
+  var dLat = toRad(lat2 - lat1);
+  var dLong = toRad(long2 - long1);
   var lat1Rad = toRad(lat1);
   var lat2Rad = toRad(lat2);
 
-  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-          Math.sin(dLong/2) * Math.sin(dLong/2) *
-          Math.cos(lat1Rad) * Math.cos(lat2Rad);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLong / 2) * Math.sin(dLong / 2) * Math.cos(lat1Rad) * Math.cos(lat2Rad);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 };
 
-
 },{"./api":6,"es6-promise":17}],9:[function(require,module,exports){
+'use strict';
+
 var urlHelpers = module.exports = {};
 
-
-urlHelpers.getProfileUrl = function(user) {
+urlHelpers.getProfileUrl = function (user) {
   return '/people/' + (user.username || user._id);
 };
 
-
 },{}],10:[function(require,module,exports){
+'use strict';
+
 var toolbelt = module.exports = {};
 
-toolbelt.clone = function(source) {
+toolbelt.clone = function (source) {
   if (source === null || typeof source !== 'object') {
     return source;
   }
@@ -385,133 +379,131 @@ toolbelt.clone = function(source) {
   return obj;
 };
 
-
 // Returns a new object w/ updated props from the second object
-toolbelt.extend = function(a, b) {
+toolbelt.extend = function (a, b) {
   var obj = toolbelt.clone(a);
-  Object.keys(b).forEach(function(key) {
+  Object.keys(b).forEach(function (key) {
     obj[key] = b[key];
   });
   return obj;
 };
 
-
 // Like extend, but updates the first object passed
-toolbelt.update = function(a, b) {
-  Object.keys(b).forEach(function(key) {
+toolbelt.update = function (a, b) {
+  Object.keys(b).forEach(function (key) {
     a[key] = b[key];
   });
   return a;
 };
 
-
 // For indexOf nested objects, ex.
 //   toolbelt.indexOf({ isCool: true }, [{ isCool: true }, { isCool: false }])
 //   => 0
-toolbelt.indexOf = function(query, arr) {
+toolbelt.indexOf = function (query, arr) {
   var key = typeof query === 'object' ? Object.keys(query)[0] : query;
   var value = typeof query === 'object' ? query[key] : true;
 
   for (var i = 0, len = arr.length; i < len; i++) {
-    if (arr[i][key] === value)
-      return i;
+    if (arr[i][key] === value) return i;
   }
 
   return -1;
 };
 
-toolbelt.groupBy = function(key, arr) {
+toolbelt.groupBy = function (key, arr) {
   var obj = {};
 
   for (var i = 0, len = arr.length; i < len; i++) {
     var item = arr[i];
     var val = item[key];
-    if (obj[val])
-      obj[val].push(item);
-    else
-      obj[val] = [item];
+    if (obj[val]) obj[val].push(item);else obj[val] = [item];
   }
 
   return obj;
 };
 
-
 },{}],11:[function(require,module,exports){
-/** @jsx React.DOM */
+'use strict';
 
 var React = require('react');
 var Header = require('../components/header.jsx');
 var getProfileUrl = require('../helpers/urls').getProfileUrl;
 
-module.exports = React.createClass({displayName: "exports",
+module.exports = React.createClass({
+  displayName: 'exports',
 
-  renderLocation: function() {
-    if (!this.props.user.location)
-      return (
-        React.createElement("p", null, 
-          "Finding your location & timezone information..."
-        )
-      );
+  renderLocation: function renderLocation() {
+    if (!this.props.user.location) return React.createElement(
+      'p',
+      null,
+      'Finding your location & timezone information...'
+    );
 
-    return (
-      React.createElement("p", null, 
-        React.createElement("span", {className: "material-icons md-18"}, "place"), 
-        this.props.user.location
-      )
+    return React.createElement(
+      'p',
+      null,
+      React.createElement(
+        'span',
+        { className: 'material-icons md-18' },
+        'place'
+      ),
+      this.props.user.location
     );
   },
 
-  renderHiddenUserFields: function() {
+  renderHiddenUserFields: function renderHiddenUserFields() {
 
     if (!this.props.user || !this.props.user.coords) return;
 
-    return (
-      React.createElement("div", null, 
-        React.createElement("input", {type: "hidden", name: "location", value: this.props.user.location}), 
-        React.createElement("input", {type: "hidden", name: "tz", value: this.props.user.tz}), 
-        React.createElement("input", {type: "hidden", name: "coords", 
-               value: this.props.user.coords.lat + ',' + this.props.user.coords.long})
-      )
-    )
+    return React.createElement(
+      'div',
+      null,
+      React.createElement('input', { type: 'hidden', name: 'location', value: this.props.user.location }),
+      React.createElement('input', { type: 'hidden', name: 'tz', value: this.props.user.tz }),
+      React.createElement('input', { type: 'hidden', name: 'coords',
+        value: this.props.user.coords.lat + ',' + this.props.user.coords.long })
+    );
   },
 
-  render: function() {
+  render: function render() {
 
-    return (
-      React.createElement("div", {className: "container login-container"}, 
-
-        React.createElement(Header, React.__spread({},  this.props)), 
-
-        React.createElement("h1", {className: "page-headline"}, "Get started"), 
-
-        React.createElement("form", {action: getProfileUrl(this.props.user), method: "post", className: "login-form"}, 
-
-          React.createElement("input", {type: "hidden", name: "_csrf", value: this.props.csrf_token}), 
-
-          React.createElement("p", null, 
-            "First, enter your name"
-          ), 
-
-          React.createElement("div", null, 
-            React.createElement("input", {type: "text", 
-                   name: "name", 
-                   placeholder: "your name", 
-                   defaultValue: this.props.user.name})
-          ), 
-
-          this.renderLocation(), 
-
-          this.renderHiddenUserFields(), 
-
-          React.createElement("div", null, 
-            React.createElement("button", {type: "submit", className: "cta login-button"}, 
-              "This is great, take me to my profile"
-            )
+    return React.createElement(
+      'div',
+      { className: 'container login-container' },
+      React.createElement(Header, this.props),
+      React.createElement(
+        'h1',
+        { className: 'page-headline' },
+        'Get started'
+      ),
+      React.createElement(
+        'form',
+        { action: getProfileUrl(this.props.user), method: 'post', className: 'login-form' },
+        React.createElement('input', { type: 'hidden', name: '_csrf', value: this.props.csrf_token }),
+        React.createElement(
+          'p',
+          null,
+          'First, enter your name'
+        ),
+        React.createElement(
+          'div',
+          null,
+          React.createElement('input', { type: 'text',
+            name: 'name',
+            placeholder: 'your name',
+            defaultValue: this.props.user.name })
+        ),
+        this.renderLocation(),
+        this.renderHiddenUserFields(),
+        React.createElement(
+          'div',
+          null,
+          React.createElement(
+            'button',
+            { type: 'submit', className: 'cta login-button' },
+            'This is great, take me to my profile'
           )
-
         )
-
-
       )
     );
   }
@@ -529,7 +521,6 @@ module.exports = React.createClass({displayName: "exports",
 //          placeholder="username"
 //          defaultValue={this.props.user.username} />
 // </div>
-
 
 },{"../components/header.jsx":3,"../helpers/urls":9,"react":175}],12:[function(require,module,exports){
 // shim for using process in browser
