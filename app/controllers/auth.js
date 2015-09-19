@@ -86,3 +86,7 @@ auth.logout = function(req, res) {
   req.logout();
   res.redirect('/login');
 };
+
+auth.connectTwitter = function(req, res) {
+  res.redirect(getProfileUrl(req.user));
+};

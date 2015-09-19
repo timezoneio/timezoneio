@@ -6,6 +6,12 @@ var people = require('../app/controllers/people.js');
 var services = require('../app/controllers/services');
 var getProfileUrl = require('../app/helpers/urls').getProfileUrl;
 
+var oauthConnectFlast = function(req, res, next) {
+  if (req.query.use_avatar)
+    req.flash('use_avatar', true);
+  next();
+};
+
 
 module.exports = function(app, passport) {
 
@@ -26,9 +32,21 @@ module.exports = function(app, passport) {
   app.post('/signup', auth.create);
   app.get('/logout', auth.logout);
 
+  app.get('/connect/twitter', oauthConnectFlast,
+                              passport.authorize('twitter', {
+                                scope: 'email',
+                                failureRedirect: '/my-profile'
+                              }));
+  app.get('/connect/twitter/callback', passport.authorize('twitter', {
+                                        scope: 'email',
+                                        failureRedirect: '/my-profile'
+                                        }),
+                                       auth.connectTwitter);
+
   app.get('/get-started', people.getStarted);
   app.get('/people/:usernameOrId', people.index);
   app.post('/people/:usernameOrId', people.save);
+  app.get('/my-profile', people.myProfile);
 
   app.get('/team', team.createForm);
   app.post('/team', team.create);

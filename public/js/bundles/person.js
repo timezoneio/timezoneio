@@ -470,15 +470,11 @@ module.exports = React.createClass({
           this.isOwnProfile() && React.createElement(
             'div',
             null,
-            React.createElement('input', { type: 'text', name: 'avatar' }),
-            React.createElement('input', { type: 'file',
-              name: 'avatar_file',
-              onChange: this.handleFileChange }),
             React.createElement(
-              'div',
-              { className: 'button',
-                onClick: this.upload },
-              'upload?'
+              'a',
+              { href: '/connect/twitter?use_avatar=true',
+                className: 'button twitter' },
+              'Use Twitter Profile Photo'
             )
           )
         )
@@ -486,6 +482,17 @@ module.exports = React.createClass({
     );
   }
 });
+
+/*
+<input type="text" name="avatar" />
+<input type="file"
+       name="avatar_file"
+       onChange={this.handleFileChange} />
+<div className="button"
+     onClick={this.upload}>
+  upload?
+</div>
+*/
 
 },{"../components/header.jsx":3,"../helpers/images":5,"../helpers/s3":6,"../utils/time.js":8,"moment-timezone":15,"react":172}],11:[function(require,module,exports){
 // shim for using process in browser

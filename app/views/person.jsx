@@ -88,14 +88,10 @@ module.exports = React.createClass({
 
             { this.isOwnProfile() &&
               <div>
-                <input type="text" name="avatar" />
-                <input type="file"
-                       name="avatar_file"
-                       onChange={this.handleFileChange} />
-                <div className="button"
-                     onClick={this.upload}>
-                   upload?
-                 </div>
+                 <a href="/connect/twitter?use_avatar=true"
+                    className="button twitter">
+                    Use Twitter Profile Photo
+                 </a>
               </div>
             }
 
@@ -106,3 +102,14 @@ module.exports = React.createClass({
     );
   }
 });
+
+/*
+<input type="text" name="avatar" />
+<input type="file"
+       name="avatar_file"
+       onChange={this.handleFileChange} />
+<div className="button"
+     onClick={this.upload}>
+  upload?
+</div>
+*/

@@ -45,6 +45,12 @@ people.index = function(req, res, next) {
 
 };
 
+people.myProfile = function(req, res) {
+  if (!req.user)
+    return res.redirect('/login');
+  res.redirect(getProfileUrl(req.user));
+};
+
 people.getStarted = function(req, res, next) {
 
   if (!req.user)

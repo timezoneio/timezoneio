@@ -13,9 +13,9 @@ var userSchema = new Schema({
   hashedPassword: { type: String, default: '' },
   salt: { type: String, default: '' },
   inviteCode: { type: String, default: '' }, // ???
-  // authToken: { type: String, default: '' },
+
   // facebook: {},
-  // twitter: {},
+  twitter: {},
   // google: {},
 
   avatar: { type: String, default: '' },
@@ -251,6 +251,14 @@ userSchema.methods = {
     });
     return true;
   },
+
+  useAvatar: function(provider) {
+    if (!this[provider])
+      return false;
+    if (provider === 'twitter')
+      this.avatar = this.twitter.profile_image_url_https.replace('_normal', '_200x200');
+    return true;
+  }
 
 };
 

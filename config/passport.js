@@ -1,9 +1,9 @@
-var UserModel = require('../app/models/user.js');
-var local = require('./passport/local.js');
-
+var UserModel = require('../app/models/user');
+var local = require('./passport/local');
+var twitter = require('./passport/twitter');
 
 module.exports = function (passport) {
-  
+
   // serialize sessions
   passport.serializeUser(function(user, done) {
     done(null, user.id);
@@ -14,8 +14,8 @@ module.exports = function (passport) {
   });
 
   passport.use(local);
+  passport.use(twitter);
   // passport.use(google);
   // passport.use(facebook);
-  // passport.use(twitter);
 
 };
