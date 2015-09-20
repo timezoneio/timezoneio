@@ -8,6 +8,7 @@ var demoTimezones = [
     tz: 'America/Los_Angeles',
     people: [
       {
+        _id: '3',
         name: 'Mary',
         tz: 'America/Los_Angeles',
         location: 'San Francisco',
@@ -19,12 +20,14 @@ var demoTimezones = [
     tz: 'America/New_York',
     people: [
       {
+        _id: '1',
         name: 'Dan',
         tz: 'America/New_York',
         location: 'New York',
         avatar: '/images/avatars/dan.jpg'
       },
       {
+        _id: '2',
         name: 'Sunil',
         tz: 'America/New_York',
         location: 'DC',
@@ -36,6 +39,7 @@ var demoTimezones = [
     tz: 'Europe/Rome',
     people: [
       {
+        _id: '4',
         name: 'Carolyn',
         tz: 'Europe/Rome',
         location: 'Venice',
