@@ -146,6 +146,10 @@ module.exports = React.createClass({
         <Header {...this.props} />
 
         <div className="profile">
+
+          <Notification style="error"
+                        text={this.props.errors} />
+
           <div className="profile-main">
 
             <img src={this.state.avatar || DEFAULT_AVATAR}

@@ -39,7 +39,8 @@ module.exports = function(app, passport) {
                               }));
   app.get('/connect/twitter/callback', passport.authorize('twitter', {
                                         scope: 'email',
-                                        failureRedirect: '/my-profile'
+                                        failureRedirect: '/my-profile',
+                                        failureFlash: true
                                         }),
                                        auth.connectTwitter);
 

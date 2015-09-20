@@ -732,6 +732,8 @@ module.exports = React.createClass({
       React.createElement(
         'div',
         { className: 'profile' },
+        React.createElement(Notification, { style: 'error',
+          text: this.props.errors }),
         React.createElement(
           'div',
           { className: 'profile-main' },

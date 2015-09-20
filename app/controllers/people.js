@@ -37,7 +37,8 @@ people.index = function(req, res, next) {
             profileUser: isOwner ? user.toOwnerJSON() : user.toJSON(),
             teams: teams,
             time: time,
-            timeFormat: timeFormat
+            timeFormat: timeFormat,
+            errors: req.flash('error')
           });
         } /* TODO - Handle errors? */);
     })
