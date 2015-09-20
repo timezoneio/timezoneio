@@ -51,7 +51,9 @@ module.exports = new TwitterStrategy({
 
         if (user && req.user) {
           if (req.user._id.toString() !== user._id.toString()) {
-            return done('You already have another Timezone.io account, please log out then log in via Twitter');
+            return done(null, false, {
+              message: 'You already have another Timezone.io account, please log out then log in via Twitter'
+            });
           }
 
           // Update fresh profile data

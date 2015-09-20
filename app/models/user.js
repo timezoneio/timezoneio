@@ -51,7 +51,8 @@ var PUBLIC_FIELDS = [
 ];
 
 var OWNER_FIELDS = [
-  'coords'
+  'coords',
+  'email'
 ];
 
 // See toOwnerJSON below

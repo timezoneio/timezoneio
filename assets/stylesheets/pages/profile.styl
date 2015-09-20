@@ -3,13 +3,13 @@
   padding-top: 0
 
 .profile-main
-  text-align: center
+  max-width: 800px
 
 .profile-avatar
   margin: 0.5em auto
 
 .profile-details
-  height: 90px
+  text-align: center
 
 .profile-name
   margin: 0.3em 0
@@ -19,10 +19,9 @@
 .profile-location
   margin: 0
 
-  > span
-    vertical-align: middle
-
   .location-icon
+    position: relative
+    top: 3px
     width: 18px
     margin-right: 0.2em
 
@@ -37,3 +36,19 @@
 
 .profile-team
   margin: 0 0.1em
+
+.profile-edit
+  text-align: center
+
+.profile-avatar-options
+  margin: 1em 0
+  text-align: center
+
+  // space out the children
+  > span,
+  > .button
+    margin: 0 0.2em
+    vertical-align: middle
+
+.profile-edit-form
+  margin-top: 2em
