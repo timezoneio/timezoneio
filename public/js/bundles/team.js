@@ -461,23 +461,24 @@ module.exports = React.createClass({
 });
 
 },{"react":196}],6:[function(require,module,exports){
-"use strict";
+'use strict';
 
 var React = require('react');
 
 module.exports = React.createClass({
-  displayName: "exports",
+
+  displayName: 'Branding',
 
   render: function render() {
     var branding = React.createElement(
-      "h1",
-      { className: "site-branding" },
-      "Timezone.io"
+      'h1',
+      { className: 'site-branding' },
+      'Timezone.io'
     );
 
     if (this.props.link) return React.createElement(
-      "a",
-      { href: "/", className: "site-branding-link" },
+      'a',
+      { href: '/', className: 'site-branding-link' },
       branding
     );
 
@@ -1220,7 +1221,8 @@ var cx = require('react/lib/cx.js');
 var timeUtils = require('../utils/time.js');
 
 module.exports = React.createClass({
-  displayName: 'exports',
+
+  displayName: 'Schedule',
 
   render: function render() {
 
@@ -1261,7 +1263,8 @@ var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
 
 module.exports = React.createClass({
-  displayName: 'exports',
+
+  displayName: 'TimeSlider',
 
   getInitialState: function getInitialState() {
     return {
@@ -1312,7 +1315,8 @@ var timeUtils = require('../utils/time.js');
 var PEOPLE_PER_COL = 8;
 
 module.exports = React.createClass({
-  displayName: 'exports',
+
+  displayName: 'Timezone',
 
   getCountsOf: function getCountsOf(list, param) {
     return list.map(function (el) {
@@ -1482,6 +1486,8 @@ var DEFAULT_AVATAR = require('../helpers/images').DEFAULT_AVATAR;
 
 module.exports = React.createClass({
   displayName: 'exports',
+
+  display: 'UserMenu',
 
   getInitialState: function getInitialState() {
     return { open: false };

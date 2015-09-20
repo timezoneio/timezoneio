@@ -144,23 +144,24 @@ module.exports = React.createClass({
 });
 
 },{"react":186}],5:[function(require,module,exports){
-"use strict";
+'use strict';
 
 var React = require('react');
 
 module.exports = React.createClass({
-  displayName: "exports",
+
+  displayName: 'Branding',
 
   render: function render() {
     var branding = React.createElement(
-      "h1",
-      { className: "site-branding" },
-      "Timezone.io"
+      'h1',
+      { className: 'site-branding' },
+      'Timezone.io'
     );
 
     if (this.props.link) return React.createElement(
-      "a",
-      { href: "/", className: "site-branding-link" },
+      'a',
+      { href: '/', className: 'site-branding-link' },
       branding
     );
 
@@ -341,7 +342,8 @@ var timeUtils = require('../utils/time.js');
 var PEOPLE_PER_COL = 8;
 
 module.exports = React.createClass({
-  displayName: 'exports',
+
+  displayName: 'Timezone',
 
   getCountsOf: function getCountsOf(list, param) {
     return list.map(function (el) {
@@ -511,6 +513,8 @@ var DEFAULT_AVATAR = require('../helpers/images').DEFAULT_AVATAR;
 
 module.exports = React.createClass({
   displayName: 'exports',
+
+  display: 'UserMenu',
 
   getInitialState: function getInitialState() {
     return { open: false };
@@ -771,6 +775,7 @@ var TimezoneList = require('../components/timezoneList.jsx');
 var demoTimezones = [{
   tz: 'America/Los_Angeles',
   people: [{
+    _id: '3',
     name: 'Mary',
     tz: 'America/Los_Angeles',
     location: 'San Francisco',
@@ -779,11 +784,13 @@ var demoTimezones = [{
 }, {
   tz: 'America/New_York',
   people: [{
+    _id: '1',
     name: 'Dan',
     tz: 'America/New_York',
     location: 'New York',
     avatar: '/images/avatars/dan.jpg'
   }, {
+    _id: '2',
     name: 'Sunil',
     tz: 'America/New_York',
     location: 'DC',
@@ -792,6 +799,7 @@ var demoTimezones = [{
 }, {
   tz: 'Europe/Rome',
   people: [{
+    _id: '4',
     name: 'Carolyn',
     tz: 'Europe/Rome',
     location: 'Venice',

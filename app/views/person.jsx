@@ -56,35 +56,39 @@ module.exports = React.createClass({
   render: function() {
     var profileUser = this.props.profileUser;
     return (
-      <div className="container profile-container">
+      <div className="container">
 
         <Header {...this.props} />
 
-        <div className="fw-section alt profile">
-          <div className="content-container">
+        <div className="profile">
+          <div className="profile-main">
 
             <img src={profileUser.avatar || this.state.avatar || DEFAULT_AVATAR}
                  className="avatar large profile-avatar" />
 
             <div className="profile-details">
               <h2 className="profile-name">{profileUser.name}</h2>
-              <h3 className="profile-location">
+              <p className="profile-location">
+                <span className="material-icons md-18 brand location-icon">place</span>
                 {profileUser.location}
                 <span className="profile-offset">
                   {this.getLocalTime()}
                 </span>
-              </h3>
-              <p>
+              </p>
+              <div className="profile-teams">
                 {this.props.teams.map(function(team, idx) {
                   return (
                     <a key={idx}
-                       href={team.url}>
+                       href={team.url}
+                       className="button profile-team">
                       {team.name}
                     </a>
                   )
                 })}
-              </p>
+              </div>
             </div>
+
+          </div>
 
             { this.isOwnProfile() &&
               <div>
@@ -95,7 +99,6 @@ module.exports = React.createClass({
               </div>
             }
 
-          </div>
         </div>
 
       </div>

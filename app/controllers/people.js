@@ -30,6 +30,8 @@ people.index = function(req, res, next) {
           var time = moment();
           var timeFormat = 12; // hardcode default for now
 
+          teams.sort(function(a, b){ return a.createdAt - b.createdAt; });
+
           res.render('person', {
             title: strings.capFirst(user.name || ''),
             profileUser: isOwner ? user.toOwnerJSON() : user.toJSON(),

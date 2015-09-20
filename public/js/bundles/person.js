@@ -10,23 +10,24 @@ var targetNode = document.querySelector('#page');
 React.render(Person(toolbelt.clone(window.appData)), targetNode);
 
 },{"../utils/toolbelt.js":9,"../views/person.jsx":10,"react":172}],2:[function(require,module,exports){
-"use strict";
+'use strict';
 
 var React = require('react');
 
 module.exports = React.createClass({
-  displayName: "exports",
+
+  displayName: 'Branding',
 
   render: function render() {
     var branding = React.createElement(
-      "h1",
-      { className: "site-branding" },
-      "Timezone.io"
+      'h1',
+      { className: 'site-branding' },
+      'Timezone.io'
     );
 
     if (this.props.link) return React.createElement(
-      "a",
-      { href: "/", className: "site-branding-link" },
+      'a',
+      { href: '/', className: 'site-branding-link' },
       branding
     );
 
@@ -100,6 +101,8 @@ var DEFAULT_AVATAR = require('../helpers/images').DEFAULT_AVATAR;
 
 module.exports = React.createClass({
   displayName: 'exports',
+
+  display: 'UserMenu',
 
   getInitialState: function getInitialState() {
     return { open: false };
@@ -426,14 +429,14 @@ module.exports = React.createClass({
     var profileUser = this.props.profileUser;
     return React.createElement(
       'div',
-      { className: 'container profile-container' },
+      { className: 'container' },
       React.createElement(Header, this.props),
       React.createElement(
         'div',
-        { className: 'fw-section alt profile' },
+        { className: 'profile' },
         React.createElement(
           'div',
-          { className: 'content-container' },
+          { className: 'profile-main' },
           React.createElement('img', { src: profileUser.avatar || this.state.avatar || DEFAULT_AVATAR,
             className: 'avatar large profile-avatar' }),
           React.createElement(
@@ -445,8 +448,13 @@ module.exports = React.createClass({
               profileUser.name
             ),
             React.createElement(
-              'h3',
+              'p',
               { className: 'profile-location' },
+              React.createElement(
+                'span',
+                { className: 'material-icons md-18 brand location-icon' },
+                'place'
+              ),
               profileUser.location,
               React.createElement(
                 'span',
@@ -455,27 +463,28 @@ module.exports = React.createClass({
               )
             ),
             React.createElement(
-              'p',
-              null,
+              'div',
+              { className: 'profile-teams' },
               this.props.teams.map(function (team, idx) {
                 return React.createElement(
                   'a',
                   { key: idx,
-                    href: team.url },
+                    href: team.url,
+                    className: 'button profile-team' },
                   team.name
                 );
               })
             )
-          ),
-          this.isOwnProfile() && React.createElement(
-            'div',
-            null,
-            React.createElement(
-              'a',
-              { href: '/connect/twitter?use_avatar=true',
-                className: 'button twitter' },
-              'Use Twitter Profile Photo'
-            )
+          )
+        ),
+        this.isOwnProfile() && React.createElement(
+          'div',
+          null,
+          React.createElement(
+            'a',
+            { href: '/connect/twitter?use_avatar=true',
+              className: 'button twitter' },
+            'Use Twitter Profile Photo'
           )
         )
       )

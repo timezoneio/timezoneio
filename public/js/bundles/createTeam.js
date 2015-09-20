@@ -35,23 +35,24 @@ var targetNode = document.querySelector('#page');
 React.render(CreateTeam(toolbelt.clone(window.appData)), targetNode);
 
 },{"../utils/toolbelt.js":10,"../views/createTeam.jsx":11,"react":172}],3:[function(require,module,exports){
-"use strict";
+'use strict';
 
 var React = require('react');
 
 module.exports = React.createClass({
-  displayName: "exports",
+
+  displayName: 'Branding',
 
   render: function render() {
     var branding = React.createElement(
-      "h1",
-      { className: "site-branding" },
-      "Timezone.io"
+      'h1',
+      { className: 'site-branding' },
+      'Timezone.io'
     );
 
     if (this.props.link) return React.createElement(
-      "a",
-      { href: "/", className: "site-branding-link" },
+      'a',
+      { href: '/', className: 'site-branding-link' },
       branding
     );
 
@@ -190,6 +191,8 @@ var DEFAULT_AVATAR = require('../helpers/images').DEFAULT_AVATAR;
 
 module.exports = React.createClass({
   displayName: 'exports',
+
+  display: 'UserMenu',
 
   getInitialState: function getInitialState() {
     return { open: false };
