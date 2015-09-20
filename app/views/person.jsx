@@ -177,7 +177,8 @@ module.exports = React.createClass({
         <div className="profile">
 
           <Notification style="error"
-                        text={this.props.errors} />
+                        text={this.props.errors}
+                        allowDismiss={true} />
 
           <div className="profile-main">
 
