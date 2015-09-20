@@ -632,7 +632,7 @@ module.exports = React.createClass({
   },
 
   isOwnProfile: function isOwnProfile() {
-    return this.props.user._id === this.props.profileUser._id;
+    return this.props.user._id.toString() === this.props.profileUser._id.toString();
   },
 
   getFileExtension: function getFileExtension(file) {
