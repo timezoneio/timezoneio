@@ -41,12 +41,12 @@ module.exports = new TwitterStrategy({
 
         // TODO - create user + login
         if (!user && !req.user) {
-          return done(null, 'Twitter oauth not current supported');
+          return done(null, false, { message: 'Twitter oauth not current supported' });
         }
 
         // TODO - login user
         if (user && !req.user) {
-          return done(null, 'Twitter login not current supported');
+          return done(null, false, { message: 'Twitter login not current supported' });
         }
 
         if (user && req.user) {
