@@ -7,4 +7,5 @@ aws.json
 
 *.log
 public/stylesheets/*.css
+public/js/bundles/*
 .awspublish-*
