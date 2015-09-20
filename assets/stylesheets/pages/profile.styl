@@ -16,6 +16,11 @@
   font-size: 32px
   font-weight: normal
 
+@keyframes loadingPulsate {
+  0% { color: $brandColor }
+  100% { color: $lightFillColor }
+}
+
 .profile-location
   margin: 0
 
@@ -24,9 +29,10 @@
     top: 3px
     width: 18px
     margin-right: 0.2em
+    color: $brandColor
 
     &.loading
-      color: orange
+      animation: loadingPulsate 600ms linear alternate infinite
 
 .profile-offset
   margin-left: 0.8em

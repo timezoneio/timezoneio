@@ -33,7 +33,7 @@ module.exports = React.createClass({
   },
 
   componentDidMount: function() {
-    this.updateUserLocation();
+    setTimeout(this.updateUserLocation, 10);
   },
 
   getLocalTime: function() {
@@ -48,6 +48,7 @@ module.exports = React.createClass({
 
     ActionCreators.getUserLocationAndTimezone(this.state)
       .then(function(positionData) {
+
         // Immediately save the user's profile data
         var newState = { checkingLocation: false };
         if (this.state.location !== positionData.location ||
@@ -155,7 +156,7 @@ module.exports = React.createClass({
     var editClasses = classNames('profile-edit', {
       'hidden': !this.state.editMode
     });
-    var locationClasses = classNames('material-icons md-18 brand location-icon', {
+    var locationIconClasses = classNames('material-icons md-18 location-icon', {
       'loading':  this.state.checkingLocation
     });
 
@@ -186,7 +187,7 @@ module.exports = React.createClass({
             <div className={viewClasses}>
               <h2 className="profile-name">{profileUser.name}</h2>
               <p className="profile-location">
-                <span className="material-icons md-18 brand location-icon">place</span>
+                <span className={locationIconClasses}>place</span>
                 {profileUser.location}
                 <span className="profile-offset">
                   {this.getLocalTime()}
