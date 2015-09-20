@@ -1,6 +1,9 @@
 var React = require('react');
 
 module.exports = React.createClass({
+
+  displayName: 'Branding',
+  
   render: function() {
     var branding = <h1 className="site-branding">Timezone.io</h1>;
 

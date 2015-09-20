@@ -3,6 +3,9 @@ var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
 
 module.exports = React.createClass({
+
+  displayName: 'TimeSlider',
+
   getInitialState: function() {
     return {
       value: 50,

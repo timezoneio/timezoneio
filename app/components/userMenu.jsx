@@ -5,6 +5,8 @@ var DEFAULT_AVATAR = require('../helpers/images').DEFAULT_AVATAR;
 
 module.exports = React.createClass({
 
+  display: 'UserMenu',
+
   getInitialState: function() {
     return { open: false };
   },

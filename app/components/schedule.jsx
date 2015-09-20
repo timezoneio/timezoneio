@@ -3,6 +3,9 @@ var cx = require('react/lib/cx.js');
 var timeUtils = require('../utils/time.js');
 
 module.exports = React.createClass({
+
+  displayName: 'Schedule',
+
   render: function() {
 
     var person = this.props.person;

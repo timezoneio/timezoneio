@@ -7,6 +7,8 @@ var PEOPLE_PER_COL = 8;
 
 module.exports = React.createClass({
 
+  displayName: 'Timezone',
+
   getCountsOf: function(list, param) {
     return list
       .map(function(el) {
