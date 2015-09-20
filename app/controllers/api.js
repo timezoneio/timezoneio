@@ -70,6 +70,7 @@ api.userGet = function(req, res, next) {
 api.userUpdate = function(req, res, next) {
 
   var user = req.activeUser;
+  var isOwner = user._id.toString() === req.user._id.toString();
 
   // if (!user.isOnTeam(req.team))
     // return handleError(res, 'Hey, that user isn\'t on your team!');
@@ -83,7 +84,7 @@ api.userUpdate = function(req, res, next) {
 
   user.save(function(err) {
     if (err) return handleError(res, 'Failed to save');
-    res.json(user);
+    res.json(isOwner ? user.toOwnerJSON() : user);
   });
 
 };

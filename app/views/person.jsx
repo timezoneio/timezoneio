@@ -11,8 +11,6 @@ const DEFAULT_AVATAR = require('../helpers/images').DEFAULT_AVATAR;
 
 const SAVE_BUTTON_STATES = ['Save', 'Saving', 'Saved'];
 
-// TEMP FOR TESTING
-
 
 module.exports = React.createClass({
 
@@ -23,6 +21,7 @@ module.exports = React.createClass({
       editMode: false,
       error: '',
       saveButtonText: SAVE_BUTTON_STATES[0],
+      checkingLocation: false,
 
       // email: this.props.email,
       name: this.props.profileUser.name,
@@ -33,11 +32,39 @@ module.exports = React.createClass({
     };
   },
 
+  componentDidMount: function() {
+    this.updateUserLocation();
+  },
+
   getLocalTime: function() {
     if (!this.props.profileUser.tz) return;
     var localTime = moment( this.props.time ).tz( this.props.profileUser.tz );
     var fmtString = timeUtils.getFormatStringFor(this.props.timeFormat);
     return localTime.format(fmtString);
+  },
+
+  updateUserLocation: function() {
+    this.setState({ checkingLocation: true });
+
+    ActionCreators.getUserLocationAndTimezone(this.state)
+      .then(function(positionData) {
+        // Immediately save the user's profile data
+        var newState = { checkingLocation: false };
+        if (this.state.location !== positionData.location ||
+            this.state.tz !== positionData.tz ||
+            this.state.coords.lat !== positionData.coords.lat ||
+            this.state.coords.long !== positionData.coords.long) {
+          this.setState(
+            toolbelt.extend({ checkingLocation: false }, positionData)
+          );
+          this.saveProfile();
+        } else {
+          this.setState({ checkingLocation: false });
+        }
+      }.bind(this))
+      .catch(function(err) {
+        this.setState({ checkingLocation: false });
+      }.bind(this));
   },
 
   isOwnProfile: function() {
@@ -98,11 +125,9 @@ module.exports = React.createClass({
     this.setState({ saveButtonText: SAVE_BUTTON_STATES[1] });
 
     var data = toolbelt.extend(this.state, { teamId: this.props.teamId });
-    delete data.saveButtonText;
-    delete data.error;
-    delete data.saveButtonText;
+    var saveData = toolbelt.pluck('name', 'avatar', 'location', 'tz', 'coords', data);
 
-    ActionCreators.saveUserInfo(this.props.profileUser._id, data)
+    ActionCreators.saveUserInfo(this.props.profileUser._id, saveData)
       .then(function(res) {
 
         this.setState({
@@ -129,6 +154,9 @@ module.exports = React.createClass({
     });
     var editClasses = classNames('profile-edit', {
       'hidden': !this.state.editMode
+    });
+    var locationClasses = classNames('material-icons md-18 brand location-icon', {
+      'loading':  this.state.checkingLocation
     });
 
     var nameLink = {

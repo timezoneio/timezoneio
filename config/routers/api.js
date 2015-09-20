@@ -64,7 +64,12 @@ var requireTeamAdmin = function(req, res, next) {
 
 var requireEditPrivlidges = function(req, res, next) {
 
-  if (req.activeUser._id === req.user._id) return next();
+  var isOwner = req.activeUser._id.toString() === req.user._id.toString();
+
+  if (isOwner) return next();
+
+
+  // TODO - Disable team admin editing if the user is registered!
 
   TeamModel.find({ people: req.activeUser._id })
     .then(function(teams) {

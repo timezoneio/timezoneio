@@ -35,6 +35,17 @@ toolbelt.update = function(a, b) {
   return a;
 };
 
+// toolbelt.pluck('first', 'last', { first: 'Johnny', last: 'Utah', age: 26 })
+toolbelt.pluck = function() {
+  var fields = [].slice.call(arguments);
+  var obj = [].splice.call(fields, fields.length - 1)[0];
+  var newObj = {};
+  fields.forEach(function(field) {
+    newObj[field] = obj[field];
+  });
+  return newObj;
+};
+
 
 // For indexOf nested objects, ex.
 //   toolbelt.indexOf({ isCool: true }, [{ isCool: true }, { isCool: false }])
