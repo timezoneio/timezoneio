@@ -34,7 +34,8 @@ module.exports = React.createClass({
   },
 
   componentDidMount: function() {
-    setTimeout(this.updateUserLocation, 10);
+    if (this.isOwnProfile())
+      setTimeout(this.updateUserLocation, 10);
   },
 
   updateUserLocation: function() {
