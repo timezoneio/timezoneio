@@ -106,13 +106,22 @@ module.exports = React.createClass({
             When you're done, you can click the button below or the X at the top right.
             To get back here you can always click the "Manage Team" button at right on your team dashboard.
           </p>
+          <p>
+            Copy the unique invite url below and send it to your team.
+            {' '}
+            This will allow them to signup and add their own location
+          </p>
         </div>
       );
       headerContent.closeButton = 'Show me my team!';
     } else {
       headerContent.title = this.props.team.name;
       headerContent.body = (
-        <p>Edit and invite members of your team here</p>
+        <p>
+          Edit and invite members of your team here.
+          {' '}
+          Copy the unique invite url below and send it to your team.
+        </p>
       );
       headerContent.closeButton = 'Go back to my team';
     }
@@ -129,8 +138,6 @@ module.exports = React.createClass({
           </h2>
 
           {headerContent.body}
-
-          <p>Copy this invite url and send it to your team</p>
 
           <div className="manage-team--row">
             <input type="text"
@@ -152,66 +159,67 @@ module.exports = React.createClass({
           clear
         </button>
 
-        <div className="manage-team--subview">
+        { !this.state.editingPerson ? (
+            <div className="manage-team--subview manage-team--subview-team">
 
-          { !this.state.editingPerson ? (
-              <div className="manage-team--team">
+              <div className="manage-team--team-header">
 
-                <div className="manage-team--team-header">
+                <input type="search"
+                       valueLink={filterValueLink}
+                       placeholder="Search" />
 
-                  <input type="search"
-                         valueLink={filterValueLink}
-                         placeholder="Search" />
+                     <button className="circle material-icons md-18"
+                        onClick={this.handleClickAdd}>
+                  add
+                </button>
 
-                       <button className="circle material-icons md-18"
-                          onClick={this.handleClickAdd}>
-                    add
-                  </button>
+              </div>
 
-                </div>
+              <div className="manage-team--team-list">
 
-                <div className="manage-team--team-list">
+                {sortedPeople.map(function(person, idx) {
+                  return (
+                    <div key={idx}
+                         className="manage-team--team-member">
 
-                  {sortedPeople.map(function(person, idx) {
-                    return (
-                      <div key={idx}
-                           className="manage-team--team-member">
+                      <div className="manage-team--team-member-info">
 
-                        <div className="manage-team--team-member-info">
+                        <Avatar avatar={person.avatar}
+                                size="mini" />
 
-                          <Avatar avatar={person.avatar}
-                                  size="mini" />
+                              <span className="manage-team--team-member-name">
+                          {person.name}
+                        </span>
+                        <span className="manage-team--team-member-location">
+                          {person.location}
+                        </span>
 
-                                <span className="manage-team--team-member-name">
-                            {person.name}
-                          </span>
-                          <span className="manage-team--team-member-location">
-                            {person.location}
-                          </span>
+                      </div>
 
-                        </div>
-
-                        <div className="manage-team--team-member-actions">
+                      <div className="manage-team--team-member-actions">
+                        { !person.isRegistered &&
                           <button className="circle clear material-icons md-18"
                                   name="Edit team member"
                                   onClick={this.handleClickUserEdit.bind(null, person)}>
                             edit
                           </button>
-                          <button className="circle clear material-icons md-18"
-                                  name="Remove from Team"
-                                  onClick={this.handleClickUserRemove.bind(null, person)}>
-                            clear
-                          </button>
-                        </div>
-
+                        }
+                        <button className="circle clear material-icons md-18"
+                                name="Remove from Team"
+                                onClick={this.handleClickUserRemove.bind(null, person)}>
+                          clear
+                        </button>
                       </div>
-                    )
-                  }.bind(this))}
 
-                </div>
+                    </div>
+                  )
+                }.bind(this))}
 
               </div>
-            ) : (
+
+            </div>
+          ) : (
+            <div className="manage-team--subview">
               <div className="manage-team--person">
 
                 <button className="modal--back-button clear material-icons"
@@ -224,10 +232,9 @@ module.exports = React.createClass({
                             isNewUser={this.state.newUser} />
 
               </div>
-            )
-          }
-
-        </div>
+            </div>
+          )
+        }
 
       </div>
     );
