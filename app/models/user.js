@@ -224,6 +224,7 @@ userSchema.methods = {
     return json;
   },
 
+  // NOTE - this needs to be recursively turned into JSON acceptable objects?
   toOwnerJSON: function() {
     var json = this.toJSON();
     OWNER_FIELDS.forEach(function(field) {

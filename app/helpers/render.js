@@ -34,7 +34,7 @@ module.exports = function render(pathName, locals, cb) {
 
   // clean user object for render
   if (data.user)
-    data.user = data.user.toJSON();
+    data.user = data.user.toOwnerJSON();
 
   var params = {};
 
