@@ -3,8 +3,10 @@ var classNames = require('classnames');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
 var ActionCreators = require('../actions/actionCreators.js');
+var Branding = require('./branding.jsx');
 var Avatar = require('./avatar.jsx');
 var EditPerson = require('./editPerson.jsx');
+var userSort = require('../utils/transform').userSort;
 
 module.exports = React.createClass({
 
@@ -76,15 +78,15 @@ module.exports = React.createClass({
     return person.name && person.name.search(this.state.filter) > -1;
   },
 
-  peopleSort: function(a, b) {
-    return a.name < b.name ? -1 : 1;
+  handleSelectText: function(e) {
+    e.target.setSelectionRange(0, e.target.value.length);
   },
 
   render: function() {
 
     var people = this.props.people;
     var visiblePeople = this.state.filter ? people.filter(this.peopleFilter) : people;
-    var sortedPeople = visiblePeople.sort(this.peopleSort);
+    var sortedPeople = visiblePeople.sort(userSort);
 
     var filterValueLink = {
       value: this.state.filterText,
@@ -120,11 +122,23 @@ module.exports = React.createClass({
 
         <header className="manage-team--header">
 
+          <Branding />
+
           <h2 className="manage-team--header-title">
             {headerContent.title}
           </h2>
 
           {headerContent.body}
+
+          <p>Copy this invite url and send it to your team</p>
+
+          <div className="manage-team--row">
+            <input type="text"
+                   className="manage-team--invite-url"
+                   readOnly={true}
+                   onClick={this.handleSelectText}
+                   value={this.props.team.inviteUrl} />
+          </div>
 
           <button onClick={this.handleClickClose}>
             {headerContent.closeButton}

@@ -19,7 +19,7 @@ function sortByNameAndId(a, b) {
 }
 
 
-module.exports = function transform(time, people) {
+ var transform = function(time, people) {
 
   // Append a moment date to each person
   people.forEach(appendTime.bind(null, time));
@@ -51,3 +51,7 @@ module.exports = function transform(time, people) {
   return timezones;
 
 };
+
+transform.userSort = sortByNameAndId;
+
+module.exports = transform;

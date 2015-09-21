@@ -31,14 +31,30 @@ teamSchema
   .virtual('url')
   .get(function() { return '/team/' + this.slug; });
 
+const INVITE_SALT = '***REMOVED***';
+
 // TODO - slug validation
 //      - admin required
 //      - people validation/limitation
 
 teamSchema.methods = {
 
+  toAdminJSON: function() {
+    var json = this.toJSON();
+    json.inviteUrl = this.getInviteUrl();
+    return json;
+  },
+
   getManageUrl: function() {
     return this.url + '/manage';
+  },
+
+  getInviteUrl: function() {
+    var inviteHash = crypto.createHash('md5')
+                           .update(INVITE_SALT + this._id)
+                           .digest('hex')
+                           .substr(0, 16); // only need 16 characters
+    return 'http://timezone.io/join/' + inviteHash;
   },
 
   isAdmin: function(user) {

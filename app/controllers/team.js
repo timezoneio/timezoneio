@@ -38,7 +38,7 @@ team.index = function(req, res, next) {
         people: people,
         isAdmin: isAdmin,
         time: time,
-        team: team,
+        team: isAdmin ? team.toAdminJSON() : team,
         timezones: timezones,
         timeFormat: timeFormat,
         isCurrentTime: true,
