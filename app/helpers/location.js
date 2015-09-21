@@ -12,7 +12,7 @@ location.getCurrentPosition = function() {
   return new Promise(function(resolve, reject) {
     navigator.geolocation.getCurrentPosition(function(position) {
       resolve(position.coords);
-    }, function() {
+    }, function(err) {
       reject(err.message);
     });
   });

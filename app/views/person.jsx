@@ -23,6 +23,8 @@ module.exports = React.createClass({
       saveButtonText: SAVE_BUTTON_STATES[0],
       checkingLocation: false,
 
+      avatarFull: null, // placeholder while avatar is resized
+
       // email: this.props.email,
       name: this.props.profileUser.name,
       avatar: this.props.profileUser.avatar,
@@ -37,8 +39,8 @@ module.exports = React.createClass({
   },
 
   getLocalTime: function() {
-    if (!this.props.profileUser.tz) return;
-    var localTime = moment( this.props.time ).tz( this.props.profileUser.tz );
+    if (!this.state.tz) return;
+    var localTime = moment( this.props.time ).tz( this.state.tz );
     var fmtString = timeUtils.getFormatStringFor(this.props.timeFormat);
     return localTime.format(fmtString);
   },
@@ -77,19 +79,37 @@ module.exports = React.createClass({
     return matches && matches[0];
   },
 
-  generateAvatarFilename: function(file) {
-    return 'avatar/' + this.props.profileUser._id + this.getFileExtension(file);
+  generateAvatarUploadFilename: function(file) {
+    // Files ending in _full will trigger the resize lambda function
+    return 'avatar/' + this.props.profileUser._id + '_full' + this.getFileExtension(file);
   },
 
   handleFileChange: function(e) {
     var files = e.target.files;
     var file = files[0];
 
+    var ext = this.getFileExtension(file);
+
+    if (['.jpg', '.jpeg', '.png'].indexOf(ext) === -1) {
+      alert('Sorry, we currently only support jpg and png files :)');
+      return;
+    }
+
     // TODO - https://www.npmjs.com/package/crop-rotate-resize-in-browser
     if (file) {
-      s3.uploadFile(file, this.generateAvatarFilename(file))
+      s3.uploadFile(file, this.generateAvatarUploadFilename(file))
         .then(function(fileUrl) {
-          this.setState({ avatar: fileUrl });
+
+          // Lambda function will resize image and rename it
+          var resizedUrl = fileUrl.replace('_full', '');
+          this.setState({
+            avatarFull: fileUrl,
+            avatar: resizedUrl
+          });
+
+          // Now save the profile!
+          this.saveProfile();
+
         }.bind(this));
     } else {
       console.warn('No file added');
@@ -108,7 +128,10 @@ module.exports = React.createClass({
     ActionCreators.getGravatar(this.props.profileUser.email)
       .then(function(avatar) {
         if (avatar)
-          this.setState({ avatar: avatar });
+          this.setState({
+            avatar: avatar,
+            avatarFull: null
+          });
       }.bind(this), function(err) {
         this.setState({
           error: err.message
@@ -182,14 +205,14 @@ module.exports = React.createClass({
 
           <div className="profile-main">
 
-            <img src={this.state.avatar || DEFAULT_AVATAR}
+            <img src={this.state.avatarFull || this.state.avatar || DEFAULT_AVATAR}
                  className="avatar large profile-avatar" />
 
             <div className={viewClasses}>
-              <h2 className="profile-name">{profileUser.name}</h2>
+              <h2 className="profile-name">{this.state.name}</h2>
               <p className="profile-location">
                 <span className={locationIconClasses}>place</span>
-                {profileUser.location}
+                {this.state.location}
                 <span className="profile-offset">
                   {this.getLocalTime()}
                 </span>
