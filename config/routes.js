@@ -26,7 +26,9 @@ module.exports = function(app, passport) {
                         failureFlash: 'Invalid email or password'
                       }),
                       function(req, res) {
-                        var next = req.flash('next') || getProfileUrl(req.user);
+                        var next = req.flash('next');
+                        next = (next && next[0]) || getProfileUrl(req.user);
+                        console.info('redirect to ' + next);
                         res.redirect(next);
                       });
   app.get('/signup', auth.signup);

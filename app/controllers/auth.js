@@ -12,8 +12,7 @@ auth.login = function(req, res) {
 
   res.render('login', {
     errors: req.flash('error'),
-    noScript: true,
-    next: req.query.next
+    noScript: true
   });
 };
 
@@ -81,9 +80,9 @@ auth.create = function(req, res) {
             return renderError('Sorry, We weren\'t able to log you in! ');
 
           var next = req.flash('next');
-          if (next) {
+          if (next && next[0]) {
             req.flash('next', '/get-started');
-            res.redirect(next);
+            res.redirect(next[0]);
           } else {
             res.redirect('/get-started');
           }
@@ -116,14 +115,17 @@ auth.joinTeam = function(req, res) {
       if (req.user) {
         team.addTeamMember(req.user);
         return team.save(function(err) {
-          var next = req.flash('next') || team.url;
+          var next = req.flash('next');
+          next = (next && next[0]) || team.url;
           res.redirect(next);
         });
       }
 
+      req.flash('next'); // clear it
       req.flash('next', req.url);
 
       res.render('signup', {
+        title: `Join ${team.name} on Timezone.io!`,
         teamInvite: true,
         team: team,
         noScript: true
