@@ -1,4 +1,5 @@
 var UserModel = require('../models/user');
+var TeamModel = require('../models/team');
 var isValidEmail = require('../utils/strings').isValidEmail;
 var getProfileUrl = require('../helpers/urls').getProfileUrl;
 
@@ -11,12 +12,18 @@ auth.login = function(req, res) {
 
   res.render('login', {
     errors: req.flash('error'),
-    noScript: true
+    noScript: true,
+    next: req.query.next
   });
 };
 
 auth.signup = function(req, res) {
+
+  if (req.user)
+    return res.redirect( getProfileUrl(req.user) );
+
   res.render('signup', {
+    errors: req.flash('error'),
     noScript: true
   });
 };
@@ -72,7 +79,14 @@ auth.create = function(req, res) {
         req.logIn(newUser, function(err) {
           if (err)
             return renderError('Sorry, We weren\'t able to log you in! ');
-          res.redirect('/get-started');
+
+          var next = req.flash('next');
+          if (next) {
+            req.flash('next', '/get-started');
+            res.redirect(next);
+          } else {
+            res.redirect('/get-started');
+          }
         });
       });
     })
@@ -80,6 +94,44 @@ auth.create = function(req, res) {
       return renderError('Something didn\'t work right there, can you try again?');
     });
 
+};
+
+auth.joinTeam = function(req, res) {
+
+  var invalidHashResponse = function() {
+    req.flash('error', 'Sorry, that invite url isn\'t valid :(');
+    res.redirect('/signup');
+  };
+
+  if (req.params.inviteHash.length !== 16) {
+    return invalidHashResponse();
+  }
+
+  TeamModel.findOne({ inviteHash: req.params.inviteHash })
+    .then(function(team) {
+      if (!team)
+        return invalidHashResponse();
+
+      // If the user is logged in, just add them to the team!
+      if (req.user) {
+        team.addTeamMember(req.user);
+        return team.save(function(err) {
+          var next = req.flash('next') || team.url;
+          res.redirect(next);
+        });
+      }
+
+      req.flash('next', req.url);
+
+      res.render('signup', {
+        teamInvite: true,
+        team: team,
+        noScript: true
+      });
+    })
+    .catch(function(err) {
+      return invalidHashResponse();
+    });
 };
 
 auth.logout = function(req, res) {

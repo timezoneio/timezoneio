@@ -1,17 +1,26 @@
+'use strict';
+
 var React = require('react');
 var Header = require('../components/header.jsx');
 var Notification = require('../components/notification.jsx');
 
-module.exports = React.createClass({
+class Signup extends React.Component {
 
-  render: function() {
+  renderHeadline() {
+    if (!this.props.teamInvite)
+      return <h1 className="page-headline">Sign up</h1>;
+
+    return <h1 className="page-headline">Join {this.props.team.name} on Timezone.io!</h1>;
+  }
+
+  render() {
 
     return (
       <div className="container login-container">
 
         <Header {...this.props} />
 
-        <h1 className="page-headline">Sign up</h1>
+        {this.renderHeadline()}
 
         <Notification style="error"
                       text={this.props.errors} />
@@ -59,4 +68,6 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+};
+
+module.exports = Signup;

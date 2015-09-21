@@ -1,10 +1,9 @@
 var React = require('react');
-var moment = require('moment-timezone');
 var classNames = require('classnames');
 var Header = require('../components/header.jsx');
 var Notification = require('../components/notification.jsx');
+var ProfileLocation = require('../components/profileLocation.jsx');
 var ActionCreators = require('../actions/actionCreators');
-var timeUtils = require('../utils/time');
 var toolbelt = require('../utils/toolbelt');
 var s3 = require('../helpers/s3'); // TODO - move to action creator
 const DEFAULT_AVATAR = require('../helpers/images').DEFAULT_AVATAR;
@@ -36,13 +35,6 @@ module.exports = React.createClass({
 
   componentDidMount: function() {
     setTimeout(this.updateUserLocation, 10);
-  },
-
-  getLocalTime: function() {
-    if (!this.state.tz) return;
-    var localTime = moment( this.props.time ).tz( this.state.tz );
-    var fmtString = timeUtils.getFormatStringFor(this.props.timeFormat);
-    return localTime.format(fmtString);
   },
 
   updateUserLocation: function() {
@@ -181,9 +173,6 @@ module.exports = React.createClass({
     var editClasses = classNames('profile-edit', {
       'hidden': !this.state.editMode
     });
-    var locationIconClasses = classNames('material-icons md-18 location-icon', {
-      'loading':  this.state.checkingLocation
-    });
 
     var nameLink = {
       value: this.state.name,
@@ -211,14 +200,15 @@ module.exports = React.createClass({
                  className="avatar large profile-avatar" />
 
             <div className={viewClasses}>
+
               <h2 className="profile-name">{this.state.name}</h2>
-              <p className="profile-location">
-                <span className={locationIconClasses}>place</span>
-                {this.state.location}
-                <span className="profile-offset">
-                  {this.getLocalTime()}
-                </span>
-              </p>
+
+              <ProfileLocation location={this.state.location}
+                               tz={this.state.tz}
+                               time={this.props.time}
+                               timeFormat={this.props.timeFormat}
+                               loading={this.state.checkingLocation} />
+
               <div className="profile-teams">
                 {this.props.teams.map(function(team, idx) {
                   return (

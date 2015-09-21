@@ -51,7 +51,7 @@ var ActionCreators = module.exports = {
   getUserLocationAndTimezone: function(user) {
 
     var positionData = toolbelt.pluck('location', 'tz', user);
-    positionData.coords = toolbelt.clone(user.coords);
+    positionData.coords = toolbelt.clone(user.coords || {});
 
     return location.getCurrentPosition()
       .then(function(coords) {

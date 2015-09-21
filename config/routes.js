@@ -26,10 +26,12 @@ module.exports = function(app, passport) {
                         failureFlash: 'Invalid email or password'
                       }),
                       function(req, res) {
-                        res.redirect( getProfileUrl(req.user) );
+                        var next = req.flash('next') || getProfileUrl(req.user);
+                        res.redirect(next);
                       });
   app.get('/signup', auth.signup);
   app.post('/signup', auth.create);
+  app.get('/join/:inviteHash', auth.joinTeam);
   app.get('/logout', auth.logout);
 
   app.get('/connect/twitter', oauthConnectFlast,

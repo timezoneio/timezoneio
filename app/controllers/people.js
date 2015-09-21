@@ -59,7 +59,10 @@ people.getStarted = function(req, res, next) {
   if (!req.user)
     return res.redirect('/login');
 
-  res.render('getStarted', {});
+  res.render('getStarted', {
+    time: moment(),
+    timeFormat: 12 // hardcode default for now
+  });
 };
 
 people.save = function(req, res, next) {

@@ -1,24 +1,9 @@
 var React = require('react');
 var Header = require('../components/header.jsx');
+var ProfileLocation = require('../components/profileLocation.jsx');
 var getProfileUrl = require('../helpers/urls').getProfileUrl;
 
 module.exports = React.createClass({
-
-  renderLocation: function() {
-    if (!this.props.user.location)
-      return (
-        <p>
-          Finding your location & timezone information...
-        </p>
-      );
-
-    return (
-      <p>
-        <span className="material-icons md-18">place</span>
-        {this.props.user.location}
-      </p>
-    );
-  },
 
   renderHiddenUserFields: function() {
 
@@ -58,7 +43,13 @@ module.exports = React.createClass({
                    defaultValue={this.props.user.name} />
           </div>
 
-          {this.renderLocation()}
+          <div className="form-row">
+            <ProfileLocation location={this.props.user.location || 'Looking up your location...'}
+                             tz={this.props.user.tz}
+                             time={this.props.time}
+                             timeFormat={this.props.timeFormat}
+                             loading={this.props.checkingLocation} />
+          </div>
 
           {this.renderHiddenUserFields()}
 
