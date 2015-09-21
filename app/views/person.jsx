@@ -127,11 +127,13 @@ module.exports = React.createClass({
     // NOTE - Use state if user can change email
     ActionCreators.getGravatar(this.props.profileUser.email)
       .then(function(avatar) {
-        if (avatar)
+        if (avatar) {
           this.setState({
             avatar: avatar,
             avatarFull: null
           });
+          this.saveProfile();
+        }
       }.bind(this), function(err) {
         this.setState({
           error: err.message
