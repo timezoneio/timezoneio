@@ -36,6 +36,7 @@ toolbelt.update = function(a, b) {
 };
 
 // toolbelt.pluck('first', 'last', { first: 'Johnny', last: 'Utah', age: 26 })
+// => { first: 'Johnny', last: 'Utah' }
 toolbelt.pluck = function() {
   var fields = [].slice.call(arguments);
   var obj = [].splice.call(fields, fields.length - 1)[0];
