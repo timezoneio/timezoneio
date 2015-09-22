@@ -1,31 +1,41 @@
+'use strict';
+
 var React = require('react');
 var classNames = require('classnames');
 var getProfileUrl = require('../helpers/urls').getProfileUrl;
 var DEFAULT_AVATAR = require('../helpers/images').DEFAULT_AVATAR;
 
-module.exports = React.createClass({
 
-  display: 'UserMenu',
+class UserMenu extends React.Component {
 
-  getInitialState: function() {
-    return { open: false };
-  },
+  constructor(props) {
+    super(props);
+    this.closeMenu = this.closeMenu.bind(this);
+    this.state = {
+      open: false
+    };
+  }
 
-  closeMenu: function(e) {
+  closeMenu() {
     this.setState({ open: false });
-  },
+    window.removeEventListener('click', this.closeMenu);
+  }
 
-  handleToggleMenu: function(e) {
-    e.stopPropagation();
-    this.setState({ open: !this.state.open });
-  },
-
-  componentDidMount: function() {
-    // Move this one day
+  openMenu() {
+    this.setState({ open: true });
     window.addEventListener('click', this.closeMenu);
-  },
+  }
 
-  render: function() {
+  handleToggleMenu(e) {
+    e.stopPropagation();
+    this.state.open ? this.closeMenu() : this.openMenu();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('click', this.closeMenu);
+  }
+
+  render() {
 
     var profileUrl = getProfileUrl(this.props);
     var avatarUrl = this.props.avatar || DEFAULT_AVATAR;
@@ -57,7 +67,7 @@ module.exports = React.createClass({
           </a>
         </div>
 
-        <a onClick={this.handleToggleMenu}
+        <a onClick={this.handleToggleMenu.bind(this)}
            className="avatar header-avatar"
            style={style}
            name={this.props.name}>
@@ -66,4 +76,6 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+};
+
+module.exports = UserMenu;
