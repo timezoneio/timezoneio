@@ -3,7 +3,8 @@
     "NODE_ENV": "development",
     "S3_BUCKET": "timezone-uploads-dev",
     "TWITTER_KEY": "***REMOVED***",
-    "TWITTER_SECRET": "***REMOVED***"
+    "TWITTER_SECRET": "***REMOVED***",
+    "MANDRILL_KEY": "***REMOVED***"
   },
   "ignore": ["public/**/*.js"],
   "ext": "js json hjs jsx"

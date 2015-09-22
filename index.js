@@ -34,18 +34,3 @@ mongoose.connection.once('open', function (callback) {
   server();
 
 });
-
-/*
-var UserModel = require('./app/models/user.js');
-
-UserModel.findOne({ username: 'dan' }, function(err, user) {
-
-  user.password = ;
-
-  user.save(function(err) {
-    if (!err)
-      console.info('success!');
-  });
-
-});
-*/

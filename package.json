@@ -34,6 +34,7 @@
     "geocoder": "^0.2.2",
     "immutable": "^3.6.2",
     "keymirror": "^0.1.1",
+    "mandrill-api": "^1.0.45",
     "moment-timezone": "^0.4.0",
     "mongoose": "^4.0.6",
     "morgan": "^1.5.1",
