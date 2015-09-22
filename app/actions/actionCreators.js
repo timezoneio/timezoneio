@@ -20,6 +20,10 @@ var ActionCreators = module.exports = {
       });
   },
 
+  getUserByEmail: function(email, teamId) {
+    return api.get('/user',{ email: email, teamId: teamId });
+  },
+
   addNewTeamMember: function(data) {
     return api
       .post('/user', data)

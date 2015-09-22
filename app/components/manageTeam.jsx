@@ -17,6 +17,7 @@ module.exports = React.createClass({
       editingPerson: null,
       filterText: '',
       filter: null,
+      inviteTeamMember: false
       // name: this.props.team.name
     };
   },
@@ -42,7 +43,7 @@ module.exports = React.createClass({
   // },
 
   handleClickUserEdit: function(person, e) {
-    this.setState({ editingPerson: person, newUser: false });
+    this.setState({ editingPerson: person, inviteTeamMember: false });
   },
 
   handleClickUserRemove: function(person, e) {
@@ -57,7 +58,7 @@ module.exports = React.createClass({
   },
 
   handleClickAdd: function(e) {
-    this.setState({ editingPerson: {}, newUser: true });
+    this.setState({ editingPerson: {}, inviteTeamMember: true });
   },
 
   handleFilterList: function(text) {
@@ -107,9 +108,9 @@ module.exports = React.createClass({
             To get back here you can always click the "Manage Team" button at right on your team dashboard.
           </p>
           <p>
-            Copy the unique invite url below and send it to your team.
+            Copy the unique invite url below and send it to your team or invite them manually.
             {' '}
-            This will allow them to signup and add their own location
+            This will allow them to signup and add their own location.
           </p>
         </div>
       );
@@ -120,7 +121,7 @@ module.exports = React.createClass({
         <p>
           Edit and invite members of your team here.
           {' '}
-          Copy the unique invite url below and send it to your team.
+          Copy the unique invite url below and send it to your team or invite them manually.
         </p>
       );
       headerContent.closeButton = 'Go back to my team';
@@ -147,9 +148,18 @@ module.exports = React.createClass({
                    value={this.props.team.inviteUrl} />
           </div>
 
-          <button onClick={this.handleClickClose}>
-            {headerContent.closeButton}
-          </button>
+          <div className="manage-team--row">
+            <button className="cta"
+               onClick={this.handleClickAdd}>
+              Add a team member
+            </button>
+          </div>
+
+          <div className="manage-team--row">
+            <button onClick={this.handleClickClose}>
+              {headerContent.closeButton}
+            </button>
+          </div>
 
         </header>
 
@@ -163,16 +173,9 @@ module.exports = React.createClass({
             <div className="manage-team--subview manage-team--subview-team">
 
               <div className="manage-team--team-header">
-
                 <input type="search"
                        valueLink={filterValueLink}
                        placeholder="Search" />
-
-                     <button className="circle material-icons md-18"
-                        onClick={this.handleClickAdd}>
-                  add
-                </button>
-
               </div>
 
               <div className="manage-team--team-list">
@@ -229,7 +232,8 @@ module.exports = React.createClass({
 
                 <EditPerson {...this.state.editingPerson}
                             teamId={this.props.team._id}
-                            isNewUser={this.state.newUser} />
+                            inviteTeamMember={this.state.inviteTeamMember}
+                            timeFormat={this.props.timeFormat} />
 
               </div>
             </div>

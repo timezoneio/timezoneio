@@ -42,7 +42,7 @@ var requireAuthentication = function(req, res, next) {
 var requireTeamAdmin = function(req, res, next) {
 
   // We check body when passed via POST params and not in URL
-  var teamId = req.body.teamId || req.params.id;
+  var teamId = req.body.teamId || req.query.teamId || req.params.id;
 
   TeamModel.findOne({ _id: teamId }, function(err, team) {
     if (err || !team)
@@ -109,6 +109,7 @@ var router = express.Router();
 
 router.all(   '*', requireAuthentication);
 
+router.get(   '/user', requireTeamAdmin,  api.getUserByEmail);
 router.post(  '/user', requireTeamAdmin,  api.userCreate);
 router.get(   '/user/:id', requireUser, api.userGet);
 router.put(   '/user/:id', requireUser, requireEditPrivlidges, api.userUpdate);

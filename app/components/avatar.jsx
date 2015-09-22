@@ -15,9 +15,11 @@ module.exports = React.createClass({
       this.setState({ brokenImage: false });
   },
 
-  handleLoadError: function() {
+  handleLoadError: function(e) {
     if (!this.state.brokenImage)
       this.setState({ brokenImage: true });
+    if (typeof this.props.onImageLoadError === 'function')
+      this.props.onImageLoadError(e);
   },
 
   render: function() {

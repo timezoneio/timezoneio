@@ -20,6 +20,23 @@ var handleError = function(res, message) {
   });
 };
 
+api.getUserByEmail = function(req, res, next) {
+
+  if (!req.query.email)
+    return res.status(400).json({ message: 'Please provide email parameter' });
+
+  UserModel.findOne({ email: req.query.email })
+    .then(function(user) {
+      if (!user)
+        return res.json({ message: 'No user with that email!' });
+
+      res.json(user);
+    })
+    .catch(function(err) {
+      handleError(res, err);
+    });
+};
+
 api.userCreate = function(req, res, next) {
 
   var userData = req.body;
