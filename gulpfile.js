@@ -94,7 +94,7 @@ gulp.task('uglify', function() {
     .pipe(gulp.dest('public/js/bundles'));
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', ['browserify'], function() {
   return gulp.watch([
     'app/**/*.js',
     'app/**/*.jsx'
