@@ -112,6 +112,9 @@ auth.joinTeam = function(req, res) {
     return invalidHashResponse();
   }
 
+  var userId = req.params.userId;
+  var emailHash = req.params.emailHash;
+
   TeamModel.findOne({ inviteHash: req.params.inviteHash })
     .then(function(team) {
       if (!team)
@@ -130,12 +133,31 @@ auth.joinTeam = function(req, res) {
       req.flash('next'); // clear it
       req.flash('next', req.url);
 
-      res.render('signup', {
-        title: `Join ${team.name} on Timezone.io!`,
-        teamInvite: true,
-        team: team,
-        noScript: true
-      });
+      // If no userId, it's a generic invite url
+      if (!userId)
+        return res.render('signup', {
+          title: `Join ${team.name} on Timezone.io!`,
+          teamInvite: true,
+          team: team,
+          noScript: true
+        });
+
+      UserModel.findOne({ _id: userId })
+          .then(function(user) {
+            if (!user || user.getEmailHash() !== emailHash)
+              return invalidHashResponse();
+
+            return res.render('signup', {
+              title: `Join ${team.name} on Timezone.io!`,
+              email: user.email,
+              teamInvite: true,
+              team: team,
+              noScript: true,
+            });
+          })
+          .catch(function(err) {
+            invalidHashResponse();
+          });
     })
     .catch(function(err) {
       return invalidHashResponse();

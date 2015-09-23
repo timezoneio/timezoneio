@@ -56,6 +56,8 @@ var OWNER_FIELDS = [
   'email'
 ];
 
+const EMAIL_HASH_SALT = '***REMOVED***';
+
 // See toOwnerJSON below
 userSchema.set('toJSON', {
   getters: true,
@@ -215,6 +217,13 @@ userSchema.methods = {
     // return ~oAuthTypes.indexOf(this.provider);
   },
 
+  // Used for team invite emails and verifying user's identity
+  getEmailHash: function() {
+    return crypto.createHash('md5')
+                 .update(EMAIL_HASH_SALT + this.email)
+                 .digest('hex')
+                 .substr(0, 16);
+  },
 
   isEmptyUser: function() {
     return !this.hashedPassword;

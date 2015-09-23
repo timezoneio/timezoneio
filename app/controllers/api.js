@@ -75,7 +75,7 @@ api.userCreate = function(req, res, next) {
         if (err) return handleError(res, 'Failed to save: ' + err);
 
         sendEmail('invite', newUser.email, {
-          inviteUrl: req.team.getInviteUrl(),
+          inviteUrl: req.team.getInviteUrl(newUser),
           adminName: req.user.name,
           teamName: req.team.name
         });

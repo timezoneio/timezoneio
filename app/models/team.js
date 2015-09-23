@@ -87,7 +87,7 @@ teamSchema.methods = {
   getInviteUrl: function(user) {
     var url = `${BASE_URL}/join/${this.inviteHash}`;
     if (user)
-      return `${url}/${user._id}`;
+      return `${url}/${user._id}-${user.getEmailHash()}`;
     return url;
   },
 

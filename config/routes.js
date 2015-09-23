@@ -28,12 +28,12 @@ module.exports = function(app, passport) {
                       function(req, res) {
                         var next = req.flash('next');
                         next = (next && next[0]) || getProfileUrl(req.user);
-                        console.info('redirect to ' + next);
                         res.redirect(next);
                       });
   app.get('/signup', auth.signup);
   app.post('/signup', auth.create);
   app.get('/join/:inviteHash', auth.joinTeam);
+  app.get('/join/:inviteHash/:userId-:emailHash', auth.joinTeam);
   app.get('/logout', auth.logout);
 
   app.get('/connect/twitter', oauthConnectFlast,
