@@ -13,9 +13,10 @@ var api = module.exports = {};
 
 var TEAM_WRITABLE_FIELDS = ['name'];
 
-// FIX THIS TO RETURN 400s ALSO
-var handleError = function(res, message) {
-  res.status(500).json({
+
+var handleError = function(res, statusCode, message) {
+  message = !message && typeof statusCode === 'string' ? message : null;
+  res.status(400).json({
     message: message || 'Something bad happened'
   });
 };
