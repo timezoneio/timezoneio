@@ -59,17 +59,38 @@ auth.create = function(req, res) {
 
   UserModel.findOneByEmail(req.body.email)
     .then(function(user) {
-      if (user)
-        return renderError('A user with that email already exists, please login instead');
+      var isInvitedUser = false;
+      var hash = null;
+
+      if (user) {
+        hash = req.flash('inviteHash');
+        hash = hash && hash[0];
+        if (hash && hash === user.getEmailHash()) {
+          isInvitedUser = true;
+        } else {
+          return renderError('A user with that email already exists, please login instead');
+        }
+      }
+
 
       var pwError = getPasswordValidationError(req.body.password, req.body.password2);
-      if (pwError)
+      if (pwError) {
+        req.flash('inviteHash', hash);
         return renderError(pwError);
+      }
 
-      var newUser = new UserModel({
-        email: req.body.email,
-        password: req.body.password
-      });
+      var newUser = null;
+
+      if (isInvitedUser) {
+        newUser = user;
+        newUser.email = req.body.email;
+        newUser.password = req.body.password;
+      } else {
+        newUser = new UserModel({
+          email: req.body.email,
+          password: req.body.password
+        });
+      }
 
       newUser.save(function(err) {
         if (err)
@@ -146,6 +167,9 @@ auth.joinTeam = function(req, res) {
           .then(function(user) {
             if (!user || user.getEmailHash() !== emailHash)
               return invalidHashResponse();
+
+            req.flash('inviteHash'); // clear it
+            req.flash('inviteHash', emailHash);
 
             return res.render('signup', {
               title: `Join ${team.name} on Timezone.io!`,
