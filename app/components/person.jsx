@@ -1,21 +1,22 @@
+'use strict';
 var React = require('react');
 var Avatar = require('./avatar.jsx');
 var ActionCreators = require('../actions/actionCreators.js');
+const DEFAULT_AVATAR = require('../helpers/images').DEFAULT_AVATAR;
 
-module.exports = React.createClass({
+class Person extends React.Component {
 
-  displayName: 'Person',
-
-  handleToggleSelected: function() {
+  handleToggleSelected() {
     ActionCreators.toggleSelectPerson(this.props.model._id);
-  },
-  render: function() {
+  }
+
+  render() {
     var person = this.props.model;
     return (
       <div className="person"
            key={person._id}
            onClick={this.handleToggleSelected}>
-        <Avatar avatar={person.avatar} />
+        <Avatar avatar={person.avatar || DEFAULT_AVATAR} />
         <div className="person-info">
           <p className="person-name">{person.name}</p>
           <p className="person-city">{person.location}</p>
@@ -24,4 +25,6 @@ module.exports = React.createClass({
     );
   }
 
-});
+};
+
+module.exports = Person;

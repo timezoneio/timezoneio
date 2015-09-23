@@ -1,38 +1,29 @@
+'use strict';
 var React = require('react');
 
-module.exports = React.createClass({
 
-  displayName: 'Avatar',
+class Avatar extends React.Component {
 
-  getInitialState: function() {
-    return {
-      brokenImage: false,
-    };
-  },
+  constructor(props) {
+    super(props);
+  }
 
-  handleLoadSuccess: function() {
-    if (this.state.brokenImage)
-      this.setState({ brokenImage: false });
-  },
-
-  handleLoadError: function(e) {
-    if (!this.state.brokenImage)
-      this.setState({ brokenImage: true });
+  handleLoadError(e) {
     if (typeof this.props.onImageLoadError === 'function')
       this.props.onImageLoadError(e);
-  },
+  }
 
-  render: function() {
-
+  render() {
     var classes = 'avatar';
     if (this.props.size) classes += ' ' + this.props.size;
 
     return (
       <img src={this.props.avatar}
            className={classes}
-           onLoad={this.handleLoadSuccess}
-           onError={this.handleLoadError} />
+           onError={this.handleLoadError.bind(this)} />
      );
   }
 
-});
+}
+
+module.exports = Avatar;
