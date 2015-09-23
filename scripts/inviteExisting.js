@@ -7,12 +7,12 @@ var UserModel = require('../app/models/user');
 var TeamModel = require('../app/models/team');
 var sendEmail = require('../app/email/send');
 
-const TEAM_ID = '5513953c6d1aacc66f7e7efe';
+const TEAM_ID = '5513953c6d1aacc66f7e7efe'; // buffer
 
 connect(function(err, connection) {
 
   // Buffer
-  TeamModel.findOne({ _id: '5513953c6d1aacc66f7e7efe' })
+  TeamModel.findOne({ _id: TEAM_ID })
     .populate('people')
     .populate('admins')
     .then(function(team) {
@@ -29,7 +29,7 @@ connect(function(err, connection) {
         sendEmail('invite', user.email, {
           inviteUrl: team.getInviteUrl(user),
           adminName: admin.name,
-          teamName: ]team.name
+          teamName: team.name
         }).then(done, done);
 
       }, function() {
