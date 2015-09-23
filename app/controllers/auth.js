@@ -1,5 +1,6 @@
 var UserModel = require('../models/user');
 var TeamModel = require('../models/team');
+var sendEmail = require('../email/send');
 var isValidEmail = require('../utils/strings').isValidEmail;
 var getProfileUrl = require('../helpers/urls').getProfileUrl;
 
@@ -73,6 +74,11 @@ auth.create = function(req, res) {
       newUser.save(function(err) {
         if (err)
           return renderError(err); // 'Something didn\'t work right there, can you try again?'
+
+        // this is async
+        sendEmail('welcome', newUser.email);
+          // .catch(function(err){ ...mark user email invalid })
+          // TODO - handle bounced and error'd emails!
 
         // login the user manually
         req.logIn(newUser, function(err) {

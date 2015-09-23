@@ -3,11 +3,12 @@ var moment = require('moment-timezone');
 var getTimezoneFromLocation = require('../helpers/getTimezoneFromLocation');
 var getCityFromCoords = require('../helpers/getCityFromCoords');
 
-var UserModel = require('../models/user.js');
-var TeamModel = require('../models/team.js');
-var LocationModel = require('../models/location.js');
-var APIClientModel = require('../../app/models/apiClient.js');
-var APIAuthModel = require('../../app/models/apiAuth.js');
+var UserModel = require('../models/user');
+var TeamModel = require('../models/team');
+var LocationModel = require('../models/location');
+var APIClientModel = require('../../app/models/apiClient');
+var APIAuthModel = require('../../app/models/apiAuth');
+var sendEmail = require('../../app/email/send');
 
 var api = module.exports = {};
 
@@ -72,6 +73,13 @@ api.userCreate = function(req, res, next) {
       if (err) return handleError(res, 'Failed to save: ' + err);
       newUser.save(function(err) {
         if (err) return handleError(res, 'Failed to save: ' + err);
+
+        sendEmail('invite', newUser.email, {
+          inviteUrl: req.team.getInviteUrl(),
+          adminName: req.user.name,
+          teamName: req.team.name
+        });
+
         res.json(newUser);
       });
     });

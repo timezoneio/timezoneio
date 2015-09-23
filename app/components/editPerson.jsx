@@ -21,8 +21,13 @@ module.exports = React.createClass({
                         SAVE_BUTTON_STATES[0],
       error: '',
 
+      // Does the user need to be created?
       isNewUser: false,
+      // Are we viewing/editing a user in the db or on the team?
+      isExistingUser: !!this.props._id,
+      // Are we in invite mode here?
       inviteTeamMember: this.props.inviteTeamMember,
+      // Is the user registerd for their own account?
       isRegistered: this.props.isRegistered,
 
       userId: this.props._id,
@@ -66,7 +71,7 @@ module.exports = React.createClass({
       .then(function(res) {
 
         this.setState({
-          isNewUser: false,
+          isNewUser: true,
           error: '', // clear the error
           saveButtonText: BUTTON_STATES[2]
         });
@@ -88,10 +93,13 @@ module.exports = React.createClass({
 
     ActionCreators.addTeamMember(this.props.teamId, this.state.userId)
       .then(function(user) {
-        this.setState({
-          error: '', // clear the error
+        this.setState(toolbelt.extend({ }, this.state, user, {
+          error: '',
+          userId: user._id,
+          isExistingUser: true,
+          isNewUser: false,
           saveButtonText: ADD_BUTTON_STATES[2]
-        });
+        }));
       }.bind(this))
       .catch(function(err) {
         this.setState({
@@ -139,16 +147,12 @@ module.exports = React.createClass({
         } else {
           // set limited user data
           var user = response;
-          this.setState({
+          this.setState(toolbelt.extend({ }, this.state, user, {
             userId: user._id,
-            name: user.name,
-            avatar: user.avatar,
-            location: user.location,
-            tz: user.tz,
             isExistingUser: true,
             isNewUser: false,
             saveButtonText: ADD_BUTTON_STATES[0]
-          });
+          }));
         }
       }.bind(this))
       .catch(function(err) {
@@ -216,7 +220,7 @@ module.exports = React.createClass({
         )}
 
         <div className="edit-person--row">
-          { this.state.avatar ? (
+          { (true || this.state.avatar) ? (
               <Avatar avatar={this.state.avatar || imageHelpers.DEFAULT_AVATAR}
                       onImageLoadError={this.onImageLoadError}
                       size="large" />

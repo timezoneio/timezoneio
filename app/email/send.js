@@ -44,6 +44,7 @@ var EMAIL_TYPES = {
     tags: ['signup']
   },
   'invite': {
+    // params: inviteUrl, adminName, teamName
     subject: function(p) {
       return `${p.adminName} wants you to join the ${p.teamName} team!`;
     },

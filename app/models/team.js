@@ -84,8 +84,11 @@ teamSchema.methods = {
     return this.url + '/manage';
   },
 
-  getInviteUrl: function() {
-    return BASE_URL + '/join/' + this.inviteHash;
+  getInviteUrl: function(user) {
+    var url = `${BASE_URL}/join/${this.inviteHash}`;
+    if (user)
+      return `${url}/${user._id}`;
+    return url;
   },
 
   isAdmin: function(user) {
