@@ -124,6 +124,40 @@ api.teamUpdate = function(req, res, next) {
 
 };
 
+api.teamAddMember = function(req, res, next) {
+  var team = req.team;
+  var userId = req.body.userId;
+
+  var failedToAdd = function(message) {
+    res.status(400).json({
+      message: message || 'Sorry, we couldn\'t add that team member'
+    });
+  };
+
+  if (!userId)
+    return failedToAdd('Please provide a userId in the body of your request');
+
+  UserModel.findOne({ _id: userId })
+    .then(function(user) {
+      if (!user)
+        return failedToAdd('Sorry, we couldn\'t find that team member');
+
+      team.addTeamMember(user);
+      team.save(function(err) {
+        if (err)
+          return failedToAdd();
+
+        res.json({
+          user: user.toAdminJSON(),
+          message: 'Team member successfully added!'
+        });
+      });
+    })
+    .catch(function(err) {
+      failedToAdd();
+    });
+};
+
 api.teamRemoveMember = function(req, res, next) {
 
   var team = req.team;

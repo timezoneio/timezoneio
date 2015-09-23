@@ -2,12 +2,13 @@ var React = require('react');
 var toolbelt = require('../utils/toolbelt');
 var imageHelpers = require('../helpers/images');
 var ActionCreators = require('../actions/actionCreators');
+var isValidEmail = require('../utils/strings').isValidEmail;
 var LocationAutocomplete = require('./locationAutocomplete.jsx');
 var Avatar = require('./avatar.jsx');
 var ProfileLocation = require('./profileLocation.jsx');
 
 var SAVE_BUTTON_STATES = ['Save', 'Saving', 'Saved'];
-var ADD_BUTTON_STATES = ['Add', 'Adding', 'Added'];
+var ADD_BUTTON_STATES = ['Add to team', 'Adding', 'Added'];
 
 module.exports = React.createClass({
 
@@ -20,8 +21,9 @@ module.exports = React.createClass({
                         SAVE_BUTTON_STATES[0],
       error: '',
 
-      inviteTeamMember: this.props.inviteTeamMember,
       isNewUser: false,
+      inviteTeamMember: this.props.inviteTeamMember,
+      isRegistered: this.props.isRegistered,
 
       userId: this.props._id,
       email: this.props.email,
@@ -56,7 +58,6 @@ module.exports = React.createClass({
     delete data.error;
     delete data.saveButtonText;
 
-
     var createOrUpdateUser = this.state.isNewUser ?
                               ActionCreators.addNewTeamMember(data) :
                               ActionCreators.saveUserInfo(this.state.userId, data);
@@ -82,6 +83,24 @@ module.exports = React.createClass({
       }.bind(this));
   },
 
+  handleClickAdd: function(e) {
+    this.setState({ saveButtonText: ADD_BUTTON_STATES[1] });
+
+    ActionCreators.addTeamMember(this.props.teamId, this.state.userId)
+      .then(function(user) {
+        this.setState({
+          error: '', // clear the error
+          saveButtonText: ADD_BUTTON_STATES[2]
+        });
+      }.bind(this))
+      .catch(function(err) {
+        this.setState({
+          error: err.message,
+          saveButtonText: ADD_BUTTON_STATES[0]
+        });
+      }.bind(this));
+  },
+
   onImageLoadError: function(e) {
     this.setState({ avatar: null });
   },
@@ -96,7 +115,21 @@ module.exports = React.createClass({
       }.bind(this));
   },
 
+  handleEmailKeyDown: function(e) {
+    if (e.keyCode === 13)
+      this.handleCheckUserEmail();
+    else if (this.state.error)
+      this.setState({ error: null });
+  },
+
   handleCheckUserEmail: function() {
+
+    if (!isValidEmail(this.state.email))
+      return this.setState({ error: 'Please enter a valid email ;)' });
+
+    if (toolbelt.indexOf({ email: this.state.email }, this.props.people) !== -1)
+      return this.setState({ error: 'This person is already on your team :)' });
+
     ActionCreators.getUserByEmail(this.state.email, this.props.teamId)
       .then(function(response) {
         // if message, then no user found!
@@ -113,7 +146,8 @@ module.exports = React.createClass({
             location: user.location,
             tz: user.tz,
             isExistingUser: true,
-            isNewUser: false
+            isNewUser: false,
+            saveButtonText: ADD_BUTTON_STATES[0]
           });
         }
       }.bind(this))
@@ -152,6 +186,7 @@ module.exports = React.createClass({
             <input type="text"
                    name="email"
                    valueLink={emailLink}
+                   onKeyDown={this.handleEmailKeyDown}
                    placeholder="E-mail" />
           </div>
           <div className="edit-person--row">
@@ -166,6 +201,9 @@ module.exports = React.createClass({
         </div>
       );
     }
+
+    var canEditUser = this.state.isRegistered === true ? false :
+                      this.state.isNewUser ? true : false;
 
     return (
       <div className="edit-person">
@@ -190,7 +228,7 @@ module.exports = React.createClass({
           }
         </div>
 
-        { this.state.isNewUser ? (
+        { canEditUser ? (
           <div>
 
             <div className="edit-person--row">
@@ -208,7 +246,7 @@ module.exports = React.createClass({
               </span>
             </div>
 
-            <div className="edit-person--row">
+            <div className="edit-person--row txt-center">
               <button onClick={this.handleClickSave}>
                 {this.state.saveButtonText}
               </button>
@@ -226,8 +264,8 @@ module.exports = React.createClass({
                              timeFormat={this.props.timeFormat} />
 
            <div className="edit-person--row txt-center">
-              <button onClick={this.handleClickSave}>
-                Add to team
+              <button onClick={this.handleClickAdd}>
+                {this.state.saveButtonText}
               </button>
             </div>
 

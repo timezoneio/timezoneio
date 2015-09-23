@@ -14,6 +14,7 @@ var userSchema = new Schema({
   salt: { type: String, default: '' },
   inviteCode: { type: String, default: '' }, // ???
 
+  // loginProvider: { type: String, default null },
   // facebook: {},
   twitter: {},
   // google: {},
@@ -78,6 +79,7 @@ userSchema
   })
   .get(function() { return this._password; });
 
+// NOTE - This should be updated to check valid loginProvider for oauth logins
 userSchema
   .virtual('isRegistered')
   .get(function() { return !!this.hashedPassword; });

@@ -38,6 +38,20 @@ var ActionCreators = module.exports = {
       });
   },
 
+  addTeamMember: function(teamId, userId) {
+    return api
+      .post(`/team/${teamId}/member`, { userId: userId })
+      .then(function(data) {
+
+        AppDispatcher.dispatchApiAction({
+          actionType: ActionTypes.UPDATED_USER_DATA,
+          value: data.user
+        });
+
+        return data;
+      });
+  },
+
   removeTeamMember: function(teamId, userId) {
     return api
       .delete('/team/' + teamId + '/member/' + userId)

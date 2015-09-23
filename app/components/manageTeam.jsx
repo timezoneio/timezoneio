@@ -232,6 +232,7 @@ module.exports = React.createClass({
 
                 <EditPerson {...this.state.editingPerson}
                             teamId={this.props.team._id}
+                            people={people}
                             inviteTeamMember={this.state.inviteTeamMember}
                             timeFormat={this.props.timeFormat} />
 
