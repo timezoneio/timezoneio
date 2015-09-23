@@ -1,6 +1,6 @@
 #!/bin/sh
 
-read -p "Did you run the gulp predeploy script (y/n)? " answer
+read -p "Did you run the gulp predeploy script & commit it (y/n)? " answer
 case ${answer:0:1} in
     y|Y )
         echo "Awesome...time to deploy"
