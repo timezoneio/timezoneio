@@ -7,13 +7,15 @@ var path = require('path');
 var Mustache = require('mustache');
 var React = require('react');
 
-var STATIC_VERSIONS = require('../../rev-manifest.json');
-var STATIC_DOMAIN = '//s3.amazonaws.com/timezoneio/';
-var isProduction = process.env.NODE_ENV === 'production';
-
+const STATIC_VERSIONS = require('../../rev-manifest.json');
+const STATIC_DOMAIN = '//s3.amazonaws.com/timezoneio/';
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+const ICON_STYLESHEET = IS_PRODUCTION ?
+                        'https://fonts.googleapis.com/icon?family=Material+Icons' :
+                        '/stylesheets/material-design-icons.css';
 
 var getStaticUrl = function(relUrl) {
-  if (isProduction && relUrl in STATIC_VERSIONS)
+  if (IS_PRODUCTION && relUrl in STATIC_VERSIONS)
     return STATIC_DOMAIN + STATIC_VERSIONS[relUrl];
   return '/' + relUrl;
 };
@@ -34,7 +36,7 @@ module.exports = function render(pathName, locals, cb) {
 
   // clean user object for render
   if (data.user)
-    data.user = data.user.toJSON();
+    data.user = data.user.toOwnerJSON();
 
   var params = {};
 
@@ -43,8 +45,10 @@ module.exports = function render(pathName, locals, cb) {
   );
   params.data = JSON.stringify(data || {});
 
+  params.icons = ICON_STYLESHEET;
   params.stylesheet = getStaticUrl('stylesheets/index.css');
-  params.script = getStaticUrl('js/bundles/' + this.name + '.js');
+  if (!locals.noScript)
+    params.script = getStaticUrl('js/bundles/' + this.name + '.js');
 
   // IDEA for generic bundle page
   // params.script = this.name ?

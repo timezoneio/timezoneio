@@ -1,3 +1,6 @@
+
+// SERVER ONLY
+
 var qs = require('querystring');
 var request = require('request');
 
@@ -8,7 +11,7 @@ var base = 'https://maps.googleapis.com/maps/api/timezone/json?';
 module.exports = function getTimezoneFromLocation(lat, long, cb) {
 
   var params = {
-    key: SERVER_KEY,
+    // key: SERVER_KEY,
     location: lat + ',' + long,
     timestamp: Math.floor(new Date().valueOf() / 1000)
   };

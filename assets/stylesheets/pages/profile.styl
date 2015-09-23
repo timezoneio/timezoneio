@@ -1,36 +1,64 @@
 
-.profile-container
-  display: flex
-  flex-direction: column
-
 .profile
-  flex-grow: 1
-  margin-top: $avatarSize * 2
   padding-top: 0
-  
-  .content-container
-    display: flex
-    align-items: center
-    max-width: 480px
-    position: relative
-    top: - $avatarSize
-    
+
+.profile-main
+  max-width: 800px
+  margin: 0 auto
+
 .profile-avatar
-  margin-right: 2em
+  margin: 0.5em auto
 
 .profile-details
-  height: 90px
-  
+  text-align: center
+
 .profile-name
-  margin: 0 0 18px
+  margin: 0.3em 0
   font-size: 32px
   font-weight: normal
 
+@keyframes loadingPulsate {
+  0% { color: $brandColor }
+  100% { color: $lightFillColor }
+}
+
 .profile-location
   margin: 0
-  font-weight: normal
-  
+
+  .location-icon
+    position: relative
+    top: 3px
+    width: 18px
+    margin-right: 0.2em
+    color: $brandColor
+
+    &.loading
+      animation: loadingPulsate 600ms linear alternate infinite
+
 .profile-offset
-  margin: 0 1em
+  margin-left: 0.8em
   color: $mutedColor
   font-size: 0.8em
+  line-height: 1em
+
+.profile-teams
+  margin: 2em 0
+
+.profile-team
+  margin: 0 0.1em
+
+.profile-edit
+  text-align: center
+
+.profile-avatar-options
+  margin: 1em 0
+  text-align: center
+
+  // space out the children
+  > span,
+  > .button
+    margin: 0 0.2em
+    vertical-align: middle
+
+.profile-edit-form
+  margin-top: 2em

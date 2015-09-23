@@ -7,6 +7,8 @@ var teamSchema = new Schema({
   name: { type: String, default: '', trim: true },
   slug: { type: String, default: '', trim: true },
 
+  inviteHash: { type: String, default: '', trim: true },
+
   //NOTE - I think this schema works w/ the nested array of objects
   admins: [{ type: Schema.ObjectId, ref: 'User' }],
   people: [{ type: Schema.ObjectId, ref: 'User' }],
@@ -27,9 +29,44 @@ var teamSchema = new Schema({
 teamSchema.index({ slug: 1 });
 teamSchema.index({ people: 1 });
 
+const INVITE_SALT = '***REMOVED***';
+const BASE_URL = process.env.NODE_ENV === 'production' ?
+                 'http://timezone.io' :
+                 'http://localhost:8080';
+
+// Populate the invite hash on first save
+teamSchema.pre('save', function(next) {
+  if (!this.inviteHash)
+    this.inviteHash = crypto.createHash('md5')
+                           .update(INVITE_SALT + this._id)
+                           .digest('hex')
+                           .substr(0, 16); // only need 16 characters
+  next();
+});
+
 teamSchema
   .virtual('url')
   .get(function() { return '/team/' + this.slug; });
+
+
+var PUBLIC_FIELDS = [
+  '_id',
+  'name',
+  'admins',
+  'people',
+  'url'
+];
+
+teamSchema.set('toJSON', {
+  getters: true,
+  virtuals: true,
+  transform: function (doc, ret, options) {
+    return PUBLIC_FIELDS.reduce(function(obj, field) {
+      obj[field] = ret[field];
+      return obj;
+    }, {});
+  }
+});
 
 // TODO - slug validation
 //      - admin required
@@ -37,8 +74,21 @@ teamSchema
 
 teamSchema.methods = {
 
+  toAdminJSON: function() {
+    var json = this.toJSON();
+    json.inviteUrl = this.getInviteUrl();
+    return json;
+  },
+
   getManageUrl: function() {
     return this.url + '/manage';
+  },
+
+  getInviteUrl: function(user) {
+    var url = `${BASE_URL}/join/${this.inviteHash}`;
+    if (user)
+      return `${url}/${user._id}-${user.getEmailHash()}`;
+    return url;
   },
 
   isAdmin: function(user) {

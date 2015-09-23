@@ -150,8 +150,8 @@ for hour in 0 1 2 3 4 5 6 7 22 23
 
 // Editing modal
 .manage-team--container
-  position: relative
   display: flex
+  height: 100%
   align-items: stretch
   padding: 3em 3em 0
 
@@ -160,7 +160,18 @@ for hour in 0 1 2 3 4 5 6 7 22 23
   padding-right: 2em
 
 .manage-team--header-title
-  margin: 0 0 1em
+  margin: 1.6em 0 1em
+
+.manage-team--row
+  margin: 1em 0
+
+input[type="text"].manage-team--invite-url
+  width: 260px
+  color: $mutedColor
+  font-size: 0.8em
+  border: 1px solid $borderColor
+  border-radius: 2px
+  cursor: text
 
 .manage-team--close
   position: absolute
@@ -172,7 +183,10 @@ for hour in 0 1 2 3 4 5 6 7 22 23
   position: relative
   max-height: 100%
 
-// .manage-team--team
+.manage-team--subview-team
+  max-height: 100%
+  display: flex
+  flex-direction: column
 
 .manage-team--team-header
   margin-bottom: 1em
@@ -180,10 +194,12 @@ for hour in 0 1 2 3 4 5 6 7 22 23
 
   input[type="search"]
     width: 315px
-    margin: 0 0.5em 0 2.5em
+    border-radius: 0
 
-// .manage-team--team-list
-//   overflow: scroll
+.manage-team--team-list
+  max-height: 100%
+  overflow: scroll
+  padding: 0 0.1em
 
 
 .manage-team--team-member
@@ -211,10 +227,14 @@ for hour in 0 1 2 3 4 5 6 7 22 23
     margin: 2em auto 0
 
 
+
 .edit-person
   display: flex
   flex-direction: column
   align-items: center
+
+  .profile-location
+    margin-bottom: 1.5em
 
 .edit-person--row
   margin: 0.5em 0
@@ -256,7 +276,7 @@ for hour in 0 1 2 3 4 5 6 7 22 23
 
     // all children are 50%
     > *
-      width: 40%
+      width: 50%
 
   .app-sidebar--time
     font-size: 1.5em
@@ -266,6 +286,7 @@ for hour in 0 1 2 3 4 5 6 7 22 23
     display: none
 
   .time-slider-container
+    width: 40%
     order: 4 // put this under the time
 
   .time-slider
@@ -273,17 +294,27 @@ for hour in 0 1 2 3 4 5 6 7 22 23
 
   .app-sidebar--button-row
     max-height: 27px
+    width: auto
     margin-top: 0.7em
+    margin-bottom: 0
     justify-content: flex-start
 
   .app-sidebar--format-select
-    margin-right: 0.8em
-    white-space: nowrap
+    display: none
+    // margin-right: 0.8em
+    // white-space: nowrap
+
+  // .app-sidebar--admin
 
   .timezone-list
     margin-top: 6em
     justify-content: flex-start
     flex-direction: column-reverse
+
+  .team-stats
+    position relative
+    padding: 1em 0
+    order -1
 
   .timezone
     display: flex

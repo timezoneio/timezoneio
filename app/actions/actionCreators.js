@@ -1,6 +1,8 @@
-var AppDispatcher = require('../dispatchers/appDispatcher.js');
-var ActionTypes = require('../actions/actionTypes.js');
-var api = require('../helpers/api.js');
+var AppDispatcher = require('../dispatchers/appDispatcher');
+var ActionTypes = require('../actions/actionTypes');
+var location = require('../helpers/location');
+var api = require('../helpers/api');
+var toolbelt = require('../utils/toolbelt');
 
 var ActionCreators = module.exports = {
 
@@ -18,6 +20,10 @@ var ActionCreators = module.exports = {
       });
   },
 
+  getUserByEmail: function(email, teamId) {
+    return api.get('/user',{ email: email, teamId: teamId });
+  },
+
   addNewTeamMember: function(data) {
     return api
       .post('/user', data)
@@ -26,6 +32,20 @@ var ActionCreators = module.exports = {
         AppDispatcher.dispatchApiAction({
           actionType: ActionTypes.UPDATED_USER_DATA,
           value: data
+        });
+
+        return data;
+      });
+  },
+
+  addTeamMember: function(teamId, userId) {
+    return api
+      .post(`/team/${teamId}/member`, { userId: userId })
+      .then(function(data) {
+
+        AppDispatcher.dispatchApiAction({
+          actionType: ActionTypes.UPDATED_USER_DATA,
+          value: data.user
         });
 
         return data;
@@ -43,6 +63,46 @@ var ActionCreators = module.exports = {
         });
 
         return data;
+      });
+  },
+
+  getUserLocationAndTimezone: function(user) {
+
+    var positionData = toolbelt.pluck('location', 'tz', user);
+    positionData.coords = toolbelt.clone(user.coords || {});
+
+    return location.getCurrentPosition()
+      .then(function(coords) {
+
+        // If no current coords, dist is NaN
+        var dist = location.calculateDistance(
+          positionData.coords.lat, positionData.coords.long,
+          coords.latitude, coords.longitude
+        );
+
+        // Check if the user has moved at least 10km
+        if (!dist || dist > 10) {
+          var newCoords = {
+            lat: coords.latitude,
+            long: coords.longitude
+          };
+          return Promise.all([
+            newCoords,
+            location.getCityFromCoords(newCoords),
+            location.getTimezomeFromCoords(newCoords)
+          ]);
+        }
+
+        return [positionData.coords, positionData.location, positionData.tz];
+      })
+      .then(function(values) {
+        positionData.coords = values[0];
+        positionData.location = values[1];
+        positionData.tz = values[2];
+        return positionData;
+      })
+      .catch(function(err) {
+        console.error(err);
       });
   },
 

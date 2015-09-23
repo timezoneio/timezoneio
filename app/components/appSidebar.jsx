@@ -67,7 +67,7 @@ module.exports = React.createClass({
 
         { this.props.isAdmin && (
 
-            <div className="app-sidebar--admin">
+            <div className="app-sidebar--button-row app-sidebar--admin">
 
               <button className="small hollow"
                       onClick={this.handleManageTeam}>Manage Team</button>

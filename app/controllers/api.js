@@ -1,22 +1,42 @@
 var crypto = require('crypto');
 var moment = require('moment-timezone');
-var getTimezoneFromLocation = require('../helpers/getTimezoneFromLocation.js');
+var getTimezoneFromLocation = require('../helpers/getTimezoneFromLocation');
+var getCityFromCoords = require('../helpers/getCityFromCoords');
 
-var UserModel = require('../models/user.js');
-var TeamModel = require('../models/team.js');
-var LocationModel = require('../models/location.js');
-var APIClientModel = require('../../app/models/apiClient.js');
-var APIAuthModel = require('../../app/models/apiAuth.js');
+var UserModel = require('../models/user');
+var TeamModel = require('../models/team');
+var LocationModel = require('../models/location');
+var APIClientModel = require('../../app/models/apiClient');
+var APIAuthModel = require('../../app/models/apiAuth');
+var sendEmail = require('../../app/email/send');
 
 var api = module.exports = {};
 
 var TEAM_WRITABLE_FIELDS = ['name'];
 
-// FIX THIS TO RETURN 400s ALSO
-var handleError = function(res, message) {
-  res.status(500).json({
+
+var handleError = function(res, statusCode, message) {
+  message = !message && typeof statusCode === 'string' ? message : null;
+  res.status(400).json({
     message: message || 'Something bad happened'
   });
+};
+
+api.getUserByEmail = function(req, res, next) {
+
+  if (!req.query.email)
+    return res.status(400).json({ message: 'Please provide email parameter' });
+
+  UserModel.findOne({ email: req.query.email })
+    .then(function(user) {
+      if (!user)
+        return res.json({ message: 'No user with that email!' });
+
+      res.json(user);
+    })
+    .catch(function(err) {
+      handleError(res, err);
+    });
 };
 
 api.userCreate = function(req, res, next) {
@@ -53,6 +73,13 @@ api.userCreate = function(req, res, next) {
       if (err) return handleError(res, 'Failed to save: ' + err);
       newUser.save(function(err) {
         if (err) return handleError(res, 'Failed to save: ' + err);
+
+        sendEmail('invite', newUser.email, {
+          inviteUrl: req.team.getInviteUrl(newUser),
+          adminName: req.user.name,
+          teamName: req.team.name
+        });
+
         res.json(newUser);
       });
     });
@@ -69,6 +96,7 @@ api.userGet = function(req, res, next) {
 api.userUpdate = function(req, res, next) {
 
   var user = req.activeUser;
+  var isOwner = user._id.toString() === req.user._id.toString();
 
   // if (!user.isOnTeam(req.team))
     // return handleError(res, 'Hey, that user isn\'t on your team!');
@@ -82,7 +110,7 @@ api.userUpdate = function(req, res, next) {
 
   user.save(function(err) {
     if (err) return handleError(res, 'Failed to save');
-    res.json(user);
+    res.json(isOwner ? user.toOwnerJSON() : user);
   });
 
 };
@@ -103,6 +131,40 @@ api.teamUpdate = function(req, res, next) {
     res.json(team);
   });
 
+};
+
+api.teamAddMember = function(req, res, next) {
+  var team = req.team;
+  var userId = req.body.userId;
+
+  var failedToAdd = function(message) {
+    res.status(400).json({
+      message: message || 'Sorry, we couldn\'t add that team member'
+    });
+  };
+
+  if (!userId)
+    return failedToAdd('Please provide a userId in the body of your request');
+
+  UserModel.findOne({ _id: userId })
+    .then(function(user) {
+      if (!user)
+        return failedToAdd('Sorry, we couldn\'t find that team member');
+
+      team.addTeamMember(user);
+      team.save(function(err) {
+        if (err)
+          return failedToAdd();
+
+        res.json({
+          user: user.toAdminJSON(),
+          message: 'Team member successfully added!'
+        });
+      });
+    })
+    .catch(function(err) {
+      failedToAdd();
+    });
 };
 
 api.teamRemoveMember = function(req, res, next) {
@@ -153,6 +215,20 @@ api.locationSearch = function(req, res, next) {
     res.json({ results: locations });
   });
 
+};
+
+api.locationGetCity = function(req, res, next) {
+
+  if (!req.query.lat || !req.query.long)
+    return res.status(400).json({
+      message: 'lat and long params required'
+    });
+
+  getCityFromCoords(req.query.lat, req.query.long, function(err, city) {
+    if (err) return handleError(res, 'Error finding your city');
+
+    res.json({ city: city });
+  });
 };
 
 api.locationGetTimezone = function(req, res, next) {

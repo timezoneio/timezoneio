@@ -17,6 +17,10 @@ button
   color: $textColor
   text-decoration: none
 
+  + .button,
+  + button
+    margin-left: 0.2em
+
   // Button sizes
   &.small
     font-size: 12px
@@ -66,6 +70,31 @@ button
     background-color: darken($buttonColor, 10%)
 
 
+  // Networks
+  &.twitter
+    padding-left: 2.8em
+    color: #fff
+    background-color: $twitter
+    background-image: url(../images/social/twitter-white-100x100.png)
+    background-size: 28px
+    background-repeat: no-repeat
+    background-position: 0.6em 50%
+
+    &:hover
+      background-color: darken($twitter, 8%)
+
+  &.gravatar
+    padding-left: 2.6em
+    color: #fff
+    background-color: $gravatar
+    background-image: url(../images/social/gravatar-white-100x100.png)
+    background-size: 28px
+    background-repeat: no-repeat
+    background-position: 0.6em 35% // push it up a pixel
+
+    &:hover
+      background-color: darken($gravatar, 8%)
+
 input[type="submit"].button
   border: 0
 
@@ -79,6 +108,10 @@ input[type="submit"].button
     border-radius: 0
     border-right-width: 0
 
+    + .button,
+    + button
+      margin-left: 0
+
     &:first-of-type
       padding-left: 1.1em
       border-radius: $buttonRadius 0 0 $buttonRadius
@@ -87,3 +120,19 @@ input[type="submit"].button
       padding-right: 1.1em
       border-right-width: 1px
       border-radius: 0 $buttonRadius $buttonRadius 0
+
+
+// NOTE - Alignment issues when used inline with other elements
+.button-upload
+  position: relative
+  overflow: hidden
+
+  input[type="file"]
+    position: absolute
+    top: 0
+    left: -100%
+    z-index: 5
+    height: 100%
+    width: 200%
+    opacity: 0
+    cursor: pointer

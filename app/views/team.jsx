@@ -1,3 +1,5 @@
+'use strict';
+
 var React = require('react');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
@@ -6,26 +8,20 @@ var TimezoneList = require('../components/timezoneList.jsx');
 var ManageTeam = require('../components/manageTeam.jsx');
 var UserMenu = require('../components/userMenu.jsx');
 
-module.exports = React.createClass({
 
-  displayName: 'Team',
+class Team extends React.Component {
 
-  handleClickMask: function(e) {
+  handleClickMask(e) {
     AppDispatcher.dispatchViewAction({
       actionType: ActionTypes.CLOSE_MODAL
     });
-  },
+  }
 
-  getModal: function() {
+  getModal() {
     return;
     var currentView = this.props.currentView;
 
     if (currentView === 'app') return;
-
-    // var modal = null;
-    //
-    // if (currentView === 'manage')
-    //   modal = (<ManageModal {...this.props} />);
 
     return (
       <div className="modal-container"
@@ -33,42 +29,28 @@ module.exports = React.createClass({
         {modal}
       </div>
     );
-  },
+  }
 
-  getView: function() {
-    var currentView = this.props.currentView;
+  getUserMenu() {
+    if (!this.props.user) return '';
+    return <UserMenu {...this.props.user}
+                     fixed={true} />
+  }
 
-    if (currentView === 'app') return;
+  render() {
 
-    var view = null;
+    if (this.props.currentView === 'manage')
+      return <ManageTeam {...this.props} />;
 
-    if (currentView === 'manage')
-      view = <ManageTeam {...this.props} />;
-
-    return (
-      <div className="view-container">
-        {view}
-      </div>
-    );
-  },
-
-  render: function() {
     return (
       <div className="container app-container">
-
         <AppSidebar {...this.props} />
-
         <TimezoneList {...this.props}
                       showStats={true} />
-
-        { this.props.user &&
-          <UserMenu {...this.props.user}
-                    fixed={true} />
-        }
-
-        {this.getView()}
-
+        {this.getUserMenu()}
       </div>
     );
   }
-});
+}
+
+module.exports = Team;

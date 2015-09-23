@@ -1,5 +1,6 @@
 var React = require('react');
 var Header = require('../components/header.jsx');
+var Notification = require('../components/notification.jsx');
 
 module.exports = React.createClass({
 
@@ -10,17 +11,12 @@ module.exports = React.createClass({
 
         <Header {...this.props} />
 
-        <h1 className="page-headline">Login</h1>
+        <h1 className="page-headline">Log in</h1>
 
-
+        <Notification style="error"
+                      text={this.props.errors} />
 
         <form action="/login" method="post" className="login-form">
-
-          { (this.props.errors && this.props.errors.length) ? (
-              <p className="form-error">
-                {this.props.errors.join('<br>')}
-              </p>
-          ) : ''}
 
           <input type="hidden" name="_csrf" value={this.props.csrf_token} />
 
@@ -38,9 +34,13 @@ module.exports = React.createClass({
 
           <div>
             <button type="submit" className="cta login-button">
-              Login
+              Log in
             </button>
           </div>
+
+          <p className="txt-center">
+            Don't have an account? <a href="/signup">Sign up now!</a>
+          </p>
 
         </form>
 

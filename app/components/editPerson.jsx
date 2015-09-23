@@ -1,11 +1,14 @@
 var React = require('react');
-var toolbelt = require('../utils/toolbelt.js');
-var ActionCreators = require('../actions/actionCreators.js');
+var toolbelt = require('../utils/toolbelt');
+var imageHelpers = require('../helpers/images');
+var ActionCreators = require('../actions/actionCreators');
+var isValidEmail = require('../utils/strings').isValidEmail;
 var LocationAutocomplete = require('./locationAutocomplete.jsx');
 var Avatar = require('./avatar.jsx');
+var ProfileLocation = require('./profileLocation.jsx');
 
 var SAVE_BUTTON_STATES = ['Save', 'Saving', 'Saved'];
-var ADD_BUTTON_STATES = ['Add', 'Adding', 'Added'];
+var ADD_BUTTON_STATES = ['Add to team', 'Adding', 'Added'];
 
 module.exports = React.createClass({
 
@@ -18,8 +21,16 @@ module.exports = React.createClass({
                         SAVE_BUTTON_STATES[0],
       error: '',
 
-      isNewUser: this.props.isNewUser,
+      // Does the user need to be created?
+      isNewUser: false,
+      // Are we viewing/editing a user in the db or on the team?
+      isExistingUser: !!this.props._id,
+      // Are we in invite mode here?
+      inviteTeamMember: this.props.inviteTeamMember,
+      // Is the user registerd for their own account?
+      isRegistered: this.props.isRegistered,
 
+      userId: this.props._id,
       email: this.props.email,
       name: this.props.name,
       location: this.props.location,
@@ -52,16 +63,15 @@ module.exports = React.createClass({
     delete data.error;
     delete data.saveButtonText;
 
-
     var createOrUpdateUser = this.state.isNewUser ?
                               ActionCreators.addNewTeamMember(data) :
-                              ActionCreators.saveUserInfo(this.props._id, data);
+                              ActionCreators.saveUserInfo(this.state.userId, data);
 
     createOrUpdateUser
       .then(function(res) {
 
         this.setState({
-          isNewUser: false,
+          isNewUser: true,
           error: '', // clear the error
           saveButtonText: BUTTON_STATES[2]
         });
@@ -78,14 +88,78 @@ module.exports = React.createClass({
       }.bind(this));
   },
 
+  handleClickAdd: function(e) {
+    this.setState({ saveButtonText: ADD_BUTTON_STATES[1] });
+
+    ActionCreators.addTeamMember(this.props.teamId, this.state.userId)
+      .then(function(user) {
+        this.setState(toolbelt.extend({ }, this.state, user, {
+          error: '',
+          userId: user._id,
+          isExistingUser: true,
+          isNewUser: false,
+          saveButtonText: ADD_BUTTON_STATES[2]
+        }));
+      }.bind(this))
+      .catch(function(err) {
+        this.setState({
+          error: err.message,
+          saveButtonText: ADD_BUTTON_STATES[0]
+        });
+      }.bind(this));
+  },
+
+  onImageLoadError: function(e) {
+    this.setState({ avatar: null });
+  },
+
   handleClickUseGravatar: function(e) {
     ActionCreators.getGravatar(this.state.email)
       .then(function(avatar) {
         if (avatar)
-          this.setState({ avatar: avatar });
+          this.setState({ avatar: avatar + '&d=404' });
       }.bind(this), function(err) {
+        this.setState({ error: err.message });
+      }.bind(this));
+  },
+
+  handleEmailKeyDown: function(e) {
+    if (e.keyCode === 13)
+      this.handleCheckUserEmail();
+    else if (this.state.error)
+      this.setState({ error: null });
+  },
+
+  handleCheckUserEmail: function() {
+
+    if (!isValidEmail(this.state.email))
+      return this.setState({ error: 'Please enter a valid email ;)' });
+
+    if (toolbelt.indexOf({ email: this.state.email }, this.props.people) !== -1)
+      return this.setState({ error: 'This person is already on your team :)' });
+
+    ActionCreators.getUserByEmail(this.state.email, this.props.teamId)
+      .then(function(response) {
+        // if message, then no user found!
+        if (response.message) {
+          this.setState({ isNewUser: true, isExistingUser: false });
+          this.handleClickUseGravatar();
+        } else {
+          // set limited user data
+          var user = response;
+          this.setState(toolbelt.extend({ }, this.state, user, {
+            userId: user._id,
+            isExistingUser: true,
+            isNewUser: false,
+            saveButtonText: ADD_BUTTON_STATES[0]
+          }));
+        }
+      }.bind(this))
+      .catch(function(err) {
         this.setState({
-          error: err.message
+          error: err.message,
+          isNewUser: false,
+          isExistingUser: false
         });
       }.bind(this));
   },
@@ -107,12 +181,48 @@ module.exports = React.createClass({
       requestChange: this.handleChange.bind(null, 'avatar')
     };
 
+    // isNewUser
+    if (this.state.inviteTeamMember && !this.state.isNewUser && !this.state.isExistingUser) {
+      return (
+        <div className="edit-person">
+          <p>Enter your teammate's email address:</p>
+          <div className="edit-person--row">
+            <input type="text"
+                   name="email"
+                   valueLink={emailLink}
+                   onKeyDown={this.handleEmailKeyDown}
+                   placeholder="E-mail" />
+          </div>
+          <div className="edit-person--row">
+            <button className="cta"
+                    onClick={this.handleCheckUserEmail}>
+              Next
+            </button>
+          </div>
+          { this.state.error &&
+              <p className="edit-person--row error">{this.state.error}</p>
+          }
+        </div>
+      );
+    }
+
+    var canEditUser = this.state.isRegistered === true ? false :
+                      this.state.isNewUser ? true : false;
+
     return (
       <div className="edit-person">
 
+        { this.state.isNewUser && (
+          <p className="txt-center">
+            Add your teammate's information <br/>
+            or wait for them to add it!
+          </p>
+        )}
+
         <div className="edit-person--row">
-          { this.state.avatar ? (
-              <Avatar avatar={this.state.avatar}
+          { (true || this.state.avatar) ? (
+              <Avatar avatar={this.state.avatar || imageHelpers.DEFAULT_AVATAR}
+                      onImageLoadError={this.onImageLoadError}
                       size="large" />
             ) : (
               <div className="add-image-placeholder">
@@ -122,52 +232,51 @@ module.exports = React.createClass({
           }
         </div>
 
-        <div className="edit-person--row">
-          <input type="text"
-                 name="name"
-                 valueLink={nameLink}
-                 placeholder="Name" />
-        </div>
+        { canEditUser ? (
+          <div>
 
-        <div className="edit-person--row">
+            <div className="edit-person--row">
+              <input type="text"
+                     name="name"
+                     valueLink={nameLink}
+                     placeholder="Name" />
+            </div>
 
-          <LocationAutocomplete {...this.props}
-                                handleChange={this.handleLocationChange} />
+            <div className="edit-person--row">
+              <LocationAutocomplete {...this.props}
+                                    handleChange={this.handleLocationChange} />
+              <span className="edit-person--timezone-display">
+                {this.state.tz}
+              </span>
+            </div>
 
-          <span className="edit-person--timezone-display">
-            {this.state.tz}
-          </span>
+            <div className="edit-person--row txt-center">
+              <button onClick={this.handleClickSave}>
+                {this.state.saveButtonText}
+              </button>
+            </div>
 
-        </div>
-
-        { //this.state.isNewUser &&
-          // FUTURE - ONLY ALLOW USER TO EDIT THEIR OWN EMAIL
-          <div className="edit-person--row">
-            <input type="text"
-                   name="email"
-                   valueLink={emailLink}
-                   placeholder="E-mail" />
           </div>
-        }
+        ) : (
+          <div className="edit-person--row">
 
-        <div className="edit-person--row">
-          <input type="text"
-                 name="avatar"
-                 valueLink={avatarLink}
-                 placeholder="Avatar URL" />
-        </div>
+            <h3 className="txt-center">{this.state.name}</h3>
 
-        <div className="edit-person--row">
-          <button onClick={this.handleClickUseGravatar}>
-            Use Gravatar
-          </button>
-        </div>
+            <ProfileLocation location={this.state.location}
+                             tz={this.state.tz}
+                             time={new Date().valueOf()}
+                             timeFormat={this.props.timeFormat} />
 
-        <div className="edit-person--row">
-          <button onClick={this.handleClickSave}>
-            {this.state.saveButtonText}
-          </button>
-        </div>
+           <div className="edit-person--row txt-center">
+              <button onClick={this.handleClickAdd}>
+                {this.state.saveButtonText}
+              </button>
+            </div>
+
+          </div>
+        )}
+
+
 
         { this.state.error &&
             <p className="edit-person--row error">{this.state.error}</p>
@@ -177,3 +286,18 @@ module.exports = React.createClass({
     );
   }
 });
+
+/*
+<div className="edit-person--row">
+  <input type="text"
+         name="avatar"
+         valueLink={avatarLink}
+         placeholder="Avatar URL" />
+</div>
+
+<div className="edit-person--row">
+  <button onClick={this.handleClickUseGravatar}>
+    Use Gravatar
+  </button>
+</div>
+*/

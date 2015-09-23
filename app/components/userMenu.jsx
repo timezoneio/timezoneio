@@ -1,30 +1,45 @@
+'use strict';
+
 var React = require('react');
 var classNames = require('classnames');
+var getProfileUrl = require('../helpers/urls').getProfileUrl;
+var DEFAULT_AVATAR = require('../helpers/images').DEFAULT_AVATAR;
 
-module.exports = React.createClass({
 
-  getInitialState: function() {
-    return { open: false };
-  },
+class UserMenu extends React.Component {
 
-  closeMenu: function(e) {
+  constructor(props) {
+    super(props);
+    this.closeMenu = this.closeMenu.bind(this);
+    this.state = {
+      open: false
+    };
+  }
+
+  closeMenu() {
     this.setState({ open: false });
-  },
+    window.removeEventListener('click', this.closeMenu);
+  }
 
-  handleToggleMenu: function(e) {
-    e.stopPropagation();
-    this.setState({ open: !this.state.open });
-  },
-
-  componentDidMount: function() {
-    // Move this one day
+  openMenu() {
+    this.setState({ open: true });
     window.addEventListener('click', this.closeMenu);
-  },
+  }
 
-  render: function() {
+  handleToggleMenu(e) {
+    e.stopPropagation();
+    this.state.open ? this.closeMenu() : this.openMenu();
+  }
 
-    var profileUrl = '/people/' + this.props.username;
-    var style = { backgroundImage: 'url(' + this.props.avatar + ')' };
+  componentWillUnmount() {
+    window.removeEventListener('click', this.closeMenu);
+  }
+
+  render() {
+
+    var profileUrl = getProfileUrl(this.props);
+    var avatarUrl = this.props.avatar || DEFAULT_AVATAR;
+    var style = { backgroundImage: 'url(' + avatarUrl + ')' };
 
     var containerClasses = classNames('user-menu-container', {
       'fixed': this.props.fixed
@@ -52,7 +67,7 @@ module.exports = React.createClass({
           </a>
         </div>
 
-        <a onClick={this.handleToggleMenu}
+        <a onClick={this.handleToggleMenu.bind(this)}
            className="avatar header-avatar"
            style={style}
            name={this.props.name}>
@@ -61,4 +76,6 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+};
+
+module.exports = UserMenu;
