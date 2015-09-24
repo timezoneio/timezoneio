@@ -19,10 +19,21 @@ connect(function(err, connection) {
 
       var admin = team.admins[0];
 
+      console.log('Found %d users on %s', team.people.length, team.name);
+
       async.eachSeries(team.people, function(user, done) {
 
-        if (user.isRegistered)
+        if (user.isRegistered) {
+          console.log('%s is registered', user.name);
           return done();
+        }
+
+        var skip = ['Joel'];
+
+        if (skip.indexOf(user.name) > -1) {
+          console.info('Skipping %s', user.name);
+          return done();
+        }
 
         console.log('Inviting %s', user.name);
 
@@ -30,7 +41,9 @@ connect(function(err, connection) {
           inviteUrl: team.getInviteUrl(user),
           adminName: admin.name,
           teamName: team.name
-        }).then(done, done);
+        })
+          .then(function() { done(); })
+          .catch(function(){ done(); });
 
       }, function() {
         connection.close();
