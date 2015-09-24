@@ -49,6 +49,9 @@ access.requireTeamAdmin = function(req, res, next) {
   // We check body when passed via POST params and not in URL
   var teamId = req.body.teamId || req.query.teamId || req.params.id;
 
+  if (req.user && req.user.isSuperAdmin())
+    return next();
+
   TeamModel.findOne({ _id: teamId }, function(err, team) {
     if (err || !team)
       return res.status(403).json({

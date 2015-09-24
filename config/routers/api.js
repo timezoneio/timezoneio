@@ -12,6 +12,7 @@ router.post(  '/user', access.requireTeamAdmin,  api.userCreate);
 router.get(   '/user/:id', access.requireUser, api.userGet);
 router.put(   '/user/:id', access.requireUser, access.requireEditPrivlidges, api.userUpdate);
 
+router.get(   '/team/:id', api.team);
 router.put(   '/team/:id', access.requireTeamAdmin, api.teamUpdate);
 router.post(  '/team/:id/member', access.requireTeamAdmin, api.teamAddMember);
 router.delete('/team/:id/member/:userId', access.requireTeamAdmin, api.teamRemoveMember);

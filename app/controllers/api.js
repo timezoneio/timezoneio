@@ -115,6 +115,25 @@ api.userUpdate = function(req, res, next) {
 
 };
 
+api.team = function(req, res) {
+
+  // NOTE - no security on this yet
+  TeamModel
+    .findOne({ _id: req.params.id })
+    .populate('people')
+    .populate('admins')
+    .then(function(team) {
+      if (!team)
+        return res.status(400).json({
+          message: 'I can\'t find a team with that id (' + req.params.id + ') man...'
+        });
+      res.json(team);
+    })
+    .catch(function(err) {
+      res.status(400).json({ message: err });
+    });
+};
+
 api.teamUpdate = function(req, res, next) {
 
   var team = req.team;

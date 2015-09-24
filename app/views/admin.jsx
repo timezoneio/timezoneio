@@ -15,10 +15,12 @@ class Admin extends React.Component {
   // }
 
   getAdminInfo(admins) {
-    if (!admins.length)
-      return 'No admin';
-
+    if (!admins.length) return 'No admin';
     return <a href={getProfileUrl(admins[0])}>admin</a>
+  }
+
+  getTeamApiEndpoint(team) {
+    return `/api/team/${team._id}`;
   }
 
   render() {
@@ -37,7 +39,9 @@ class Admin extends React.Component {
             {this.props.teams.map(function(team) {
               return (
                 <div className="team-list--team">
-                  <a href={team.url}>{team.name}</a> has {team.people.length} team members ({this.getAdminInfo(team.admins)})
+                  <a href={team.url}>{team.name}</a> has {team.people.length} team members
+                  {' '}- {this.getAdminInfo(team.admins)}
+                  {' '}- <a href={this.getTeamApiEndpoint(team)} target="_blank">debug</a>
                 </div>
               );
             }.bind(this))}
