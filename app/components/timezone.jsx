@@ -71,14 +71,15 @@ module.exports = React.createClass({
     // the global app time
     var localTime   = moment( this.props.time ).tz( this.props.model.tz );
     var fmtString   = timeUtils.getFormatStringFor(this.props.timeFormat);
-    var displayTime = localTime.format(fmtString);
-    var offset      = localTime.format('Z');
+    var displayTime = localTime ? localTime.format(fmtString) : 'Unknown';
+    var offset      = localTime ? localTime.format('Z') : '??:??';
+    var hour        = localTime ? localTime.hour() : 'unknown';
 
-    var timezoneClasses = 'timezone timezone-hour-' + localTime.hour();
+    var timezoneClasses = 'timezone timezone-hour-' + hour;
 
     if (this.props.model.major) timezoneClasses += ' timezone-major';
 
-    var topCity = this.getTopCity();
+    var topCity = this.getTopCity() || 'Add location';
     var columns = this.getPeopleColumns();
 
     return (

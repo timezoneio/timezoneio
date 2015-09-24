@@ -15,11 +15,11 @@ class Person extends React.Component {
     return (
       <div className="person"
            key={person._id}
-           onClick={this.handleToggleSelected}>
+           onClick={this.handleToggleSelected.bind(this)}>
         <Avatar avatar={person.avatar || DEFAULT_AVATAR} />
         <div className="person-info">
           <p className="person-name">{person.name}</p>
-          <p className="person-city">{person.location}</p>
+          <p className="person-city">{person.location || 'Location needed!'}</p>
         </div>
       </div>
     );
