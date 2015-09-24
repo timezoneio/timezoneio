@@ -2,7 +2,7 @@ var moment = require('moment-timezone');
 
 
 function appendTime(time, person) {
-  person.time = moment( time ).tz( person.tz );
+  person.time = moment( time ).tz( person.tz || 'UTC' );
   person.utcOffset = person.time.utcOffset();
   // person.zone = person.time.utcOffset();
 }
