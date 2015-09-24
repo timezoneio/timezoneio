@@ -4,6 +4,7 @@ var auth = require('../app/controllers/auth.js');
 var team = require('../app/controllers/team.js');
 var people = require('../app/controllers/people.js');
 var services = require('../app/controllers/services');
+var admin = require('../app/controllers/admin.js');
 var getProfileUrl = require('../app/helpers/urls').getProfileUrl;
 
 var oauthConnectFlast = function(req, res, next) {
@@ -61,6 +62,8 @@ module.exports = function(app, passport) {
   app.use('/api', apiRouter);
 
   app.use('/sign-s3', services.signS3);
+
+  app.get('/admin', admin.index);
 
 
   /**

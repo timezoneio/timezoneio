@@ -39,6 +39,7 @@ var userSchema = new Schema({
 // Indexes
 userSchema.index({ username: 1 });
 
+const SUPER_ADMIN_ID = '5513998f6d1aacc66f7e7eff';
 
 // Keep these configs closer to the ones in static
 var PUBLIC_FIELDS = [
@@ -223,6 +224,10 @@ userSchema.methods = {
                  .update(EMAIL_HASH_SALT + this.email)
                  .digest('hex')
                  .substr(0, 16);
+  },
+
+  isSuperAdmin: function() {
+    return this._id.toString() === SUPER_ADMIN_ID;
   },
 
   isEmptyUser: function() {

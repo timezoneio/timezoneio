@@ -4,7 +4,6 @@ var UserModel = require('../models/user.js');
 var TeamModel = require('../models/team.js');
 var transform = require('../../app/utils/transform.js');
 var strings = require('../../app/utils/strings.js');
-var Team = require('../../app/views/team.jsx');
 
 
 var team = module.exports = {};
