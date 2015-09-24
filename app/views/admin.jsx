@@ -14,6 +14,13 @@ class Admin extends React.Component {
   //   }
   // }
 
+  getAdminInfo(admins) {
+    if (!admins.length)
+      return 'No admin';
+
+    return <a href={getProfileUrl(admins[0])}>admin</a>
+  }
+
   render() {
     return (
       <div className="container login-container">
@@ -30,10 +37,10 @@ class Admin extends React.Component {
             {this.props.teams.map(function(team) {
               return (
                 <div className="team-list--team">
-                  <a href={team.url}>{team.name}</a> has {team.people.length} team members (<a href={getProfileUrl(team.admins[0])}>admin</a>)
+                  <a href={team.url}>{team.name}</a> has {team.people.length} team members ({this.getAdminInfo(team.admins)})
                 </div>
               );
-            })}
+            }.bind(this))}
           </div>
 
         </div>
