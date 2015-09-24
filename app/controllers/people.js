@@ -19,7 +19,7 @@ people.index = function(req, res, next) {
       if (!user) return next('User not found :(');
 
       // If same user + no name, redirect to onboarding. see comment above
-      var isOwner = req.user._id.toString() === user._id.toString();
+      var isOwner = !!req.user && req.user._id.toString() === user._id.toString();
       if (isOwner && !user.name) {
         return res.redirect('/get-started');
       }
