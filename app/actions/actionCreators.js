@@ -100,9 +100,6 @@ var ActionCreators = module.exports = {
         positionData.location = values[1];
         positionData.tz = values[2];
         return positionData;
-      })
-      .catch(function(err) {
-        console.error(err);
       });
   },
 

@@ -1,20 +1,25 @@
 var React = require('react');
 var Header = require('../components/header.jsx');
 var ProfileLocation = require('../components/profileLocation.jsx');
+var LocationAutocomplete = require('../components/locationAutocomplete.jsx');
 var getProfileUrl = require('../helpers/urls').getProfileUrl;
 
 module.exports = React.createClass({
 
   renderHiddenUserFields: function() {
 
-    if (!this.props.user || !this.props.user.coords) return;
+    if (!this.props.user) return;
+
+    var coords = this.props.user.coords && (
+                  <input type="hidden" name="coords"
+                         value={this.props.user.coords.lat + ',' + this.props.user.coords.long} />
+                 );
 
     return (
       <div>
         <input type="hidden" name="location" value={this.props.user.location} />
         <input type="hidden" name="tz" value={this.props.user.tz} />
-        <input type="hidden" name="coords"
-               value={this.props.user.coords.lat + ',' + this.props.user.coords.long} />
+        {coords}
       </div>
     )
   },
@@ -44,11 +49,21 @@ module.exports = React.createClass({
           </div>
 
           <div className="form-row">
-            <ProfileLocation location={this.props.user.location || 'Looking up your location...'}
-                             tz={this.props.user.tz}
-                             time={this.props.time}
-                             timeFormat={this.props.timeFormat}
-                             loading={this.props.checkingLocation} />
+            { this.props.locationField ? (
+              <div className="edit-person--row">
+                <LocationAutocomplete location={this.props.user.location}
+                                      handleChange={this.props.handleLocationChange} />
+                <span className="edit-person--timezone-display">
+                  {this.props.user.tz}
+                </span>
+              </div>
+            ) : (
+              <ProfileLocation location={this.props.user.location || 'Looking up your location...'}
+                               tz={this.props.user.tz}
+                               time={this.props.time}
+                               timeFormat={this.props.timeFormat}
+                               loading={this.props.checkingLocation} />
+            ) }
           </div>
 
           {this.renderHiddenUserFields()}

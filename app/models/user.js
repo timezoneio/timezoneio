@@ -28,9 +28,6 @@ var userSchema = new Schema({
   location: { type: String, default: '' },
   tz: { type: String, default: '' },
 
-  // DEPRECATED
-  teams: [{ type: Schema.ObjectId, ref: 'Team' }],
-
   createdAt: { type : Date, default : Date.now },
   updatedAt: { type : Date, default : Date.now }
 });

@@ -83,12 +83,14 @@ people.save = function(req, res, next) {
     try {
       var parts = req.body.coords.split(',');
       req.body.coords = {
-        lat: parseFloat(parts[0]),
-        long: parseFloat(parts[1])
+        lat: parseFloat(parts[0]) || 0,
+        long: parseFloat(parts[1]) || 0
       };
     } catch (err) {
       delete req.body.coords;
     }
+  } else {
+    req.body.coords = {};
   }
 
   for (var key in req.body) {

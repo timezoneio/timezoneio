@@ -12,6 +12,12 @@ var GetStarted = React.createFactory(require('../views/getStarted.jsx'));
 // Application state:
 var state = new toolbelt.clone(window.appData);
 
+state.handleLocationChange = function(location, tz) {
+  state.user.location = location;
+  state.user.tz = tz;
+  renderApp();
+};
+
 // Add the component to the DOM
 var targetNode = document.querySelector('#page');
 
@@ -46,6 +52,7 @@ ActionCreators.getUserLocationAndTimezone(state.user)
   })
   .catch(function(err) {
     console.error(err);
+    state.locationField = true;
     state.checkingLocation = false;
     renderApp();
   });
