@@ -115,6 +115,25 @@ api.userUpdate = function(req, res, next) {
 
 };
 
+api.userDelete = function(req, res) {
+
+  UserModel
+    .find({ _id: req.params._id })
+    .then(function(user) {
+
+      TeamModel
+        .findAllByUser(user)
+        .then(function(teams) {
+          // remove from each team + save
+        });
+
+      // delete user
+
+
+    });
+
+};
+
 api.team = function(req, res) {
 
   // NOTE - no security on this yet
