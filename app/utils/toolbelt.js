@@ -1,3 +1,5 @@
+var extend = require('lodash/object/extend');
+
 var toolbelt = module.exports = {};
 
 toolbelt.clone = function(source) {
@@ -18,13 +20,7 @@ toolbelt.clone = function(source) {
 
 
 // Returns a new object w/ updated props from the second object
-toolbelt.extend = function(a, b) {
-  var obj = toolbelt.clone(a);
-  Object.keys(b).forEach(function(key) {
-    obj[key] = b[key];
-  });
-  return obj;
-};
+toolbelt.extend = extend;
 
 
 // Like extend, but updates the first object passed

@@ -1,5 +1,6 @@
 var React = require('react');
 var toolbelt = require('../utils/toolbelt');
+var extend = require('lodash/object/extend');
 var imageHelpers = require('../helpers/images');
 var ActionCreators = require('../actions/actionCreators');
 var isValidEmail = require('../utils/strings').isValidEmail;
@@ -59,7 +60,7 @@ module.exports = React.createClass({
 
     this.setState({ saveButtonText: BUTTON_STATES[1] });
 
-    var data = toolbelt.extend(this.state, { teamId: this.props.teamId });
+    var data = extend(this.state, { teamId: this.props.teamId });
     delete data.error;
     delete data.saveButtonText;
 
@@ -93,7 +94,7 @@ module.exports = React.createClass({
 
     ActionCreators.addTeamMember(this.props.teamId, this.state.userId)
       .then(function(user) {
-        this.setState(toolbelt.extend({ }, this.state, user, {
+        this.setState(extend({ }, this.state, user, {
           error: '',
           userId: user._id,
           isExistingUser: true,
@@ -147,7 +148,7 @@ module.exports = React.createClass({
         } else {
           // set limited user data
           var user = response;
-          this.setState(toolbelt.extend({ }, this.state, user, {
+          this.setState(extend({ }, this.state, user, {
             userId: user._id,
             isExistingUser: true,
             isNewUser: false,
@@ -181,7 +182,7 @@ module.exports = React.createClass({
       requestChange: this.handleChange.bind(null, 'avatar')
     };
 
-    // isNewUser
+    console.info(this.state.inviteTeamMember, this.state.isNewUser, this.state.isExistingUser);
     if (this.state.inviteTeamMember && !this.state.isNewUser && !this.state.isExistingUser) {
       return (
         <div className="edit-person">
