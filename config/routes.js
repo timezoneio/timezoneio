@@ -1,10 +1,11 @@
-var apiRouter = require('./routers/api.js');
-var base = require('../app/controllers/base.js');
-var auth = require('../app/controllers/auth.js');
-var team = require('../app/controllers/team.js');
-var people = require('../app/controllers/people.js');
+var apiRouter = require('./routers/api');
+var access = require('./middleware/access')
+var base = require('../app/controllers/base');
+var auth = require('../app/controllers/auth');
+var team = require('../app/controllers/team');
+var people = require('../app/controllers/people');
 var services = require('../app/controllers/services');
-var admin = require('../app/controllers/admin.js');
+var admin = require('../app/controllers/admin');
 var getProfileUrl = require('../app/helpers/urls').getProfileUrl;
 
 var oauthConnectFlast = function(req, res, next) {
@@ -63,7 +64,10 @@ module.exports = function(app, passport) {
 
   app.use('/sign-s3', services.signS3);
 
+  app.use('/admin', access.requireSuperUser);
   app.get('/admin', admin.index);
+  app.get('/admin/users', admin.users);
+  app.get('/admin/user/:userId', admin.user);
 
 
   /**
