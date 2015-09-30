@@ -310,6 +310,10 @@ userSchema.statics = {
 
   findOneByEmail: function(email, done) {
     return User.findOne({ email: email }, done);
+  },
+
+  findAllRegistered: function(done) {
+    return User.find({ hashedPassword: { $ne: '' } }, done);
   }
 
 };

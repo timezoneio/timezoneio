@@ -5,6 +5,16 @@ var APIAuthModel = require('../../app/models/apiAuth');
 
 var access = module.exports = {};
 
+access.requireSuperUser = function(req, res, next) {
+  if (req.user && req.user.isSuperAdmin())
+    return next();
+
+  res.status(403).json({
+    message: 'Ah ah ah, you didn\'t say the magic word',
+    url: req.baseUrl
+  });
+};
+
 // Ensure
 //   the user is logged in
 // or

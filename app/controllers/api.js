@@ -1,5 +1,6 @@
 var crypto = require('crypto');
 var moment = require('moment-timezone');
+var async = require('async');
 var getTimezoneFromLocation = require('../helpers/getTimezoneFromLocation');
 var getCityFromCoords = require('../helpers/getCityFromCoords');
 
@@ -14,6 +15,11 @@ var api = module.exports = {};
 
 var TEAM_WRITABLE_FIELDS = ['name'];
 
+var createErrorHandler = function(res) {
+  return function(err) {
+    handleError(res, 500, err.message);
+  };
+};
 
 var handleError = function(res, statusCode, message) {
   message = !message && typeof statusCode === 'string' ? message : null;
@@ -112,6 +118,42 @@ api.userUpdate = function(req, res, next) {
     if (err) return handleError(res, 'Failed to save');
     res.json(isOwner ? user.toOwnerJSON() : user);
   });
+
+};
+
+api.userDelete = function(req, res) {
+
+  UserModel
+    .findOne({ _id: req.params.id })
+    .then(function(user) {
+
+      if (!user)
+        return res.status(400).json({ message: 'User not found' });
+      if (user.isSuperAdmin())
+        return res.status(403).json({ message: 'FORBIDDEN! Cannot delte that user' });
+
+      TeamModel
+        .findAllByUser(user)
+        .then(function(teams) {
+
+          async.eachSeries(teams, function(team, done) {
+            team.removeAdmin(user);
+            team.removeTeamMember(user);
+            team.save(function(err) {
+              done(err);
+            });
+          }, function(results) {
+            UserModel
+              .remove({ _id: user._id })
+              .then(function() {
+                res.json({ message: 'User was deleted', results: results });
+              })
+              .catch(createErrorHandler());
+          });
+        })
+        .catch(createErrorHandler());
+    })
+    .catch(createErrorHandler());
 
 };
 
