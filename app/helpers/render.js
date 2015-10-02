@@ -9,6 +9,7 @@ var React = require('react');
 
 const STATIC_VERSIONS = require('../../rev-manifest.json');
 const STATIC_DOMAIN = '//s3.amazonaws.com/timezoneio/';
+const STATIC_URL = IS_PRODUCTION ? STATIC_DOMAIN : '/';
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 const ICON_STYLESHEET = IS_PRODUCTION ?
                         'https://fonts.googleapis.com/icon?family=Material+Icons' :
@@ -45,6 +46,7 @@ module.exports = function render(pathName, locals, cb) {
   );
   params.data = JSON.stringify(data || {});
 
+  params.STATIC_URL = STATIC_URL;
   params.icons = ICON_STYLESHEET;
   params.stylesheet = getStaticUrl('stylesheets/index.css');
   if (!locals.noScript)
