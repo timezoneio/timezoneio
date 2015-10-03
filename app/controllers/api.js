@@ -187,9 +187,9 @@ api.teamUpdate = function(req, res, next) {
     }
   }
 
-  team.save(function(err) {
+  team.save(function(err, savedTeam) {
     if (err) return handleError(res, 'Failed to save');
-    res.json(team);
+    res.json(savedTeam);
   });
 
 };

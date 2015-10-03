@@ -6,19 +6,19 @@ var ActionCreators = require('../actions/actionCreators.js');
 var Branding = require('./branding.jsx');
 var Avatar = require('./avatar.jsx');
 var EditPerson = require('./editPerson.jsx');
+var EditTeamInfo = require('./EditTeamInfo.jsx');
 var userSort = require('../utils/transform').userSort;
 
-module.exports = React.createClass({
 
-  displayName: 'ManageTeam',
+var ManageTeam = React.createClass({
 
   getInitialState: function() {
     return {
-      editingPerson: null,
+      editingPerson: null, // user obejct that we are editing
+      editingTeamInfo: false,
       filterText: '',
       filter: null,
       inviteTeamMember: false
-      // name: this.props.team.name
     };
   },
 
@@ -28,19 +28,6 @@ module.exports = React.createClass({
       value: 'app'
     });
   },
-
-  // handleChange: function(name, value) {
-  //   var newState = {};
-  //   newState[name] = value;
-  //   this.setState(newState);
-  // },
-
-  // handleClickSave: function(e) {
-  //   AppDispatcher.dispatchViewAction({
-  //     actionType: ActionTypes.SAVE_TEAM_INFO,
-  //     value: this.state
-  //   });
-  // },
 
   handleClickUserEdit: function(person, e) {
     this.setState({ editingPerson: person, inviteTeamMember: false });
@@ -52,13 +39,27 @@ module.exports = React.createClass({
     }
   },
 
+  handleClickEditTeamInfo: function() {
+    this.setState({
+      editingPerson: null,
+      editingTeamInfo: true
+    });
+  },
+
   handleClickBackToMenu: function(e) {
     this.resetFilter();
-    this.setState({ editingPerson: null });
+    this.setState({
+      editingPerson: null,
+      editingTeamInfo: false
+    });
   },
 
   handleClickAdd: function(e) {
-    this.setState({ editingPerson: {}, inviteTeamMember: true });
+    this.setState({
+      editingPerson: {},
+      inviteTeamMember: true,
+      editingTeamInfo: false
+    });
   },
 
   handleFilterList: function(text) {
@@ -83,17 +84,7 @@ module.exports = React.createClass({
     e.target.setSelectionRange(0, e.target.value.length);
   },
 
-  render: function() {
-
-    var people = this.props.people;
-    var visiblePeople = this.state.filter ? people.filter(this.peopleFilter) : people;
-    var sortedPeople = visiblePeople.sort(userSort);
-
-    var filterValueLink = {
-      value: this.state.filterText,
-      requestChange: this.handleFilterList
-    };
-
+  getHeaderContent: function() {
     var headerContent = {};
 
     if (this.props.justCreated) {
@@ -127,6 +118,107 @@ module.exports = React.createClass({
       headerContent.closeButton = 'Go back to my team';
     }
 
+    return headerContent;
+  },
+
+  renderPersonListItem: function(person, idx) {
+    return (
+      <div key={idx}
+           className="manage-team--team-member">
+
+        <div className="manage-team--team-member-info">
+
+          <Avatar avatar={person.avatar}
+                  size="mini" />
+
+                <span className="manage-team--team-member-name">
+            {person.name}
+          </span>
+          <span className="manage-team--team-member-location">
+            {person.location}
+          </span>
+
+        </div>
+
+        <div className="manage-team--team-member-actions">
+          { !person.isRegistered &&
+            <button className="circle clear material-icons md-18"
+                    name="Edit team member"
+                    onClick={this.handleClickUserEdit.bind(null, person)}>
+              edit
+            </button>
+          }
+          <button className="circle clear material-icons md-18"
+                  name="Remove from Team"
+                  onClick={this.handleClickUserRemove.bind(null, person)}>
+            clear
+          </button>
+        </div>
+
+      </div>
+    )
+  },
+
+  renderSubView: function() {
+    if (this.state.editingPerson)
+      return (
+        <div className="manage-team--subview">
+          <div className="manage-team--person">
+            <button className="modal--back-button clear material-icons"
+                    onClick={this.handleClickBackToMenu}>
+              arrow_back
+            </button>
+            <EditPerson {...this.state.editingPerson}
+                        teamId={this.props.team._id}
+                        people={this.props.people}
+                        inviteTeamMember={this.state.inviteTeamMember}
+                        timeFormat={this.props.timeFormat} />
+          </div>
+        </div>
+      );
+
+    if (this.state.editingTeamInfo)
+      return (
+        <div className="manage-team--subview">
+          <div className="manage-team--person">
+            <button className="modal--back-button clear material-icons"
+                    onClick={this.handleClickBackToMenu}>
+              arrow_back
+            </button>
+            <EditTeamInfo {...this.props.team} />
+          </div>
+        </div>
+      );
+
+    // Default people list
+    var people = this.props.people;
+    var visiblePeople = this.state.filter ? people.filter(this.peopleFilter) : people;
+    var sortedPeople = visiblePeople.sort(userSort);
+    var filterValueLink = {
+      value: this.state.filterText,
+      requestChange: this.handleFilterList
+    };
+    return (
+      <div className="manage-team--subview manage-team--subview-team">
+
+        <div className="manage-team--team-header">
+          <input type="search"
+                 valueLink={filterValueLink}
+                 placeholder="Search" />
+        </div>
+
+        <div className="manage-team--team-list">
+          {sortedPeople.map(this.renderPersonListItem)}
+        </div>
+
+      </div>
+    )
+  },
+
+  render: function() {
+
+    var headerContent = this.getHeaderContent();
+
     return (
       <div className="manage-team--container">
 
@@ -156,6 +248,12 @@ module.exports = React.createClass({
           </div>
 
           <div className="manage-team--row">
+            <button onClick={this.handleClickEditTeamInfo}>
+              Edit team info
+            </button>
+          </div>
+
+          <div className="manage-team--row">
             <button onClick={this.handleClickClose}>
               {headerContent.closeButton}
             </button>
@@ -169,79 +267,11 @@ module.exports = React.createClass({
           clear
         </button>
 
-        { !this.state.editingPerson ? (
-            <div className="manage-team--subview manage-team--subview-team">
-
-              <div className="manage-team--team-header">
-                <input type="search"
-                       valueLink={filterValueLink}
-                       placeholder="Search" />
-              </div>
-
-              <div className="manage-team--team-list">
-
-                {sortedPeople.map(function(person, idx) {
-                  return (
-                    <div key={idx}
-                         className="manage-team--team-member">
-
-                      <div className="manage-team--team-member-info">
-
-                        <Avatar avatar={person.avatar}
-                                size="mini" />
-
-                              <span className="manage-team--team-member-name">
-                          {person.name}
-                        </span>
-                        <span className="manage-team--team-member-location">
-                          {person.location}
-                        </span>
-
-                      </div>
-
-                      <div className="manage-team--team-member-actions">
-                        { !person.isRegistered &&
-                          <button className="circle clear material-icons md-18"
-                                  name="Edit team member"
-                                  onClick={this.handleClickUserEdit.bind(null, person)}>
-                            edit
-                          </button>
-                        }
-                        <button className="circle clear material-icons md-18"
-                                name="Remove from Team"
-                                onClick={this.handleClickUserRemove.bind(null, person)}>
-                          clear
-                        </button>
-                      </div>
-
-                    </div>
-                  )
-                }.bind(this))}
-
-              </div>
-
-            </div>
-          ) : (
-            <div className="manage-team--subview">
-              <div className="manage-team--person">
-
-                <button className="modal--back-button clear material-icons"
-                        onClick={this.handleClickBackToMenu}>
-                  arrow_back
-                </button>
-
-                <EditPerson {...this.state.editingPerson}
-                            teamId={this.props.team._id}
-                            people={people}
-                            inviteTeamMember={this.state.inviteTeamMember}
-                            timeFormat={this.props.timeFormat} />
-
-              </div>
-            </div>
-          )
-        }
+        {this.renderSubView()}
 
       </div>
     );
   }
 });
+
+module.exports = ManageTeam;

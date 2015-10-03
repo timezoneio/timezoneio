@@ -1,7 +1,9 @@
 var moment = require('moment-timezone');
-var toolbelt = require('../utils/toolbelt.js');
-var transform = require('../utils/transform.js');
-var timeUtils = require('../utils/time.js');
+var toolbelt = require('../utils/toolbelt');
+var transform = require('../utils/transform');
+var timeUtils = require('../utils/time');
+var AppDispatcher = require('../dispatchers/appDispatcher');
+var ActionTypes = require('../actions/actionTypes');
 
 
 class AppState {
@@ -69,7 +71,20 @@ class AppState {
   }
 
   updateTeamData(data) {
-    toolbelt.update(this._state.team, data);
+    // Only update the team slug + name
+    this._state.team.name = data.name;
+    this._state.team.slug = data.slug;
+
+    // NOTE - We're currently not re-slugifying
+    if (this._state.team.url !== data.url) {
+      this._state.team.url = data.url;
+
+      // Trigger event to update the current url
+      AppDispatcher.dispatchViewAction({
+        actionType: ActionTypes.UPDATE_TEAM_URL,
+        value: data.url
+      });
+    }
   }
 
   updateUserData(data) {

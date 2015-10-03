@@ -140,6 +140,12 @@ function handlePopState(e) {
   updateCurrentView(view);
 }
 
+function updateTeamUrl(newTeamUrl) {
+  var currentPath = window.location.pathname;
+  var newPath = currentPath.replace(/\/team\/.+\//, newTeamUrl);
+  window.history.pushState({}, null, newPath);
+}
+
 
 window.addEventListener('popstate', handlePopState);
 
@@ -184,6 +190,10 @@ var handleViewAction = function(action) {
       shouldRender = true;
       break;
 
+    case ActionTypes.UPDATE_TEAM_URL:
+      updateTeamUrl(value);
+      break;
+
   }
 
   if (shouldRender) renderApp();
@@ -194,6 +204,11 @@ var handleAPIAction = function(action) {
   var value = action.value;
 
   switch (actionType) {
+
+    case ActionTypes.UPDATED_TEAM_DATA:
+      appState.updateTeamData(value);
+      renderApp();
+      break;
 
     case ActionTypes.UPDATED_USER_DATA:
       appState.updateUserData(value);

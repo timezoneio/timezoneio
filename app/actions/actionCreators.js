@@ -6,6 +6,20 @@ var toolbelt = require('../utils/toolbelt');
 
 var ActionCreators = module.exports = {
 
+  saveTeamInfo: function(teamId, data) {
+    return api
+      .put('/team/' + teamId, data)
+      .then(function(data) {
+
+        AppDispatcher.dispatchApiAction({
+          actionType: ActionTypes.UPDATED_TEAM_DATA,
+          value: data
+        });
+
+        return data;
+      });
+  },
+
   saveUserInfo: function(userId, data) {
     return api
       .put('/user/' + userId, data)

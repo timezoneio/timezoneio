@@ -230,7 +230,7 @@ input[type="text"].manage-team--invite-url
     margin: 2em auto 0
 
 
-
+// TODO - Change to .edit-info
 .edit-person
   display: flex
   flex-direction: column
@@ -240,7 +240,26 @@ input[type="text"].manage-team--invite-url
     margin-bottom: 1.5em
 
 .edit-person--row
+  width: 240px
   margin: 0.5em 0
+  text-align: center
+
+  input
+    width: 100%
+
+.edit-person--label
+  display: block;
+  margin-right: 0
+  text-align: left
+
+  + button,
+  + .button
+    margin-top: 0.5em
+
+.edit-info--danger
+  width: calc(240px + 2em)
+  padding: 1em
+  border: 1px solid $errorLightColor
 
 .add-image-placeholder
   height: $avatarSize * 2
