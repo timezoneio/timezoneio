@@ -52,6 +52,7 @@ teamSchema
 var PUBLIC_FIELDS = [
   '_id',
   'name',
+  'slug',
   'admins',
   'people',
   'url'

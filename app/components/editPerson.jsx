@@ -11,9 +11,8 @@ var ProfileLocation = require('./profileLocation.jsx');
 var SAVE_BUTTON_STATES = ['Save', 'Saving', 'Saved'];
 var ADD_BUTTON_STATES = ['Add to team', 'Adding', 'Added'];
 
-module.exports = React.createClass({
 
-  displayName: 'EditPerson',
+var EditPerson = React.createClass({
 
   getInitialState: function() {
     return {
@@ -276,9 +275,7 @@ module.exports = React.createClass({
 
           </div>
         )}
-
-
-
+        
         { this.state.error &&
             <p className="edit-person--row error">{this.state.error}</p>
         }
@@ -288,17 +285,4 @@ module.exports = React.createClass({
   }
 });
 
-/*
-<div className="edit-person--row">
-  <input type="text"
-         name="avatar"
-         valueLink={avatarLink}
-         placeholder="Avatar URL" />
-</div>
-
-<div className="edit-person--row">
-  <button onClick={this.handleClickUseGravatar}>
-    Use Gravatar
-  </button>
-</div>
-*/
+module.exports = EditPerson;
