@@ -177,7 +177,6 @@ api.team = function(req, res) {
 };
 
 api.teamUpdate = function(req, res, next) {
-
   var team = req.team;
 
   // replace w/ underscore
@@ -191,7 +190,15 @@ api.teamUpdate = function(req, res, next) {
     if (err) return handleError(res, 'Failed to save');
     res.json(savedTeam);
   });
+};
 
+api.teamDelete = function(req, res) {
+  TeamModel
+    .remove({ _id: req.params.id })
+    .then(function() {
+      res.json({ message: 'Team was successfully deleted' });
+    })
+    .catch(createErrorHandler());
 };
 
 api.teamAddMember = function(req, res, next) {
