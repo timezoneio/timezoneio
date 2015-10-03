@@ -3,7 +3,7 @@ var express = require('express');
 var logger = require('morgan');
 var slashes = require('connect-slashes');
 var cookieParser = require('cookie-parser');
-var cookieSession = require('cookie-session');
+// var cookieSession = require('cookie-session');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var csrf = require('csurf');
@@ -18,7 +18,7 @@ var stylusMiddleware = require('../config/middleware/stylus.js');
 var render = require('./helpers/render.js');
 
 
-module.exports = function() {
+module.exports = function(mongooseConnection) {
 
   require('../config/passport.js')(passport);
 
@@ -44,14 +44,15 @@ module.exports = function() {
   app.use(multer());
 
   app.use(cookieParser());
-  app.use(cookieSession({ secret: 'secret' }));
+  // app.use(cookieSession({ secret: 'secret' }));
   app.use(session({
-    resave: true,
-    saveUninitialized: true,
+    resave: false, //don't save session if unmodified
+    saveUninitialized: false, // don't create session until something stored
     secret: 'bodhi',
     store: new mongoStore({
-      url: 'mongodb://localhost/timezone',
-      collection : 'sessions'
+      mongooseConnection: mongooseConnection,
+      collection : 'sessions',
+      touchAfter: 24 * 3600
     })
   }));
 

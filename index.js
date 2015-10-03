@@ -31,6 +31,6 @@ mongoose.connection.on('disconnected', connect);
 mongoose.connection.once('open', function (callback) {
 
   console.info('We\'re connected, booyah! Starting up the server...');
-  server();
+  server(mongoose.connection);
 
 });
