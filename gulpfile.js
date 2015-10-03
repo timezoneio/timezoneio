@@ -25,6 +25,20 @@ var entries = glob.sync('./app/apps/*.js').reduce(function(obj, path) {
   return obj;
 }, {});
 
+var webpackStats = {
+  assets: true,
+  colors: true,
+  version: true,
+  modules: false,
+  hash: false,
+  timings: false,
+  chunks: true,
+  chunkModules: false,
+  reasons : true,
+  cached : true,
+  chunkOrigins : true
+};
+
 var webpackConfig = {
   entry: entries,
   output: {
@@ -60,9 +74,7 @@ var webpackConfig = {
 gulp.task('webpack', function(callback) {
   webpack(webpackConfig, function(err, stats) {
     if(err) throw new gutil.PluginError('webpack', err);
-    gutil.log('[webpack]', stats.toString({
-      // output options
-    }));
+    gutil.log('[webpack]', stats.toString(webpackStats));
     callback();
   });
 });
@@ -75,6 +87,7 @@ gulp.task('webpack-dev-server', function(callback) {
 
   new WebpackDevServer(compiler, {
     contentBase: path.join(__dirname, 'public'),
+    stats: webpackStats,
     // hot: true,
     // This is where we're running our app server
     proxy: {

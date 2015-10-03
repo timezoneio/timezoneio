@@ -20,6 +20,15 @@ var ActionCreators = module.exports = {
       });
   },
 
+  deleteTeam: function(teamId) {
+    return api
+      .delete('/team/' + teamId)
+      .then(function(res) {
+        // Redirect to user profile
+        window.location = '/my-profile';
+      });
+  },
+
   saveUserInfo: function(userId, data) {
     return api
       .put('/user/' + userId, data)

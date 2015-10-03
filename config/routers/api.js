@@ -15,6 +15,7 @@ router.delete('/user/:id', access.requireSuperUser, api.userDelete);
 
 router.get(   '/team/:id', api.team);
 router.put(   '/team/:id', access.requireTeamAdmin, api.teamUpdate);
+router.delete('/team/:id', access.requireTeamAdmin, api.teamDelete);
 router.post(  '/team/:id/member', access.requireTeamAdmin, api.teamAddMember);
 router.delete('/team/:id/member/:userId', access.requireTeamAdmin, api.teamRemoveMember);
 

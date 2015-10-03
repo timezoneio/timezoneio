@@ -19,16 +19,13 @@ class EditTeamInfo extends React.Component {
   }
 
   handleClickSave(e) {
-    ActionCreators.saveTeamInfo(this.props._id, this.state)
-      .then(function(data) {
-        console.info(data);
-      });
+    ActionCreators.saveTeamInfo(this.props._id, this.state);
   }
 
-  // handleClickDelete(e) {
-  //   if (window.confirm(`Are you sure you want to delete ${this.state.name}`))
-  //     console.info('DLETE!');
-  // }
+  handleClickDelete(e) {
+    if (window.confirm(`Are you sure you want to delete ${this.state.name}`))
+      ActionCreators.deleteTeam(this.props._id);
+  }
 
   render() {
 
@@ -55,21 +52,20 @@ class EditTeamInfo extends React.Component {
           </button>
         </div>
 
+        <div className="edit-person--row edit-info--danger">
+          <label className="edit-person--label">
+            Delete your team, this cannot be undone
+          </label>
+          <button className="danger"
+                  onClick={this.handleClickDelete.bind(this)}>
+            Delete {this.state.name}
+          </button>
+        </div>
+
       </div>
     )
   }
 
 }
-/*
-<div className="edit-person--row edit-info--danger">
-  <label className="edit-person--label">
-    Delete your team, this cannot be undone
-  </label>
-  <button className="danger"
-          onClick={this.handleClickDelete.bind(this)}>
-    Delete {this.state.name}
-  </button>
-</div>
-*/
 
 module.exports = EditTeamInfo;
