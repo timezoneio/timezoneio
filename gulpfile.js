@@ -1,4 +1,9 @@
 var gulp = require('gulp');
+var gutil = require('gulp-util');
+var path = require('path');
+var glob = require('glob');
+var webpack = require('webpack');
+var WebpackDevServer = require('webpack-dev-server');
 var plumber = require('gulp-plumber');
 var rename = require('gulp-rename');
 var transform = require('vinyl-transform');
@@ -12,6 +17,69 @@ var rev = require('gulp-rev');
 var awspublish = require('gulp-awspublish');
 
 var awsCredentials = require('./aws.json');
+
+
+var entries = glob.sync('./app/apps/*.js').reduce(function(obj, path) {
+  var filename = path.match(/.+\/(\w+).js/)[1];
+  obj[filename] = path;
+  return obj;
+}, {});
+
+var webpackConfig = {
+  entry: entries,
+  output: {
+		path: __dirname + '/public',
+		publicPath: '/',
+		filename: 'js/bundles/[name].js'
+	},
+  resolve: {
+    extensions: ['', '.json', '.jsx', '.js']
+  },
+  module: {
+    loaders: [
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        loaders: ['babel?stage=0'],
+      },
+      { include: /\.json$/, loaders: ["json-loader"] } // moment-timezone
+    ]
+  }
+};
+
+gulp.task('webpack', function(callback) {
+  webpack(webpackConfig, function(err, stats) {
+    if(err) throw new gutil.PluginError('webpack', err);
+    gutil.log('[webpack]', stats.toString({
+      // output options
+    }));
+    callback();
+  });
+});
+
+gulp.task('webpack-dev-server', function(callback) {
+
+  var devConfig = webpackConfig;
+  devConfig.devtool = '#inline-source-map';
+  var compiler = webpack(webpackConfig);
+
+  new WebpackDevServer(compiler, {
+    contentBase: path.join(__dirname, 'public'),
+    // hot: true,
+    // This is where we're running our app server
+    proxy: {
+      '*': 'http://localhost:8080'
+    }
+  }).listen(8888, 'localhost', function(err) {
+    if(err) throw new gutil.PluginError('webpack-dev-server error', err);
+    // Server listening
+    gutil.log('[webpack-dev-server]',
+      'http://localhost:8080/webpack-dev-server/index.html');
+
+    // Comment out to keep the server running
+    // callback();
+  });
+});
 
 
 gulp.task('browserify', function() {
