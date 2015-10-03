@@ -66,6 +66,8 @@ var webpackConfig = {
         'NODE_ENV': JSON.stringify('production'),
        }
     }),
+    // Only include British english in addition to American English for moment.js
+    new webpack.ContextReplacementPlugin(/moment[\\\/]locale$/, /^\.\/(en-gb)$/)
   ]
 };
 
