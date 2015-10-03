@@ -44,7 +44,15 @@ var webpackConfig = {
       },
       { include: /\.json$/, loaders: ["json-loader"] } // moment-timezone
     ]
-  }
+  },
+  plugins: [
+    // Build the production version of React
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production'),
+       }
+    }),
+  ]
 };
 
 gulp.task('webpack', function(callback) {
@@ -81,7 +89,7 @@ gulp.task('webpack-dev-server', function(callback) {
   });
 });
 
-
+/*
 gulp.task('browserify', function() {
 
   var browserified = transform(function(filename) {
@@ -96,7 +104,7 @@ gulp.task('browserify', function() {
     .pipe(gulp.dest('public/js/bundles'));
 
 });
-
+*/
 
 
 var getExpires = function() {
@@ -139,7 +147,7 @@ gulp.task('upload-css', function() {
     .pipe(gulp.dest('./'));
 });
 
-gulp.task('upload-js', ['browserify'], function() {
+gulp.task('upload-js', ['webpack'], function() {
   var publisher = awspublish.create(awsCredentials);
   return gulp.src(['public/js/bundles/*.js'])
     .pipe(uglify())
@@ -162,13 +170,13 @@ gulp.task('uglify', function() {
     .pipe(gulp.dest('public/js/bundles'));
 });
 
-gulp.task('watch', ['browserify'], function() {
+gulp.task('watch', ['webpack'], function() {
   return gulp.watch([
     'app/**/*.js',
     'app/**/*.jsx'
   ], ['browserify']);
 });
 
-gulp.task('predeploy', ['browserify', 'upload-images', 'upload-css', 'upload-js']);
+gulp.task('predeploy', ['webpack', 'upload-images', 'upload-css', 'upload-js']);
 
 gulp.task('default', ['browserify']);
