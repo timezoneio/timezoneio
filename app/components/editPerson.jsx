@@ -7,6 +7,7 @@ var isValidEmail = require('../utils/strings').isValidEmail;
 var LocationAutocomplete = require('./locationAutocomplete.jsx');
 var Avatar = require('./avatar.jsx');
 var ProfileLocation = require('./profileLocation.jsx');
+var UploadButton = require('./UploadButton.jsx');
 
 var SAVE_BUTTON_STATES = ['Save', 'Saving', 'Saved'];
 var ADD_BUTTON_STATES = ['Add to team', 'Adding', 'Added'];
@@ -35,8 +36,15 @@ var EditPerson = React.createClass({
       name: this.props.name,
       location: this.props.location,
       tz: this.props.tz,
-      avatar: this.props.avatar
+      avatar: this.props.avatar,
+
+      emailHash: null,
+      avatarFull: null // temp file for upload while we wait for resize
     };
+  },
+
+  getFileName: function() {
+    return this.state._id || this.state.emailHash;
   },
 
   handleChange: function(name, value) {
@@ -49,6 +57,13 @@ var EditPerson = React.createClass({
     this.setState({
       location: location,
       tz: tz || this.state.tz
+    });
+  },
+
+  handleUploaded: function(fileUrls) {
+    this.setState({
+      avatarFull: fileUrls.full,
+      avatar: fileUrls.resized
     });
   },
 
@@ -71,7 +86,8 @@ var EditPerson = React.createClass({
       .then(function(res) {
 
         this.setState({
-          isNewUser: true,
+          inviteTeamMember: false,
+          isNewUser: false,
           error: '', // clear the error
           saveButtonText: BUTTON_STATES[2]
         });
@@ -142,7 +158,11 @@ var EditPerson = React.createClass({
       .then(function(response) {
         // if message, then no user found!
         if (response.message) {
-          this.setState({ isNewUser: true, isExistingUser: false });
+          this.setState({
+            emailHash: response.hash,
+            isNewUser: true,
+            isExistingUser: false
+          });
           this.handleClickUseGravatar();
         } else {
           // set limited user data
@@ -205,8 +225,6 @@ var EditPerson = React.createClass({
       );
     }
 
-    // var canEditUser = this.state.isRegistered === true ? false : true;
-    //                   this.state.isNewUser ? true : false;
     var canEditUser = !this.state.isRegistered;
 
     return (
@@ -220,8 +238,10 @@ var EditPerson = React.createClass({
         )}
 
         <div className="edit-person--row">
-          { (true || this.state.avatar) ? (
-              <Avatar avatar={this.state.avatar || imageHelpers.DEFAULT_AVATAR}
+          { this.state.avatar ? (
+              <Avatar avatar={this.state.avatarFull ||
+                              this.state.avatar ||
+                              imageHelpers.DEFAULT_AVATAR}
                       onImageLoadError={this.onImageLoadError}
                       size="large" />
             ) : (
@@ -234,6 +254,11 @@ var EditPerson = React.createClass({
 
         { canEditUser ? (
           <div>
+
+            <div className="edit-person--row">
+              <UploadButton fileName={this.getFileName()}
+                            handleUploaded={this.handleUploaded} />
+            </div>
 
             <div className="edit-person--row">
               <input type="text"

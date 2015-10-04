@@ -35,10 +35,14 @@ api.getUserByEmail = function(req, res, next) {
 
   UserModel.findOne({ email: req.query.email })
     .then(function(user) {
-      if (!user)
-        return res.json({ message: 'No user with that email!' });
+      if (user)
+        return res.json(user);
 
-      res.json(user);
+      var emailHash = crypto.createHash('md5').update(req.query.email).digest('hex');
+      res.json({
+        hash: emailHash,
+        message: 'No user with that email!'
+      });
     })
     .catch(function(err) {
       handleError(res, err);
