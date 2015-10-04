@@ -181,7 +181,6 @@ var EditPerson = React.createClass({
       requestChange: this.handleChange.bind(null, 'avatar')
     };
 
-    console.info(this.state.inviteTeamMember, this.state.isNewUser, this.state.isExistingUser);
     if (this.state.inviteTeamMember && !this.state.isNewUser && !this.state.isExistingUser) {
       return (
         <div className="edit-person">
@@ -206,8 +205,9 @@ var EditPerson = React.createClass({
       );
     }
 
-    var canEditUser = this.state.isRegistered === true ? false :
-                      this.state.isNewUser ? true : false;
+    // var canEditUser = this.state.isRegistered === true ? false : true;
+    //                   this.state.isNewUser ? true : false;
+    var canEditUser = !this.state.isRegistered;
 
     return (
       <div className="edit-person">
@@ -275,7 +275,7 @@ var EditPerson = React.createClass({
 
           </div>
         )}
-        
+
         { this.state.error &&
             <p className="edit-person--row error">{this.state.error}</p>
         }
