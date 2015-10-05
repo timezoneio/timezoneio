@@ -4,9 +4,9 @@ var Header = require('../components/header.jsx');
 var Notification = require('../components/notification.jsx');
 var ProfileLocation = require('../components/profileLocation.jsx');
 var LocationAutocomplete = require('../components/locationAutocomplete.jsx');
+var UploadButton = require('../components/UploadButton.jsx');
 var ActionCreators = require('../actions/actionCreators');
 var toolbelt = require('../utils/toolbelt');
-var s3 = require('../helpers/s3'); // TODO - move to action creator
 const DEFAULT_AVATAR = require('../helpers/images').DEFAULT_AVATAR;
 
 const SAVE_BUTTON_STATES = ['Save', 'Saving', 'Saved'];
@@ -79,47 +79,14 @@ module.exports = React.createClass({
            this.props.user._id.toString() === this.props.profileUser._id.toString();
   },
 
-  getFileExtension: function(file) {
-    var matches = /\.\w+$/.exec(file.name);
-    return matches && matches[0];
-  },
+  handleAvatarUploaded: function(fileUrls) {
+    this.setState({
+      avatarFull: fileUrls.full,
+      avatar: fileUrls.resized
+    });
 
-  generateAvatarUploadFilename: function(file) {
-    // Files ending in _full will trigger the resize lambda function
-    return 'avatar/' + this.props.profileUser._id + '_full' + this.getFileExtension(file);
-  },
-
-  handleFileChange: function(e) {
-    var files = e.target.files;
-    var file = files[0];
-
-    var ext = this.getFileExtension(file);
-
-    if (['.jpg', '.jpeg', '.png'].indexOf(ext) === -1) {
-      alert('Sorry, we currently only support jpg and png files :)');
-      return;
-    }
-
-    // TODO - https://www.npmjs.com/package/crop-rotate-resize-in-browser
-    if (file) {
-      s3.uploadFile(file, this.generateAvatarUploadFilename(file))
-        .then(function(fileUrl) {
-
-          // Lambda function will resize image and rename it
-          var resizedUrl = fileUrl.replace('_full', '');
-          this.setState({
-            avatarFull: fileUrl,
-            avatar: resizedUrl
-          });
-
-          // Now save the profile!
-          this.saveProfile();
-
-        }.bind(this));
-    } else {
-      console.warn('No file added');
-    }
-
+    // Now save the profile!
+    this.saveProfile();
   },
 
   handleToggleProfileEdit: function(e) {
@@ -277,12 +244,8 @@ module.exports = React.createClass({
                 <span>
                   or
                 </span>
-                <div className="button button-upload">
-                  <input type="file"
-                         name="avatar_file"
-                         onChange={this.handleFileChange} />
-                  Upload a photo
-                </div>
+                <UploadButton fileName={this.props.profileUser._id}
+                              handleUploaded={this.handleAvatarUploaded} />
               </div>
 
               <div className="profile-edit-form">
