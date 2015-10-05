@@ -10,13 +10,25 @@ class Person extends React.Component {
     ActionCreators.toggleSelectPerson(this.props.model._id);
   }
 
+  getInitials(name) {
+    return name.replace(/[^A-Z]/g, '') || (name[0] && name[0].toUpperCase());
+  }
+
   render() {
     var person = this.props.model;
     return (
       <div className="person"
            key={person._id}
            onClick={this.handleToggleSelected.bind(this)}>
-        <Avatar avatar={person.avatar || DEFAULT_AVATAR} />
+        {
+          person.avatar ?
+            <Avatar avatar={person.avatar || DEFAULT_AVATAR} />
+          :
+            <div className="avatar-placeholder">
+              {this.getInitials(person.name)}
+            </div>
+        }
+
         <div className="person-info">
           <p className="person-name">{person.name}</p>
           <p className="person-city">{person.location || 'Location needed!'}</p>

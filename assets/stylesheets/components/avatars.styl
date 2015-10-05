@@ -1,4 +1,5 @@
-.avatar
+.avatar,
+.avatar-placeholder
   display: block
   width: $avatarSize
   height: $avatarSize
@@ -21,3 +22,10 @@
 
 a.avatar
   cancelLinkHover()
+
+// Initials/text placeholder
+.avatar-placeholder
+  line-height: $avatarSize + 2px
+  text-align: center
+  background-color: $lightFillColor
+  font-size: 1.3em
