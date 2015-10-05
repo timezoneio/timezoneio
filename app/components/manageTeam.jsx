@@ -8,6 +8,7 @@ var Avatar = require('./avatar.jsx');
 var EditPerson = require('./editPerson.jsx');
 var EditTeamInfo = require('./EditTeamInfo.jsx');
 var userSort = require('../utils/transform').userSort;
+const DEFAULT_AVATAR = require('../helpers/images').DEFAULT_AVATAR;
 
 
 var ManageTeam = React.createClass({
@@ -128,7 +129,7 @@ var ManageTeam = React.createClass({
 
         <div className="manage-team--team-member-info">
 
-          <Avatar avatar={person.avatar}
+          <Avatar avatar={person.avatar || DEFAULT_AVATAR}
                   size="mini" />
 
                 <span className="manage-team--team-member-name">
