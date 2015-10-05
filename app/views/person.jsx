@@ -3,6 +3,7 @@ var classNames = require('classnames');
 var Header = require('../components/header.jsx');
 var Notification = require('../components/notification.jsx');
 var ProfileLocation = require('../components/profileLocation.jsx');
+var LocationAutocomplete = require('../components/locationAutocomplete.jsx');
 var ActionCreators = require('../actions/actionCreators');
 var toolbelt = require('../utils/toolbelt');
 var s3 = require('../helpers/s3'); // TODO - move to action creator
@@ -59,8 +60,18 @@ module.exports = React.createClass({
         }
       }.bind(this))
       .catch(function(err) {
-        this.setState({ checkingLocation: false });
+        this.setState({
+          checkingLocation: false,
+          useLocationFallback: true
+        });
       }.bind(this));
+  },
+
+  handleLocationAutocompleteChange: function(location, tz) {
+    this.setState({
+      location: location,
+      tz: tz
+    });
   },
 
   isOwnProfile: function() {
@@ -185,6 +196,15 @@ module.exports = React.createClass({
       requestChange: this.handleChange.bind(null, 'avatar')
     };
 
+    var locationText = this.state.location ||
+                       (this.state.checkingLocation ?
+                        'Searching...' :
+                        'Click to set location'
+                       );
+    var locationError = !this.state.location &&
+                        !this.state.checkingLocation &&
+                        this.state.useLocationFallback;
+
     return (
       <div className="container">
 
@@ -205,11 +225,14 @@ module.exports = React.createClass({
 
               <h2 className="profile-name">{this.state.name}</h2>
 
-              <ProfileLocation location={this.state.location}
+              <ProfileLocation location={locationText}
                                tz={this.state.tz}
                                time={this.props.time}
                                timeFormat={this.props.timeFormat}
-                               loading={this.state.checkingLocation} />
+                               error={locationError}
+                               loading={this.state.checkingLocation}
+                               onClick={this.state.useLocationFallback &&
+                                        this.handleToggleProfileEdit} />
 
               <div className="profile-teams">
                 {this.props.teams.map(function(team, idx) {
@@ -269,7 +292,22 @@ module.exports = React.createClass({
                   <input type="text" name="name" valueLink={nameLink} />
                 </div>
 
-                <input type="hidden" name="location" value={this.state.location} />
+                { this.state.useLocationFallback ? (
+                  <div>
+                    <p>
+                      Type below to search for your location
+                    </p>
+                    <LocationAutocomplete location={this.state.location}
+                                          handleChange={this.handleLocationAutocompleteChange} />
+                    <span className="edit-person--timezone-display">
+                      {this.props.user.tz}
+                    </span>
+                  </div>
+                ) : (
+                  <input type="hidden" name="location" value={this.state.location} />
+                )}
+
+
                 <input type="hidden" name="tz" value={this.state.tz} />
                 <input type="hidden" name="avatar" value={this.state.avatar} />
                 <input type="hidden" name="coords[lat]" value={this.state.coords.lat} />

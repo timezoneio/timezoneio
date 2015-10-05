@@ -35,6 +35,12 @@
     &.loading
       animation: loadingPulsate 600ms linear alternate infinite
 
+    &.error
+      color: $errorColor
+
+.profile-location-clickable
+  cursor: pointer
+
 .profile-offset
   margin-left: 0.8em
   color: $mutedColor
@@ -62,3 +68,6 @@
 
 .profile-edit-form
   margin-top: 2em
+
+  .autocomplete
+    display: inline-block

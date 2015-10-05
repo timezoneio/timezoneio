@@ -1,6 +1,6 @@
 'use strict';
-
 var React = require('react');
+var classNames = require('classnames');
 var moment = require('moment-timezone');
 var timeUtils = require('../utils/time');
 
@@ -15,13 +15,18 @@ class ProfileLocation extends React.Component {
 
   render() {
 
-    var iconClasses = 'material-icons md-18 location-icon';
-    if (this.props.loading) iconClasses += ' loading';
+    var iconClasses = classNames('material-icons md-18 location-icon', {
+      'loading': this.props.loading,
+      'error': this.props.error
+    });
 
     return (
       <p className="profile-location">
         <span className={iconClasses}>place</span>
-        {this.props.location}
+        <span className={typeof this.props.onClick === 'function' && 'profile-location-clickable'}
+              onClick={this.props.onClick}>
+          {this.props.location}
+        </span>
         <span className="profile-offset">
           {this.getLocalTime()}
         </span>
