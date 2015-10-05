@@ -54,7 +54,7 @@ var webpackConfig = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loaders: ['babel?stage=0'],
+        loaders: ['babel?stage=0'], // optional[]=runtime if needed
       },
       { include: /\.json$/, loaders: ["json-loader"] } // moment-timezone
     ]
