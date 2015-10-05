@@ -1,12 +1,14 @@
+'use strict';
 var React = require('react');
 var Header = require('../components/header.jsx');
 var ProfileLocation = require('../components/profileLocation.jsx');
 var LocationAutocomplete = require('../components/locationAutocomplete.jsx');
 var getProfileUrl = require('../helpers/urls').getProfileUrl;
 
-module.exports = React.createClass({
 
-  renderHiddenUserFields: function() {
+class GetStarted extends React.Component {
+
+  renderHiddenUserFields() {
 
     if (!this.props.user) return;
 
@@ -17,14 +19,13 @@ module.exports = React.createClass({
 
     return (
       <div>
-        <input type="hidden" name="location" value={this.props.user.location} />
         <input type="hidden" name="tz" value={this.props.user.tz} />
         {coords}
       </div>
     )
-  },
+  }
 
-  render: function() {
+  render() {
 
     return (
       <div className="container login-container">
@@ -48,23 +49,27 @@ module.exports = React.createClass({
                    defaultValue={this.props.user.name} />
           </div>
 
-          <div className="form-row">
-            { this.props.locationField ? (
-              <div className="edit-person--row">
-                <LocationAutocomplete location={this.props.user.location}
-                                      handleChange={this.props.handleLocationChange} />
-                <span className="edit-person--timezone-display">
-                  {this.props.user.tz}
-                </span>
-              </div>
-            ) : (
+          { this.props.locationField ? (
+            <div>
+              <p>
+                Now, type below to search for your location
+              </p>
+              <LocationAutocomplete location={this.props.user.location}
+                                    handleChange={this.props.handleLocationChange} />
+              <span className="edit-person--timezone-display">
+                {this.props.user.tz}
+              </span>
+            </div>
+          ) : (
+            <div className="form-row">
               <ProfileLocation location={this.props.user.location || 'Looking up your location...'}
                                tz={this.props.user.tz}
                                time={this.props.time}
                                timeFormat={this.props.timeFormat}
                                loading={this.props.checkingLocation} />
-            ) }
-          </div>
+              <input type="hidden" name="location" value={this.props.user.location} />
+            </div>
+          ) }
 
           {this.renderHiddenUserFields()}
 
@@ -80,7 +85,9 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+};
+
+module.exports = GetStarted;
 
 // TODO
 // <p>

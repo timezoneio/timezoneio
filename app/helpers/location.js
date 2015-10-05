@@ -1,4 +1,4 @@
-require('es6-promise').polyfill();
+if (typeof Promise === 'undefined') require('es6-promise').polyfill();
 var api = require('./api');
 
 var toRad = function(n) {

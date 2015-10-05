@@ -1,4 +1,4 @@
-require('es6-promise').polyfill();
+if (typeof Promise === 'undefined') require('es6-promise').polyfill();
 
 // source: https://devcenter.heroku.com/articles/s3-upload-node
 

@@ -51,6 +51,9 @@ module.exports = React.createClass({
         this.moveSelectionDown();
         break;
       case KEY.ENTER:
+        // Prevent form submit
+        e.preventDefault();
+        e.stopPropagation();
         this.makeSelection();
         break;
     }
