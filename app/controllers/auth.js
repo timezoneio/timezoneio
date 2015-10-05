@@ -57,31 +57,45 @@ auth.create = function(req, res) {
   if (!isValidEmail(req.body.email))
     return renderError('Please provide a valid email address');
 
+  // The invite hash may be in post body or the session
+  var inviteCode = req.body.inviteCode || function() {
+    var code = req.flash('inviteCode');
+    return code && code[0];
+  }();
+
+  var pwError = getPasswordValidationError(req.body.password, req.body.password2);
+  if (pwError) {
+    req.flash('inviteCode', inviteCode);
+    return renderError(pwError);
+  }
+
   UserModel.findOneByEmail(req.body.email)
     .then(function(user) {
-      var isInvitedUser = false;
-      var hash = null;
+      if (user && user.isRegistered)
+        return Promise.reject('A user with that email already exists, please login instead');
 
-      if (user) {
-        hash = req.flash('inviteHash');
-        hash = hash && hash[0];
-        if (hash && hash === user.getEmailHash()) {
-          isInvitedUser = true;
-        } else {
-          return renderError('A user with that email already exists, please login instead');
-        }
+      // If the user is not found, but there is an invite hash, that means
+      // the user changed their email during signup
+      if (!user && inviteCode) {
+        var userId = inviteCode.split(/-/)[0];
+        var emailHash = inviteCode.split(/-/)[1];
+        return UserModel
+          .findOne({ _id: userId })
+          .then(function(user) {
+            if (!user || emailHash !== user.getEmailHash())
+              return Promise.reject('Sorry, please retry the invite link from your email ;)');
+            return user;
+          });
       }
 
-
-      var pwError = getPasswordValidationError(req.body.password, req.body.password2);
-      if (pwError) {
-        req.flash('inviteHash', hash);
-        return renderError(pwError);
-      }
-
+      // This may be an existing unregistered user or undefined
+      return user;
+    })
+    .then(function(user) {
       var newUser = null;
 
-      if (isInvitedUser) {
+      // Update the existing unregistered user or create a new one
+      if (user) {
         newUser = user;
         newUser.email = req.body.email;
         newUser.password = req.body.password;
@@ -117,7 +131,8 @@ auth.create = function(req, res) {
       });
     })
     .catch(function(err) {
-      return renderError('Something didn\'t work right there, can you try again?');
+      renderError(err.message ||
+                  'Something didn\'t work right there, can you try again?');
     });
 
 };
@@ -168,8 +183,9 @@ auth.joinTeam = function(req, res) {
             if (!user || user.getEmailHash() !== emailHash)
               return invalidHashResponse();
 
-            req.flash('inviteHash'); // clear it
-            req.flash('inviteHash', emailHash);
+            // Invite code is the user id + the email hash
+            req.flash('inviteCode'); // clear it
+            req.flash('inviteCode', `${user._id}-${emailHash}`);
 
             return res.render('signup', {
               title: `Join ${team.name} on Timezone.io!`,

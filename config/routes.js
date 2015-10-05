@@ -1,5 +1,5 @@
 var apiRouter = require('./routers/api');
-var access = require('./middleware/access')
+var access = require('./middleware/access');
 var base = require('../app/controllers/base');
 var auth = require('../app/controllers/auth');
 var team = require('../app/controllers/team');
