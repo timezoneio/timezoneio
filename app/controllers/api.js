@@ -87,6 +87,7 @@ api.userCreate = function(req, res, next) {
         sendEmail('invite', newUser.email, {
           inviteUrl: req.team.getInviteUrl(newUser),
           adminName: req.user.name,
+          name: newUser.name || 'there', // Hi <there>!,
           teamName: req.team.name
         });
 
