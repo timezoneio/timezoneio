@@ -46,7 +46,7 @@ var EMAIL_TYPES = {
   'invite': {
     // params: inviteUrl, adminName, teamName
     subject: function(p) {
-      return `${p.adminName} wants you to join the ${p.teamName} team!`;
+      return `${p.adminName} wants you to join the ${p.teamName} team on Timezone.io!`;
     },
     tags: ['invite']
   }
