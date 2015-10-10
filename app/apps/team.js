@@ -108,7 +108,6 @@ function saveTeamInfo(info) {
   return fetch('/api/team/' + appState.getTeam()._id, options)
     .then(json)
     .then(function(res){
-      console.info(res);
       return res;
     });
 }

@@ -243,6 +243,9 @@ userSchema.methods = {
     OWNER_FIELDS.forEach(function(field) {
       json[field] = this[field];
     }.bind(this));
+    if (this.teams) {
+      json.teams = this.teams.map(function(t){ return t.toJSON(); });
+    }
     return json;
   },
 

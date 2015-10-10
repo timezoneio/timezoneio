@@ -10,23 +10,53 @@
       box-shadow(1)
 
   .header-avatar
+    position: relative
+    margin-right: 15px
     cursor: pointer
+
+    &::after
+      position: absolute
+      top: 15px
+      right: -15px
+      bottom: auto
+      left: auto
+      display: inline-block
+      height: 0
+      width: 0
+      margin: 0
+      content: ""
+
+      opacity: 1
+      background-color: transparent
+      border: 5px solid transparent
+      border-top: 5px solid $mutedColor
+      transform: none
+
+    &:hover::after
+      border-top-color: $textColor
+      transform: none
+
 
 .user-menu
 
   $spacing = 4px
 
-  display: none
+  display: flex
+  // justify-content: space-between;
+  visibility: hidden
+  opacity: 0
   position: absolute
-  top: - $spacing
+  top: 110%
+  top: calc(100% + 0.5em)
   right: - $spacing
-  min-width: 10em
-  padding: 130% 0.1em 0.1em
+  min-width: 22em
   background: #fff
-  box-shadow(1)
-  // box-shadow: 0 1px 2px rgba(0,0,0,0.3)
+  box-shadow(2)
   font-size: 0.9em
-  text-align: right
+  // text-align: right
+  transform: translateY(-10px)
+  transition: all 400ms cubic-bezier(.7,0,.3,1)
+  // opacity 300ms linear, transform 300ms ease-in-out 0s
 
   &.bottom-left
     top: auto
@@ -37,10 +67,43 @@
 
   // TODO - Add some transition
   &.menu-open
-    display: block
+    // display: block
+    visibility: visible
+    opacity: 1
+    transform: translateY(0px)
 
+.user-menu-toggle
+  cursor: pointer
+
+.user-menu-section
+  width: 50%
+  margin: 0.8em 0 1em
+  padding: 0 1em
+  border-right: 1px solid $lightBorderColor
+
+  &:last-child
+    border-right: 0
+
+.user-menu-section-header
+  margin: 0 0 0.5em
+
+.user-menu-section-name
+  margin: 0
+  font-size: 1.2em
+
+.user-menu-section-location
+  margin-bottom: 1em
+  font-size: 12px
+  color: $mutedColor
+
+  .location-icon
+    width: 16px
+    font-size: 16px
 
 .user-menu-item
   cancelLinkHover()
   display: block
-  margin: 0.5em 0.8em;
+  margin-bottom: 0.5em
+
+  &:last-child
+    margin-bottom: 0

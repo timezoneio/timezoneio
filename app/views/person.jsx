@@ -244,7 +244,7 @@ module.exports = React.createClass({
                 <span>
                   or
                 </span>
-                <UploadButton fileName={this.props.profileUser._id}
+                <UploadButton fileName={this.props.profileUser._id.toString()}
                               handleUploaded={this.handleAvatarUploaded} />
               </div>
 

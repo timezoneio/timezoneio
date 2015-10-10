@@ -13,3 +13,17 @@
 // Rules for using icons as white on a dark background.
 .material-icons.md-light { color: rgba(255, 255, 255, 1); }
 .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+
+// Location aka "place"
+.location-icon
+  position: relative
+  top: 3px
+  width: 18px
+  margin-right: 0.2em
+  color: $brandColor
+
+  &.loading
+    animation: loadingPulsate 600ms linear alternate infinite
+
+  &.error
+    color: $errorColor

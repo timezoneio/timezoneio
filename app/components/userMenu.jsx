@@ -31,6 +31,10 @@ class UserMenu extends React.Component {
     this.state.open ? this.closeMenu() : this.openMenu();
   }
 
+  handleClickMenu(e) {
+    e.stopPropagation();
+  }
+
   componentWillUnmount() {
     window.removeEventListener('click', this.closeMenu);
   }
@@ -52,26 +56,64 @@ class UserMenu extends React.Component {
     return (
       <div className={containerClasses}>
 
-        <div className={menuClasses}>
-          <a href={profileUrl}
-             className="user-menu-item">
-            Profile
-          </a>
-          <a href="/team"
-             className="user-menu-item">
-            Add your team
-          </a>
-          <a href="/logout"
-             className="user-menu-item">
-            Logout
-          </a>
+        <div className={menuClasses}
+             onClick={this.handleClickMenu}>
+
+          <div className="user-menu-section">
+
+            <p className="user-menu-section-name">
+              {this.props.name}
+            </p>
+
+            {this.props.location && (
+              <div className="user-menu-section-location">
+                <span className="material-icons location-icon">place</span>
+                <span>
+                  {this.props.location}
+                </span>
+              </div>
+            )}
+
+            <a href={profileUrl}
+               className="user-menu-item">
+              View profile
+            </a>
+
+            <a href="/logout"
+               className="user-menu-item">
+              Sign out
+            </a>
+
+          </div>
+
+          <div className="user-menu-section">
+            <p className="user-menu-section-header">
+              Teams
+            </p>
+            {this.props.teams.map(function(team, idx) {
+              return (
+                <a key={idx}
+                   href={team.url}
+                   className="user-menu-item">
+                  {team.name}
+                </a>
+              )
+            })}
+            <a href="/team"
+               className="button small">
+              Add your team
+            </a>
+          </div>
+
         </div>
 
-        <a onClick={this.handleToggleMenu.bind(this)}
-           className="avatar header-avatar"
-           style={style}
-           name={this.props.name}>
-        </a>
+        <div className="user-menu-toggle"
+             onClick={this.handleToggleMenu.bind(this)}>
+          <div className="avatar header-avatar"
+             style={style}
+             name={this.props.name}>
+          </div>
+        </div>
 
       </div>
     );
