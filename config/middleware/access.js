@@ -8,7 +8,7 @@ var access = module.exports = {};
 
 access.allowImpersonate = function(req, res, next) {
 
-  if (!req.user.isSuperAdmin() || !req.query.impersonate)
+  if (!req.user || !req.user.isSuperAdmin() || !req.query.impersonate)
     return next();
 
   UserModel
