@@ -1,7 +1,4 @@
-// Currently, the fetch API doesn't reliably parse the UTF-8 encoded json
-// correctly. Here we just force the polyfill
-window.fetch = null;
-require('whatwg-fetch');
+require('../helpers/fetchPolyfill'); // Do we need this anymore?
 var React  = require('react');
 var toolbelt = require('../utils/toolbelt.js');
 var location = require('../helpers/location');
