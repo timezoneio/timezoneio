@@ -237,6 +237,13 @@ userSchema.methods = {
     return json;
   },
 
+  toSuperAdminJSON: function() {
+    var json = this.toAdminJSON();
+    json.createdAt = this.createdAt.toJSON();
+    json.updatedAt = this.updatedAt.toJSON();
+    return json;
+  },
+
   // NOTE - this needs to be recursively turned into JSON acceptable objects?
   toOwnerJSON: function() {
     var json = this.toJSON();

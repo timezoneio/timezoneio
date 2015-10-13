@@ -1,5 +1,6 @@
 'use strict';
 var React = require('react');
+var moment = require('moment-timezone');
 var getProfileUrl = require('../helpers/urls').getProfileUrl;
 var api = require('../helpers/api');
 var Header = require('../components/header.jsx');
@@ -71,6 +72,11 @@ class Admin extends React.Component {
     return;
   }
 
+  renderDate(dateString) {
+    var m = moment(dateString);
+    return `${m.fromNow()} (${m.format('ddd MMM Do [at] h:mm a')})`
+  }
+
   render() {
     return (
       <div className="container">
@@ -103,6 +109,8 @@ class Admin extends React.Component {
               <p><strong>tz: </strong>{this.props.manageUser.tz}</p>
               <p><strong>coords: </strong>{JSON.stringify(this.props.manageUser.coords)}</p>
               <p><strong>Avatar: </strong>{this.props.manageUser.avatar}</p>
+              <p><strong>Created: </strong>{this.renderDate(this.props.manageUser.createdAt)}</p>
+              <p><strong>Updated: </strong>{this.renderDate(this.props.manageUser.updatedAt)}</p>
               <button onClick={this.handleDeleteUserAccount.bind(this, this.props.manageUser)}>
                 Delete user account
               </button>

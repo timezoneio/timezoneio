@@ -81,6 +81,13 @@ teamSchema.methods = {
     return json;
   },
 
+  toSuperAdminJSON: function() {
+    var json = this.toAdminJSON();
+    json.createdAt = this.createdAt.toJSON();
+    json.updatedAt = this.updatedAt.toJSON();
+    return json;
+  },
+
   getManageUrl: function() {
     return this.url + '/manage';
   },

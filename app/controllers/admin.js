@@ -15,8 +15,10 @@ var handleError = function(res) {
   };
 };
 
-var toAdminJSON = function(model) {
-  return typeof model.toAdminJSON !== 'undefined' ? model.toAdminJSON() : model.toJSON();
+var toSuperAdminJSON = function(model) {
+  return typeof model.toSuperAdminJSON !== 'undefined' ?
+         model.toSuperAdminJSON() :
+         model.toJSON();
 };
 
 admin.index = function(req, res, next) {
@@ -45,8 +47,8 @@ admin.index = function(req, res, next) {
       title: 'Admin',
       numUsers: numUsers,
       numRegisteredUsers: numRegisteredUsers,
-      teams: teams ? teams.map(toAdminJSON) : [],
-      users: users ? users.map(toAdminJSON) : []
+      teams: teams ? teams.map(toSuperAdminJSON) : [],
+      users: users ? users.map(toSuperAdminJSON) : []
     });
 
   });
@@ -71,12 +73,13 @@ admin.users = function(req, res) {
 
   UserModel
     .find(query)
+    .sort({ createdAt: -1 })
     .skip((page - 1) * COUNT)
     .limit(COUNT)
     .then(function(users) {
       res.render('admin', {
         title: 'Admin',
-        users: users ? users.map(toAdminJSON) : [],
+        users: users ? users.map(toSuperAdminJSON) : [],
         baseUrl: '/admin/users',
         prevPage: page > 1 ? (page - 1) : null,
         nextPage: users && users.length === COUNT ? (page + 1) : null
@@ -102,7 +105,7 @@ admin.user = function(req, res) {
         .then(function(teams) {
           res.render('admin', {
             title: 'Admin',
-            manageUser: user.toOwnerJSON(),
+            manageUser: toSuperAdminJSON(user),
             teams: teams
           });
         });
@@ -117,12 +120,13 @@ admin.teams = function(req, res) {
 
   TeamModel
     .find()
+    .sort({ createdAt: -1 })
     .skip((page - 1) * COUNT)
     .limit(COUNT)
     .then(function(teams) {
       res.render('admin', {
         title: 'Admin',
-        teams: teams ? teams.map(toAdminJSON) : [],
+        teams: teams ? teams.map(toSuperAdminJSON) : [],
         baseUrl: '/admin/teams',
         prevPage: page > 1 ? (page - 1) : null,
         nextPage: teams && teams.length === COUNT ? (page + 1) : null
