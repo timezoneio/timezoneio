@@ -15,6 +15,10 @@ var handleError = function(res) {
   };
 };
 
+var toAdminJSON = function(model) {
+  return typeof model.toAdminJSON !== 'undefined' ? model.toAdminJSON() : model.toJSON();
+};
+
 admin.index = function(req, res, next) {
 
   // NOTE - We may want to cache some of these values
@@ -41,8 +45,8 @@ admin.index = function(req, res, next) {
       title: 'Admin',
       numUsers: numUsers,
       numRegisteredUsers: numRegisteredUsers,
-      teams: teams,
-      users: users
+      teams: teams ? teams.map(toAdminJSON) : [],
+      users: users ? users.map(toAdminJSON) : []
     });
 
   });
@@ -72,7 +76,7 @@ admin.users = function(req, res) {
     .then(function(users) {
       res.render('admin', {
         title: 'Admin',
-        users: users || [],
+        users: users ? users.map(toAdminJSON) : [],
         baseUrl: '/admin/users',
         prevPage: page > 1 ? (page - 1) : null,
         nextPage: users && users.length === COUNT ? (page + 1) : null
@@ -118,7 +122,7 @@ admin.teams = function(req, res) {
     .then(function(teams) {
       res.render('admin', {
         title: 'Admin',
-        teams: teams || [],
+        teams: teams ? teams.map(toAdminJSON) : [],
         baseUrl: '/admin/teams',
         prevPage: page > 1 ? (page - 1) : null,
         nextPage: teams && teams.length === COUNT ? (page + 1) : null

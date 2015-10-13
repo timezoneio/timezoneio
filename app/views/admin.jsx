@@ -73,7 +73,7 @@ class Admin extends React.Component {
 
   render() {
     return (
-      <div className="container login-container">
+      <div className="container">
 
         <Header {...this.props} />
 
@@ -85,7 +85,7 @@ class Admin extends React.Component {
         <Notification text={this.state.message}
                       style={this.props.error && 'error'} />
 
-        <div className="page-content">
+        <div className="admin-content">
 
           <form action="/admin/users">
             <input type="text" name="search" placeholder="search" autoComplete="off" />
@@ -142,6 +142,7 @@ class Admin extends React.Component {
                     <div className="admin-list--item" key={idx}>
                       <div className="admin-list--name">
                         <a href={getUserAdminUrl(user)}>{user.name || 'No name'}</a>
+                        {' '}{user.email}
                       </div>
                       <a href={getProfileUrl(user)}
                          target="_blank"
