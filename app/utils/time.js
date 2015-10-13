@@ -26,6 +26,7 @@ timeUtils.getHourFormattedString = function(hour, fmt) {
 
 timeUtils.gmtHoursToOffset = function(gmtHour, utcHourOffset) {
   var hour = gmtHour + utcHourOffset;
+  if (hour >= 24) hour -= 24;
   return hour >= 0 ? hour : 24 + hour;
 };
 
