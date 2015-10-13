@@ -79,7 +79,7 @@ class Admin extends React.Component {
 
         <h1 className="page-headline">Admin</h1>
         <p className="txt-center">
-          <a href="/admin">Teams</a> - <a href="/admin/users">Users</a>
+          <a href="/admin">Home</a> - <a href="/admin/teams">Teams</a> - <a href="/admin/users">Users</a>
         </p>
 
         <Notification text={this.state.message}
@@ -118,7 +118,7 @@ class Admin extends React.Component {
                   return (
                     <div className="admin-list--item" key={idx}>
                       <div className="admin-list--name">
-                        <a href={team.url}>{team.name}</a>
+                        <a href={team.url}>{team.name || 'No name'}</a>
                         {' '}has {team.people.length} team members
                       </div>
                       {this.getAdminInfo(team.admins)}
@@ -141,7 +141,7 @@ class Admin extends React.Component {
                   return (
                     <div className="admin-list--item" key={idx}>
                       <div className="admin-list--name">
-                        <a href={getUserAdminUrl(user)}>{user.name}</a>
+                        <a href={getUserAdminUrl(user)}>{user.name || 'No name'}</a>
                       </div>
                       <a href={getProfileUrl(user)}
                          target="_blank"
@@ -155,6 +155,17 @@ class Admin extends React.Component {
               </div>
             </div>
           ) }
+
+            <p>
+              { this.props.prevPage && (
+                <a href={this.props.baseUrl + '?p=' + this.props.prevPage}>Prev page</a>
+              ) }
+              { this.props.prevPage && this.props.nextPage && ' - ' }
+              { this.props.nextPage && (
+                <a href={this.props.baseUrl + '?p=' + this.props.nextPage}>Next page</a>
+              ) }
+            </p>
+
 
         </div>
 

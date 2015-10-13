@@ -19,22 +19,30 @@ admin.index = function(req, res, next) {
 
   // NOTE - We may want to cache some of these values
   Promise.all([
+    UserModel.count(),
+    UserModel.findAllRegistered().count(),
     TeamModel
       .find()
-      .limit(50)
+      .sort({ createdAt: -1 })
+      .limit(10)
       .populate('admins'),
-    UserModel.count(),
-    UserModel.findAllRegistered().count()
+    UserModel
+      .find()
+      .sort({ createdAt: -1 })
+      .limit(10)
   ]).then(function(values) {
-    var teams = values[0];
-    var numUsers = values[1];
-    var numRegisteredUsers = values[2];
+
+    var numUsers = values[0];
+    var numRegisteredUsers = values[1];
+    var teams = values[2];
+    var users = values[3];
 
     res.render('admin', {
       title: 'Admin',
       numUsers: numUsers,
       numRegisteredUsers: numRegisteredUsers,
-      teams: teams
+      teams: teams,
+      users: users
     });
 
   });
@@ -43,6 +51,8 @@ admin.index = function(req, res, next) {
 
 admin.users = function(req, res) {
 
+  const COUNT = 50;
+  var page = parseInt(req.query.p || 1, 10);
   var query = {};
   var search = req.query.search;
 
@@ -57,10 +67,15 @@ admin.users = function(req, res) {
 
   UserModel
     .find(query)
+    .skip((page - 1) * COUNT)
+    .limit(COUNT)
     .then(function(users) {
       res.render('admin', {
         title: 'Admin',
-        users: users || []
+        users: users || [],
+        baseUrl: '/admin/users',
+        prevPage: page > 1 ? (page - 1) : null,
+        nextPage: users && users.length === COUNT ? (page + 1) : null
       });
     })
     .catch(handleError(res));
@@ -88,6 +103,26 @@ admin.user = function(req, res) {
           });
         });
 
+    })
+    .catch(handleError(res));
+};
+
+admin.teams = function(req, res) {
+  const COUNT = 50;
+  var page = parseInt(req.query.p || 1, 10);
+
+  TeamModel
+    .find()
+    .skip((page - 1) * COUNT)
+    .limit(COUNT)
+    .then(function(teams) {
+      res.render('admin', {
+        title: 'Admin',
+        teams: teams || [],
+        baseUrl: '/admin/teams',
+        prevPage: page > 1 ? (page - 1) : null,
+        nextPage: teams && teams.length === COUNT ? (page + 1) : null
+      });
     })
     .catch(handleError(res));
 };
