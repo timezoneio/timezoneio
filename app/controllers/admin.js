@@ -114,6 +114,37 @@ admin.user = function(req, res) {
     .catch(handleError(res));
 };
 
+admin.userUpdate = function(req, res) {
+  UserModel
+    .findOne({ _id: req.params.userId })
+    .then(function(user) {
+
+      if (!user)
+        return res.render('admin', {
+          title: 'Admin',
+          message: 'Could not find user'
+        });
+
+      for (var key in req.body) {
+        if (UserModel.ADMIN_WRITABLE_FIELDS.indexOf(key) > -1) {
+          user[key] = req.body[key];
+        }
+      }
+
+      // :(
+      if ('password' in req.body) {
+        user.password = req.body.password;
+      }
+
+      user.save(function(err) {
+        if (err) return handleError(res, 'Failed to save');
+        res.redirect(req.url);
+      });
+
+    })
+    .catch(handleError(res));
+};
+
 admin.teams = function(req, res) {
   const COUNT = 50;
   var page = parseInt(req.query.p || 1, 10);

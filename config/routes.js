@@ -68,6 +68,7 @@ module.exports = function(app, passport) {
   app.get('/admin', admin.index);
   app.get('/admin/users', admin.users);
   app.get('/admin/user/:userId', admin.user);
+  app.post('/admin/user/:userId', admin.userUpdate);
   app.get('/admin/teams', admin.teams);
 
 

@@ -6,6 +6,7 @@ var api = require('../helpers/api');
 var Header = require('../components/header.jsx');
 var Notification = require('../components/notification.jsx');
 var Avatar = require('../components/avatar.jsx');
+var CSRFToken = require('../components/CSRFToken.jsx');
 
 var getUserAdminUrl = function(user) {
   return `/admin/user/${user._id}`;
@@ -111,9 +112,22 @@ class Admin extends React.Component {
               <p><strong>Avatar: </strong>{this.props.manageUser.avatar}</p>
               <p><strong>Created: </strong>{this.renderDate(this.props.manageUser.createdAt)}</p>
               <p><strong>Updated: </strong>{this.renderDate(this.props.manageUser.updatedAt)}</p>
-              <button onClick={this.handleDeleteUserAccount.bind(this, this.props.manageUser)}>
+              <button onClick={this.handleDeleteUserAccount.bind(this, this.props.manageUser)}
+                      className="danger">
                 Delete user account
               </button>
+
+              <div className="admin-section">
+                <form action={`/admin/user/${this.props.manageUser._id}`}
+                      method="post">
+                  <CSRFToken {...this.props} />
+                  <input type="text" name="password" placeholder="password" />
+                  <button type="submit"
+                          className="danger">
+                    Update password
+                  </button>
+                </form>
+              </div>
             </div>
           ) }
 

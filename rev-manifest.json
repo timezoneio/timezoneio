@@ -1,10 +1,10 @@
 {
   "js/bundles/about.js": "js/bundles/about-de02647cc2.js.gz",
-  "js/bundles/admin.js": "js/bundles/admin-e61395a95c.js.gz",
-  "js/bundles/createTeam.js": "js/bundles/createTeam-0d4a2ad494.js.gz",
-  "js/bundles/getStarted.js": "js/bundles/getStarted-2cf95018a9.js.gz",
-  "js/bundles/homepage.js": "js/bundles/homepage-f1a89e8eb6.js.gz",
-  "js/bundles/person.js": "js/bundles/person-bb9a7c92e1.js.gz",
-  "js/bundles/team.js": "js/bundles/team-b5e3a0c0fb.js.gz",
-  "stylesheets/index.css": "stylesheets/index-90fc9d05bc.css.gz"
+  "js/bundles/admin.js": "js/bundles/admin-d872091c49.js.gz",
+  "js/bundles/createTeam.js": "js/bundles/createTeam-f2bacb33cf.js.gz",
+  "js/bundles/getStarted.js": "js/bundles/getStarted-bc5d9dcb65.js.gz",
+  "js/bundles/homepage.js": "js/bundles/homepage-2042cd279a.js.gz",
+  "js/bundles/person.js": "js/bundles/person-65139a54be.js.gz",
+  "js/bundles/team.js": "js/bundles/team-41e8590f9f.js.gz",
+  "stylesheets/index.css": "stylesheets/index-3cdab7fbf3.css.gz"
 }
