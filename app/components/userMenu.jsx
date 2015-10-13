@@ -90,7 +90,7 @@ class UserMenu extends React.Component {
             <p className="user-menu-section-header">
               Teams
             </p>
-            {this.props.teams.map(function(team, idx) {
+            {this.props.teams && this.props.teams.map(function(team, idx) {
               return (
                 <a key={idx}
                    href={team.url}

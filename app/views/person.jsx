@@ -271,10 +271,14 @@ module.exports = React.createClass({
                 )}
 
 
-                <input type="hidden" name="tz" value={this.state.tz} />
-                <input type="hidden" name="avatar" value={this.state.avatar} />
-                <input type="hidden" name="coords[lat]" value={this.state.coords.lat} />
-                <input type="hidden" name="coords[long]" value={this.state.coords.long} />
+                <input type="hidden" name="tz"
+                       value={this.state.tz} />
+                <input type="hidden" name="avatar"
+                       value={this.state.avatar} />
+                <input type="hidden" name="coords[lat]"
+                       value={this.state.coords && this.state.coords.lat} />
+                <input type="hidden" name="coords[long]"
+                       value={this.state.coords && this.state.coords.long} />
 
                 <div className="form-row">
                   <button title="Go back to your profile"
