@@ -5,6 +5,13 @@ var s3 = require('../helpers/s3');
 
 class UploadButton extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      isUploading: false
+    };
+  }
+
   handleFileChange(e) {
     var files = e.target.files;
     var file = files[0];
@@ -19,9 +26,12 @@ class UploadButton extends React.Component {
       return console.warn('No file added');
     }
 
+    this.setState({ isUploading: true });
+
     // TODO - https://www.npmjs.com/package/crop-rotate-resize-in-browser
     s3.uploadFile(file, generateAvatarUploadFilename(this.props.fileName, file))
       .then(function(fileUrl) {
+        this.setState({ isUploading: false });
 
         // Lambda function will resize image and rename it
         var resizedUrl = fileUrl.replace('_full', '');
@@ -29,7 +39,7 @@ class UploadButton extends React.Component {
           full: fileUrl,
           resized: resizedUrl
         };
-      })
+      }.bind(this))
       .then(this.props.handleUploaded);
   }
 
@@ -40,7 +50,7 @@ class UploadButton extends React.Component {
         <input type="file"
                name="avatar_file"
                onChange={this.handleFileChange.bind(this)} />
-        Upload a photo
+        { this.state.isUploading ? 'Uploading...' : 'Upload a photo' }
       </div>
     );
   }
