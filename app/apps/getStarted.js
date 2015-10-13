@@ -1,4 +1,4 @@
-require('../helpers/fetchPolyfill'); // Do we need this anymore?
+require('../helpers/fetchPolyfill');
 var React  = require('react');
 var toolbelt = require('../utils/toolbelt.js');
 var location = require('../helpers/location');

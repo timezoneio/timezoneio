@@ -1,3 +1,4 @@
+require('../helpers/fetchPolyfill');
 var React = require('react');
 var toolbelt = require('../utils/toolbelt.js');
 var CreateTeam = React.createFactory(require('../views/createTeam.jsx'));

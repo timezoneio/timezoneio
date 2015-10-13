@@ -5,6 +5,7 @@ var qs = require('querystring');
 
 // we rely on global csrf token for now, grab first so it can't be modified
 var CSRF = typeof window !== 'undefined' && window.appData.csrf_token;
+// var fetch = typeof window !== 'undefined' && window.fetch;
 
 // TOOD - Need promise polyfill
 var status = function(res) {

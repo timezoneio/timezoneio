@@ -1,3 +1,4 @@
+require('../helpers/fetchPolyfill');
 var React  = require('react');
 
 var About = React.createFactory(require('../views/about.jsx'));

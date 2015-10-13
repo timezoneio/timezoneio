@@ -1,3 +1,4 @@
+require('../helpers/fetchPolyfill');
 var React  = require('react');
 
 var Admin = React.createFactory(require('../views/admin.jsx'));

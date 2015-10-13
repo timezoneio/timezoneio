@@ -1,10 +1,6 @@
+require('../helpers/fetchPolyfill');
 var React  = require('react');
 var moment = require('moment-timezone');
-
-// Currently, the fetch API doesn't reliably parse the UTF-8 encoded json
-// correctly. Here we just force the
-window.fetch = null;
-require('whatwg-fetch');
 
 var transform = require('../utils/transform.js');
 var timeUtils = require('../utils/time.js');

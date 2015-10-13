@@ -1,3 +1,4 @@
+require('../helpers/fetchPolyfill');
 var React  = require('react');
 
 var Homepage = React.createFactory(require('../views/homepage.jsx'));
