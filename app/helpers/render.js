@@ -36,8 +36,12 @@ module.exports = function render(pathName, locals, cb) {
   data.csrf_token = locals.csrf_token;
 
   // clean user object for render
-  if (data.user && typeof data.user.toOwnerJSON === 'function')
+  if (data.impersonateUser) {
+    data.realUser = data.user.toOwnerJSON();
+    data.user = data.impersonateUser.toOwnerJSON();
+  } else if (data.user && typeof data.user.toOwnerJSON === 'function') {
     data.user = data.user.toOwnerJSON();
+  }
 
   var params = {};
 

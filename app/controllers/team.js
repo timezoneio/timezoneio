@@ -21,7 +21,7 @@ team.index = function(req, res, next) {
       // Team not found
       if (!team) return next();
 
-      var isAdmin = team.isAdmin(req.user);
+      var isAdmin = team.isAdmin(req.user) || team.isAdmin(res.locals.impersonateUser);
 
       // Organize into timezones
       var time = moment();

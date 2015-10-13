@@ -5,6 +5,25 @@ var APIAuthModel = require('../../app/models/apiAuth');
 
 var access = module.exports = {};
 
+
+access.allowImpersonate = function(req, res, next) {
+
+  if (!req.user.isSuperAdmin() || !req.query.impersonate)
+    return next();
+
+  UserModel
+    .findOne({ _id: req.query.impersonate })
+    .then(function(user) {
+      if (!user) return next();
+
+      res.locals.impersonateUser = user;
+      next();
+    })
+    .catch(function(err) {
+      next();
+    });
+};
+
 access.requireSuperUser = function(req, res, next) {
   if (req.user && req.user.isSuperAdmin())
     return next();

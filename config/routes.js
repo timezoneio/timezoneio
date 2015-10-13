@@ -17,6 +17,7 @@ var oauthConnectFlast = function(req, res, next) {
 
 module.exports = function(app, passport) {
 
+  app.use('*', access.allowImpersonate);
 
   app.get('/', base.index);
   app.get('/about', base.about);
