@@ -100,15 +100,14 @@ for hour in 0 1 2 3 4 5 6 7 22 23
   &:hover
     .person-info
       opacity: 1
+      transform: translateX(-50%)
 
 .person-info
   position: absolute
-  left: -20%
-  right: -20%
+  left: 50%
   bottom: -2em
   z-index: 1000
-  width: 140%
-  max-width: 110px
+  min-width: 100%
   max-height: 3em
   margin: 0 auto
   padding: 0.3em 0.4em 0.4em
@@ -117,7 +116,6 @@ for hour in 0 1 2 3 4 5 6 7 22 23
   transition: all 200ms
   background: #fff
   border-radius: 2px
-  // box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24)
   font-size: 0.8em
   font-weight: bold
   text-align: center
@@ -125,9 +123,7 @@ for hour in 0 1 2 3 4 5 6 7 22 23
   p
     margin: 0
     line-height: 1.1em
-    text-overflow: clip
     white-space: nowrap
-    overflow: hidden
 
   .person-name
     margin-bottom: 0.3em
