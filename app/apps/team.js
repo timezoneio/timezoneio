@@ -17,6 +17,11 @@ var Team = React.createFactory(require('../views/team.jsx'));
 // Application state:
 var appState = new AppState(window.appData);
 
+// Get non-user settings:
+if (!appState.getUser()) {
+  var fmt = window.localStorage.getItem('tz:timeFormat');
+  if (fmt) appState.setTimeFormat(parseInt(fmt, 10));
+}
 
 // Add the component to the DOM
 var targetNode = document.querySelector('#page');
@@ -111,8 +116,10 @@ function saveTeamInfo(info) {
 
 function saveUserTimeFormat(format) {
   var user = appState.getUser();
-  if (!user) return;
-  ActionCreators.saveUserSetting(user._id, 'timeFormat', format);
+  if (user)
+    return ActionCreators.saveUserSetting(user._id, 'timeFormat', format);
+
+  window.localStorage.setItem('tz:timeFormat', format);
 }
 
 function updateCurrentView(view, shouldUpdateUrl) {
