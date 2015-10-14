@@ -100,18 +100,19 @@ for hour in 0 1 2 3 4 5 6 7 22 23
   &:hover
     .person-info
       opacity: 1
-      transform: translateX(-50%)
+      z-index: 110
 
 .person-info
   position: absolute
   left: 50%
   bottom: -2em
-  z-index: 1000
+  z-index: 100
   min-width: 100%
   max-height: 3em
   margin: 0 auto
   padding: 0.3em 0.4em 0.4em
 
+  transform: translateX(-50%)
   opacity: 0
   transition: all 200ms
   background: #fff
