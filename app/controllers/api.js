@@ -119,11 +119,26 @@ api.userUpdate = function(req, res, next) {
     }
   }
 
+  user.setUserSetting('timeFormat', 24);
+
   user.save(function(err) {
     if (err) return handleError(res, 'Failed to save');
     res.json(isOwner ? user.toOwnerJSON() : user);
   });
 
+};
+
+api.userUpdateSetting = function(req, res) {
+  var user = req.activeUser;
+
+  user.setUserSetting(req.body.name, req.body.value);
+  user.save(function(err) {
+    if (err) return handleError(res, 'Failed to save');
+    res.json({
+      setting: user.getUserSettingDoc(req.body.name),
+      message: 'Setting successfully saved!'
+    });
+  });
 };
 
 api.userDelete = function(req, res) {

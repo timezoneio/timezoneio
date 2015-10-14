@@ -27,6 +27,10 @@ class AppState {
     return this._state.csrf_token;
   }
 
+  getUser() {
+    return this._state.user;
+  }
+
   getTeam() {
     return this._state.team;
   }

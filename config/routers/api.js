@@ -11,6 +11,7 @@ router.get(   '/user', access.requireTeamAdmin,  api.getUserByEmail);
 router.post(  '/user', access.requireTeamAdmin,  api.userCreate);
 router.get(   '/user/:id', access.requireUser, api.userGet);
 router.put(   '/user/:id', access.requireUser, access.requireEditPrivlidges, api.userUpdate);
+router.put(   '/user/:id/setting', access.requireUser, access.requireEditPrivlidges, api.userUpdateSetting);
 router.delete('/user/:id', access.requireSuperUser, api.userDelete);
 
 router.get(   '/team/:id', api.team);

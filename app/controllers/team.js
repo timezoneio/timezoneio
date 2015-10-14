@@ -26,7 +26,9 @@ team.index = function(req, res, next) {
       // Organize into timezones
       var time = moment();
       var timezones = transform(time, team.people);
-      var timeFormat = 12; // hardcode default for now
+      var timeFormat = req.user ?
+                       req.user.getUserSetting('timeFormat') :
+                       UserModel.getDefaultSettingValue('timeFormat');
 
       var people = !isAdmin ?
                     team.people :
@@ -42,7 +44,6 @@ team.index = function(req, res, next) {
         timeFormat: timeFormat,
         isCurrentTime: true,
         currentView: isAdmin ? view : DEFAULT_VIEW,
-        // justCreated: true // DEBUG
         justCreated: req.flash('justCreated')[0] === true
       });
 

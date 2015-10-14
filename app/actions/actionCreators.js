@@ -43,6 +43,18 @@ var ActionCreators = module.exports = {
       });
   },
 
+  saveUserSetting: function(userId, name, value) {
+    return api
+      .put('/user/' + userId + '/setting', {
+        name: name,
+        value: value
+      })
+      .then(function(data) {
+        // No op for now
+        return data;
+      });
+  },
+
   getUserByEmail: function(email, teamId) {
     return api.get('/user',{ email: email, teamId: teamId });
   },

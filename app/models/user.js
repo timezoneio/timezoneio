@@ -1,9 +1,11 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto');
 var Schema = mongoose.Schema;
+var userSettings = require('./sub/userSettings')
 var isValidEmail = require('../utils/strings').isValidEmail;
 
 // Inspiration: https://github.com/madhums/node-express-mongoose-demo/blob/master/app/models/user.js
+
 
 var userSchema = new Schema({
   username: { type: String, default: '' },
@@ -27,6 +29,8 @@ var userSchema = new Schema({
   },
   location: { type: String, default: '' },
   tz: { type: String, default: '' },
+
+  settings: [userSettings.schema],
 
   createdAt: { type : Date, default : Date.now },
   updatedAt: { type : Date, default : Date.now }
@@ -283,6 +287,18 @@ userSchema.methods = {
     if (provider === 'twitter')
       this.avatar = this.twitter.profile_image_url_https.replace('_normal', '_200x200');
     return true;
+  },
+
+  getUserSetting: function(settingName) {
+    return userSettings.getSettingValue(settingName, this.settings);
+  },
+
+  getUserSettingDoc: function(settingName) {
+    return userSettings.getSettingDoc(settingName, this.settings);
+  },
+
+  setUserSetting: function(settingName, value) {
+    return userSettings.setSettingValue(settingName, value, this.settings);
   }
 
 };
@@ -302,6 +318,10 @@ userSchema.statics = {
   ADMIN_WRITABLE_FIELDS: WRITABLE_FIELDS.concat([
     'email'
   ]),
+
+  getDefaultSettingValue: function(type) {
+    return userSettings.getDefaultSettingValue(type);
+  },
 
   findOneByUsername: function(username, done) {
     return User.findOne({ username: username }, done);

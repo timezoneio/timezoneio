@@ -8,6 +8,7 @@ var clone = require('../utils/toolbelt.js').clone;
 
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
+var ActionCreators = require('../actions/actionCreators');
 var AppState = require('../state/appState.js');
 
 var Team = React.createFactory(require('../views/team.jsx'));
@@ -108,6 +109,12 @@ function saveTeamInfo(info) {
     });
 }
 
+function saveUserTimeFormat(format) {
+  var user = appState.getUser();
+  if (!user) return;
+  ActionCreators.saveUserSetting(user._id, 'timeFormat', format);
+}
+
 function updateCurrentView(view, shouldUpdateUrl) {
 
   appState.setCurrentView(view);
@@ -153,6 +160,7 @@ var handleViewAction = function(action) {
 
     case ActionTypes.CHANGE_TIME_FORMAT:
       appState.setTimeFormat(value);
+      saveUserTimeFormat(value);
       shouldRender = true;
       break;
     case ActionTypes.USE_CURRENT_TIME:
