@@ -3,14 +3,14 @@ var express = require('express');
 var logger = require('morgan');
 var slashes = require('connect-slashes');
 var cookieParser = require('cookie-parser');
-// var cookieSession = require('cookie-session');
 var session = require('express-session');
+var RedisStore = require('connect-redis')(session);
 var bodyParser = require('body-parser');
 var csrf = require('csurf');
 var multer = require('multer');
 var flash = require('connect-flash');
 var passport = require('passport');
-var mongoStore = require('connect-mongo')(session);
+
 
 require('node-jsx').install({extension: '.jsx'});
 
@@ -44,15 +44,13 @@ module.exports = function(mongooseConnection) {
   app.use(multer());
 
   app.use(cookieParser());
-  // app.use(cookieSession({ secret: 'secret' }));
   app.use(session({
     resave: false, //don't save session if unmodified
     saveUninitialized: false, // don't create session until something stored
     secret: 'bodhi',
-    store: new mongoStore({
-      mongooseConnection: mongooseConnection,
-      collection : 'sessions',
-      touchAfter: 24 * 3600
+    store: new RedisStore({
+      host: '127.0.0.1',
+      port: 6379
     })
   }));
 
@@ -73,7 +71,6 @@ module.exports = function(mongooseConnection) {
       next();
     }
   });
-  // app.use(csrf());
   app.use(function(req, res, next) {
     if (req.csrfToken)
       res.locals.csrf_token = req.csrfToken();
