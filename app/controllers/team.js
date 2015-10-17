@@ -70,47 +70,85 @@ team.create = function(req, res, next) {
     return res.redirect('/team');
   }
 
-  var searchSlug = TeamModel.slugify(req.body.name);
+  // If user decides to create a team with the same name:
+  var createSameName = req.body.createSameName === 'true';
 
-  // Match the bare slug or the slug followed by a dash and digit
-  var reggie = new RegExp(searchSlug + '$|' + searchSlug + '-(\\d+)$');
+  function getNewTeamSlug(name) {
+    // If not, we'll go search to find any matching slugs to create a new one!
+    var searchSlug = TeamModel.slugify(name);
 
-  // Run a query to figure out what to use as the slug
-  TeamModel.find({ slug: reggie }, function(err, teams) {
-    if (err) {
-      req.flash('error', err);
-      return res.redirect('/team');
-    }
+    // Match the bare slug or the slug followed by a dash and digit
+    var reggie = new RegExp(searchSlug + '$|' + searchSlug + '-(\\d+)$');
+    // Run a query to figure out what to use as the slug
+    return TeamModel
+      .find({ slug: reggie })
+      .then(function(teams) {
+        var getSlug = function(teamNames, num, baseSlug) {
+          var slug = num ? baseSlug + '-' + num : baseSlug;
+          var exists = ~teamNames.indexOf(slug);
+          return exists ? getSlug(teamNames, ++num, baseSlug) : slug;
+        };
+        var numTeams = teams.length;
+        var teamNames = teams.map(function(t) { return t.name; });
+        var slug = getSlug(teamNames, numTeams, searchSlug);
+        return slug;
+      });
+  }
 
-    var getSlug = function(teamNames, num, baseSlug) {
-      var slug = num ? baseSlug + '-' + num : baseSlug;
-      var exists = ~teamNames.indexOf(slug);
-      return exists ? getSlug(teamNames, ++num, baseSlug) : slug;
-    };
-    var numTeams = teams.length;
-    var teamNames = teams.map(function(t) { return t.name; });
-    var slug = getSlug(teamNames, numTeams, searchSlug);
+  function getPotentialDuplicateTeams(name) {
+    var reggie = new RegExp(name.trim(), 'i');
+    return TeamModel
+      .find({ name: reggie })
+      .populate('admins');
+  }
 
+  function createTeam(name, slug) {
     var newTeam = new TeamModel({
-      name: req.body.name,
+      name: name,
       slug: slug
     });
 
     newTeam.addAdmin(req.user);
     newTeam.addTeamMember(req.user);
 
-    newTeam.save(function(err) {
-      if (err) {
-        req.flash('error', err);
-        return res.redirect('/team');
-      }
+    return newTeam.save();
+  }
 
-      // SUCCESS!!
-      req.flash('justCreated', true);
-      res.redirect(newTeam.getManageUrl());
+  function createTeamSuccess(team) {
+    req.flash('justCreated', true);
+    res.redirect(team.getManageUrl());
+  }
 
-    });
+  function handleCreateError(err) {
+    req.flash('error', err.message);
+    res.redirect('/team');
+  }
 
-  });
+  // What query should we run?
+  if (createSameName) {
+    getNewTeamSlug(req.body.name)
+      .then(createTeam.bind(null, req.body.name))
+      .then(createTeamSuccess)
+      .catch(handleCreateError);
+
+  } else {
+    getPotentialDuplicateTeams(req.body.name)
+      .then(function(existingTeams) {
+
+        if (existingTeams.length)
+          return res.render('createTeam', {
+            title: 'Create your team',
+            name: req.body.name,
+            existingTeams: existingTeams
+          });
+
+        return getNewTeamSlug(req.body.name)
+          .then(createTeam.bind(null, req.body.name))
+          .then(createTeamSuccess);
+          // NOTE - Do we need another handler here since the last one doens't
+          // return a promise?
+      })
+      .catch(handleCreateError);
+  }
 
 };
