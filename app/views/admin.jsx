@@ -32,10 +32,9 @@ class Admin extends React.Component {
     };
   }
 
-  getAdminInfo(admins) {
-    if (!admins.length) return 'No admin';
-    return <a href={getProfileUrl(admins[0])}
-              target="_blank"
+  getAdminInfo(adminIds) {
+    if (!adminIds.length) return 'No admin';
+    return <a href={getUserAdminUrl({ _id: adminIds[0] })}
               className="admin-list--action">admin</a>;
   }
 
