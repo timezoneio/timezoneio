@@ -4,8 +4,8 @@ var Schema = mongoose.Schema;
 
 
 var teamSchema = new Schema({
-  name: { type: String, default: '', trim: true },
-  slug: { type: String, default: '', trim: true },
+  name: { type: String, default: '', trim: true, minlength: 1 },
+  slug: { type: String, default: '', trim: true, minlength: 1 },
 
   inviteHash: { type: String, default: '', trim: true },
 
