@@ -4,6 +4,7 @@ people.json
 data.js
 notes.md
 aws.json
+dump.rdb
 
 *.log
 public/stylesheets/*.css
