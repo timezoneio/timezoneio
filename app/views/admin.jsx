@@ -20,8 +20,6 @@ var getTeamApiEndpoint = function(team) {
   return `/api/team/${team._id}`;
 };
 
-// {' '}- <a href="#" onClick={this.handleDeleteUserAccount.bind(this, user)}>delete</a>
-
 
 class Admin extends React.Component {
 
@@ -94,12 +92,21 @@ class Admin extends React.Component {
 
         <div className="admin-content">
 
-          <form action="/admin/users">
-            <input type="text" name="search" placeholder="search" autoComplete="off" />
-            <button type="submit">
-              Search
-            </button>
-          </form>
+          <div className="admin-search-bar">
+            <form action="/admin/users">
+              <input type="text" name="search" placeholder="Search users" autoComplete="off" />
+              <button type="submit">
+                Search
+              </button>
+            </form>
+
+            <form action="/admin/teams">
+              <input type="text" name="search" placeholder="Search teams" autoComplete="off" />
+              <button type="submit">
+                Search
+              </button>
+            </form>
+          </div>
 
           { this.props.manageUser && (
             <div className="admin-section">

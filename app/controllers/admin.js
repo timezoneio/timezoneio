@@ -148,9 +148,15 @@ admin.userUpdate = function(req, res) {
 admin.teams = function(req, res) {
   const COUNT = 50;
   var page = parseInt(req.query.p || 1, 10);
+  var search = req.query.search;
+  var query = {};
+
+  if (search) {
+    query.name = new RegExp(search, 'i');
+  }
 
   TeamModel
-    .find()
+    .find(query)
     .sort({ createdAt: -1 })
     .skip((page - 1) * COUNT)
     .limit(COUNT)
