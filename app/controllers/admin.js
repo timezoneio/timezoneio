@@ -63,6 +63,7 @@ admin.users = function(req, res) {
   var search = req.query.search;
 
   if (search) {
+    search = search.trim();
     if (isValidEmail(search))
       query.email = search;
     else if (search.length === 24)
@@ -152,7 +153,7 @@ admin.teams = function(req, res) {
   var query = {};
 
   if (search) {
-    query.name = new RegExp(search, 'i');
+    query.name = new RegExp(search.trim(), 'i');
   }
 
   TeamModel
