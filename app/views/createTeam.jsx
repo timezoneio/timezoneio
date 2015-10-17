@@ -21,15 +21,12 @@ module.exports = React.createClass({
             Create your team
           </h2>
 
+          <Notification style="error"
+                        text={this.props.errors} />
+
           <form action="/team" method="post" className="">
 
             <input type="hidden" name="_csrf" value={this.props.csrf_token} />
-
-            { (this.props.errors && this.props.errors.length) ? (
-                <p className="form-error">
-                  {this.props.errors.join('<br>')}
-                </p>
-            ) : ''}
 
             <p>First, name your team</p>
 
