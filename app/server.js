@@ -50,7 +50,8 @@ module.exports = function(mongooseConnection) {
     secret: 'bodhi',
     store: new RedisStore({
       host: '127.0.0.1',
-      port: 6379
+      port: 6379,
+      ttl: 14 * 86400 // 14 days expiration
     })
   }));
 
