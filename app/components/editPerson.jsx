@@ -44,7 +44,7 @@ var EditPerson = React.createClass({
   },
 
   getFileName: function() {
-    return this.state._id || this.state.emailHash;
+    return this.state.userId || this.state.emailHash;
   },
 
   handleChange: function(name, value) {
