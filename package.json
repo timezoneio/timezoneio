@@ -50,7 +50,7 @@
     "request": "^2.60.0",
     "stylus": "^0.52.4",
     "underscore": "^1.8.3",
-    "whatwg-fetch": "^0.9.0"
+    "whatwg-fetch": "^0.10.0"
   },
   "devDependencies": {
     "babel-core": "^5.8.25",
