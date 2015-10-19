@@ -27,7 +27,7 @@ location.getCityFromCoords = function(coords) {
     });
 };
 
-location.getTimezomeFromCoords = function(coords) {
+location.getTimezoneFromCoords = function(coords) {
   return api
     .get('/location/timezone', coords)
     .then(function(data) {

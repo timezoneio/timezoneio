@@ -124,7 +124,7 @@ var ActionCreators = module.exports = {
           return Promise.all([
             newCoords,
             location.getCityFromCoords(newCoords),
-            location.getTimezomeFromCoords(newCoords)
+            location.getTimezoneFromCoords(newCoords)
           ]);
         }
 
