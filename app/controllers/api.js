@@ -100,8 +100,9 @@ api.userCreate = function(req, res, next) {
 };
 
 api.userGet = function(req, res, next) {
-  res.carset = 'utf-8'; //('Content-Type', 'application/json;charset=utf-8');
-  res.json(req.activeUser);
+  res.carset = 'utf-8';
+  var isOwner = req.activeUser._id.toString() === req.user._id.toString();
+  res.json(isOwner ? req.activeUser.toOwnerJSON() : req.activeUser.toJSON());
 };
 
 api.userUpdate = function(req, res, next) {
