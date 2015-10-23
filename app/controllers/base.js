@@ -12,3 +12,7 @@ base.about = function(req, res) {
 base.roadmap = function(req, res) {
   res.render('roadmap');
 };
+
+base.contact = function(req, res) {
+  res.render('Contact');
+};

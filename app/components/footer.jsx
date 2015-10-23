@@ -6,6 +6,10 @@ var links = [
     text: 'About'
   },
   {
+    url: '/contact',
+    text: 'Contact'
+  },
+  {
     url: '/team/buffer',
     text: 'Demo'
   },

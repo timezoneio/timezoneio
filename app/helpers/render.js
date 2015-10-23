@@ -54,7 +54,7 @@ module.exports = function render(pathName, locals, cb) {
   params.icons = ICON_STYLESHEET;
   params.stylesheet = getStaticUrl('stylesheets/index.css');
   if (!locals.noScript)
-    params.script = getStaticUrl('js/bundles/' + this.name + '.js');
+    params.script = getStaticUrl('js/bundles/' + this.name.toLowerCase() + '.js');
 
   // IDEA for generic bundle page
   // params.script = this.name ?

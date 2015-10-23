@@ -42,6 +42,10 @@ module.exports = React.createClass({
             Don't have an account? <a href="/signup">Sign up now!</a>
           </p>
 
+          <p className="txt-center">
+            Forgot your password? <a href="/contact">Click here</a>
+          </p>
+
         </form>
 
 
