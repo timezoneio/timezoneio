@@ -88,13 +88,18 @@ module.exports = function(app, passport) {
     }
     console.error(err.stack);
     // error page
-    // res.status(500).render('500', { error: err.stack });
-    res.status(500).send(err.stack);
+    res.status(500).render('Error', {
+      type: 500,
+      error: err.stack //.split('\n')
+    });
   });
 
   // assume 404 since no middleware responded
   app.use(function (req, res, next) {
-    res.status(404).send('404 Not found!');
+    res.status(404).render('Error', {
+      type: 404,
+      error: 'Page not found!'
+    });
   });
 
 };
