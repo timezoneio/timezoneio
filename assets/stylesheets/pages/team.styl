@@ -40,6 +40,28 @@ $sidebarPadding = 1em
   justify-content: center
   flex-grow: 1 // this grows, the sidebar is a fixed width
 
+// For teams larger than 10 colums
+.timezone-list-wide
+
+  .timezone
+    padding-left: 0.8em
+    padding-right: 0.8em
+
+  .timezone-header
+    width: 72px
+
+  .timezone-time
+    font-size: 1.1em
+
+  .timezone-people-column
+    min-width: auto
+
+  .avatar,
+  .avatar-placeholder
+    height: 54px
+    width: 54px
+    line-height: 54px // for placeholder
+
 .team-stats
   position absolute
   bottom 0.5em
@@ -58,7 +80,10 @@ $sidebarPadding = 1em
 
 .timezone-people-column
   min-width: $avatarSize
-  margin-right: 1em
+  margin-left: 1em
+
+  &:first-child
+    margin-left: 0
 
 // Timezones that are in nighttime
 for hour in 0 1 2 3 4 5 6 7 22 23

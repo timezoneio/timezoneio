@@ -1,6 +1,8 @@
 var React    = require('react');
 var Timezone = require('./timezone.jsx');
 
+const PEOPLE_PER_COL = 8;
+
 var count = function(metric, people) {
   var items = people.reduce(function(list, p) {
     if (list.indexOf(p[metric].toLowerCase()) === -1)
@@ -26,14 +28,22 @@ module.exports = React.createClass({
     return `${numPeople} people in ${numCities} cities across ${numTimezones} timezones`;
   },
 
+  getColumnNumber: function(timezones) {
+    return timezones.reduce(function(cols, timezone) {
+      return cols + Math.ceil(timezone.people.length / PEOPLE_PER_COL);
+    }, 0);
+  },
+
   render: function() {
 
     var timeFormat = this.props.timeFormat || 12;
 
     var stats = this.getStats(this.props.people);
+    var numCols = this.getColumnNumber(this.props.timezones);
+    var sizeClass = 'timezone-list-' + (numCols > 10 ? 'wide' : 'normal');
 
     return (
-      <div className="timezone-list">
+      <div className={'timezone-list ' + sizeClass}>
         {this.props.timezones.map(function(timezone){
           return <Timezone key={timezone.tz}
                            time={this.props.time}
