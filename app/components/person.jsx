@@ -7,7 +7,7 @@ const DEFAULT_AVATAR = require('../helpers/images').DEFAULT_AVATAR;
 class Person extends React.Component {
 
   handleToggleSelected() {
-    ActionCreators.toggleSelectPerson(this.props.model._id);
+    ActionCreators.toggleSelectPerson(this.props.person._id);
   }
 
   getInitials(name) {
@@ -15,9 +15,13 @@ class Person extends React.Component {
   }
 
   render() {
-    var person = this.props.model;
+    var person = this.props.person;
+
+    var personClasses = 'person';
+    if (this.props.isHighlighted) personClasses += ' person-highlight';
+
     return (
-      <div className="person"
+      <div className={personClasses}
            key={person._id}
            onClick={this.handleToggleSelected.bind(this)}>
         {

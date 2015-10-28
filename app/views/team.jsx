@@ -4,6 +4,7 @@ var React = require('react');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
 var AppSidebar = require('../components/appSidebar.jsx');
+var AppToolbar = require('../components/AppToolbar.jsx');
 var TimezoneList = require('../components/timezoneList.jsx');
 var ManageTeam = require('../components/manageTeam.jsx');
 var UserMenu = require('../components/userMenu.jsx');
@@ -19,28 +20,38 @@ class Team extends React.Component {
 
   getModal() {
     return;
-    var currentView = this.props.currentView;
-
-    if (currentView === 'app') return;
-
-    return (
-      <div className="modal-container"
-           onClick={this.handleClickMask}>
-        {modal}
-      </div>
-    );
+    // var currentView = this.props.currentView;
+    //
+    // if (currentView === 'app') return;
+    //
+    // return (
+    //   <div className="modal-container"
+    //        onClick={this.handleClickMask}>
+    //     {modal}
+    //   </div>
+    // );
   }
 
   getUserMenu() {
     if (!this.props.user) return '';
     return <UserMenu {...this.props.user}
-                     fixed={true} />
+                     fixed={true} />;
   }
 
   render() {
 
     if (this.props.currentView === 'manage')
       return <ManageTeam {...this.props} />;
+
+    // Only Super admin has this design right now
+    if (this.props.user._id.toString() === '5513998f6d1aacc66f7e7eff')
+      return (
+        <div className="container app-container app-with-toolbar">
+          <AppToolbar {...this.props} />
+          <TimezoneList {...this.props}
+                        showStats={true} />
+        </div>
+      );
 
     return (
       <div className="container app-container">

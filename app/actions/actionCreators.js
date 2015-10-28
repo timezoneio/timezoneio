@@ -154,6 +154,14 @@ var ActionCreators = module.exports = {
       });
   },
 
+  searchTeam: function(term) {
+    AppDispatcher.dispatchViewAction({
+      actionType: ActionTypes.SEARCH_TEAM,
+      value: term
+    });
+  },
+
+
   toggleSelectPerson: function(userId) {
     AppDispatcher.dispatchViewAction({
       actionType: ActionTypes.TOGGLE_SELECT_PERSON,

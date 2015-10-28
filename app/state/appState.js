@@ -74,6 +74,10 @@ class AppState {
     this._state.currentView = view;
   }
 
+  setActiveFilter(term) {
+    this._state.activeFilter = term && term.length > 2 && new RegExp(term, 'i');
+  }
+
   updateTeamData(data) {
     // Only update the team slug + name
     this._state.team.name = data.name;

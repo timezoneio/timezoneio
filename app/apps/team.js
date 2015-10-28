@@ -5,6 +5,7 @@ var moment = require('moment-timezone');
 var transform = require('../utils/transform.js');
 var timeUtils = require('../utils/time.js');
 var clone = require('../utils/toolbelt.js').clone;
+var KEY = require('../helpers/keyConstants');
 
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
@@ -33,18 +34,25 @@ function renderApp() {
 renderApp();
 
 // Allow arrow keys to change time by selecting time range input
-var KEY = {
-  LEFT:  37,
-  RIGHT: 39
-};
-var timeSlider = document.querySelector('.time-slider');
-
-
+// Allow / key to select search
+// NOTE - not caching variables b/c of manage view removes items from DOM
 var handleKeyUp = function(e) {
-  if (e.keyCode === KEY.RIGHT || e.keyCode === KEY.LEFT) {
+  if (e.target.nodeName === 'INPUT' || e.target.nodeName === 'TEXTAREA')
+    return;
+
+  var keyCode = e.keyCode;
+  var key = e.key || '';
+
+  if (key === '/' || keyCode === KEY.SLASH) {
+    e.preventDefault();
+    document.querySelector('.team-search-input').focus();
+    return;
+  }
+
+  if (keyCode === KEY.RIGHT || keyCode === KEY.LEFT) {
     e.preventDefault();
     disableAutoUpdate();
-    timeSlider.focus();
+    document.querySelector('.time-slider').focus();
     renderApp();
   }
 };
@@ -164,6 +172,11 @@ var handleViewAction = function(action) {
   var shouldRender = false;
 
   switch (actionType) {
+
+    case ActionTypes.SEARCH_TEAM:
+      appState.setActiveFilter(value);
+      shouldRender = true;
+      break;
 
     case ActionTypes.CHANGE_TIME_FORMAT:
       appState.setTimeFormat(value);

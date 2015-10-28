@@ -32,6 +32,131 @@ $sidebarPadding = 1em
   button
     width: 100%
 
+// TOOLBAR DESIGN START ------------------------------------------------------
+.app-container.app-with-toolbar
+  display block
+
+$toolbarItemHeight = 32px;
+
+.app-toolbar
+  display: flex
+  justify-content: space-between
+  align-items: center
+  padding: 0.5em 1em
+  border-bottom: 1px solid $lightBorderColor
+
+  .site-branding
+    margin: 0
+
+  button.material-icons
+    height: $toolbarItemHeight
+    width: $toolbarItemHeight
+
+.team-search
+
+  .team-search-input
+    $padding = 1.2em
+
+    height: $toolbarItemHeight
+    padding-left: $padding
+    padding-right: $padding
+
+    font-size: 14px
+    border: 1px solid $lightBorderColor
+    border-radius: 100px
+
+.app-toolbar-branding,
+.app-toolbar-actions
+  width: 40%
+
+.app-toolbar-main
+  width: 10%
+  min-width: 120px
+
+
+.app-toolbar-actions
+  display: flex
+  justify-content: flex-end
+  min-width: 300px; // to max sure we don't flex smaller
+
+  > *
+    margin-left: 1rem
+
+.time-control
+  position relative
+
+  .time-control-menu
+    display none
+
+  &.time-control-open .time-control-menu
+    display inherit
+
+.time-control-time
+  position relative // for menu
+  z-index 1001
+  margin 0
+  font-size 1.4em
+  text-align center
+  font-weight normal
+  cursor pointer
+
+.time-control-menu
+  position absolute
+  z-index 100
+  // top 110%
+  // top calc(100% + 0.5em);
+  top -0.5em
+  left -100px
+  right -100px
+  margin 0 auto
+  padding 2.5em 0.5em 0.5em
+  width 200px
+
+  background #fff
+  border 1px solid $lightBorderColor
+  box-shadow(2)
+
+  transition all 100ms
+
+  &.time-control-menu-slider-only
+    background rgba(255,255,255, 0.2)
+    border-color transparent
+    box-shadow('none')
+
+    .time-control-buttons
+      opacity 0
+
+  .time-slider
+    margin 0.5em 0
+
+  // Arrow hack
+  // &::before
+  //   content ""
+  //   display block
+  //   position absolute
+  //   top -11px
+  //   left 0
+  //   right 0
+  //   margin 0 auto
+  //   width 0
+  //   border 5px solid transparent
+  //   border-bottom-color $lightBorderColor
+  //
+  // &::after
+  //   content ""
+  //   display block
+  //   position absolute
+  //   top -10px
+  //   left 0
+  //   right 0
+  //   margin 0 auto
+  //   width 0
+  //   border 5px solid transparent
+  //   border-bottom-color #fff
+
+
+// TOOLBAR DESIGN END ------------------------------------------------------
+
 
 .timezone-list
   position relative
@@ -117,6 +242,13 @@ for hour in 0 1 2 3 4 5 6 7 22 23
   font-size: 0.7em
   color: #61676F
 
+// Using css for potential faster rendering performance
+.timezone-list-active-filter
+  .avatar,
+  .avatar-placeholder
+    // opacity: 0.3
+    filter: opacity(0.3)
+
 .person
   position: relative
   margin: 0.8em 0
@@ -126,6 +258,21 @@ for hour in 0 1 2 3 4 5 6 7 22 23
     .person-info
       opacity: 1
       z-index: 110
+
+  .avatar,
+  .avatar-placeholder
+    // manual reverse stack for max compatibility
+    transition: filter 400ms, -moz-filter 400ms, -webkit-filter 400ms
+
+// For team filter - NOTE - this may cause poor rendering performance
+.person-highlight
+  .avatar,
+  .avatar-placeholder
+    filter: opacity(1)
+
+  .person-info
+    opacity: 1
+    z-index: 110
 
 .person-info
   position: absolute
