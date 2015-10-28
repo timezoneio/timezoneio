@@ -9,8 +9,6 @@ var TimezoneList = require('../components/timezoneList.jsx');
 var ManageTeam = require('../components/manageTeam.jsx');
 var UserMenu = require('../components/userMenu.jsx');
 
-var newDesign = true;
-
 
 class Team extends React.Component {
 
@@ -45,7 +43,8 @@ class Team extends React.Component {
     if (this.props.currentView === 'manage')
       return <ManageTeam {...this.props} />;
 
-    if (newDesign)
+    // Only Super admin has this design right now
+    if (this.props.user._id.toString() === '5513998f6d1aacc66f7e7eff')
       return (
         <div className="container app-container app-with-toolbar">
           <AppToolbar {...this.props} />
