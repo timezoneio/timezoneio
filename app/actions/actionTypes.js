@@ -8,6 +8,7 @@ module.exports = keyMirror({
   USE_CURRENT_TIME: 0,
   TOGGLE_SELECT_PERSON: 0,
   CLEAR_MEETING_GROUPS: 0,
+  SEARCH_TEAM: 0,
 
   SHOW_MODAL: 0,
   CLOSE_MODAL: 0,

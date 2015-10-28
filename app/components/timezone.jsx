@@ -33,7 +33,7 @@ module.exports = React.createClass({
 
   getTopTimezone: function() {
 
-    var tzCounts = this.getCountsOf(this.props.model.people, 'tz');
+    var tzCounts = this.getCountsOf(this.props.timezone.people, 'tz');
     var topTz = this.getHighestOccuring(tzCounts);
 
     return topTz.replace(/.+\//g, '').replace(/_/g,' ');
@@ -41,21 +41,28 @@ module.exports = React.createClass({
 
   getTopCity: function() {
 
-    var cityCounts = this.getCountsOf(this.props.model.people, 'location');
+    var cityCounts = this.getCountsOf(this.props.timezone.people, 'location');
     var topCity = this.getHighestOccuring(cityCounts);
 
-    return cityCounts[topCity] === 1 && this.props.model.people.length > 1 ?
+    return cityCounts[topCity] === 1 && this.props.timezone.people.length > 1 ?
       this.getTopTimezone() :
       topCity;
   },
 
-  getPeopleColumns: function() {
+  isHighlighted: function(person) {
+    if (!this.props.activeFilter)
+      return false;
 
-    var numPeople = this.props.model.people.length;
+    return person.name.search(this.props.activeFilter) > -1;
+  },
+
+  getPeopleColumns: function(people) {
+
+    var numPeople = people.length;
     var numCols = Math.ceil(numPeople / PEOPLE_PER_COL);
     var numPerCol = Math.ceil(numPeople / numCols);
 
-    return this.props.model.people.reduce(function(cols, person){
+    return people.reduce(function(cols, person){
       if (cols[cols.length - 1] &&
           cols[cols.length - 1].length  < numPerCol)
         cols[cols.length - 1].push(person);
@@ -69,7 +76,7 @@ module.exports = React.createClass({
 
     // We clone the time object itself so the this time is bound to
     // the global app time
-    var localTime   = moment( this.props.time ).tz( this.props.model.tz );
+    var localTime   = moment( this.props.time ).tz( this.props.timezone.tz );
     var fmtString   = timeUtils.getFormatStringFor(this.props.timeFormat);
     var displayTime = localTime ? localTime.format(fmtString) : 'Unknown';
     var offset      = localTime ? localTime.format('Z') : '??:??';
@@ -77,10 +84,10 @@ module.exports = React.createClass({
 
     var timezoneClasses = 'timezone timezone-hour-' + hour;
 
-    if (this.props.model.major) timezoneClasses += ' timezone-major';
+    if (this.props.timezone.major) timezoneClasses += ' timezone-major';
 
     var topCity = this.getTopCity() || 'Add location';
-    var columns = this.getPeopleColumns();
+    var columns = this.getPeopleColumns(this.props.timezone.people);
 
     return (
       <div className={timezoneClasses}>
@@ -94,11 +101,13 @@ module.exports = React.createClass({
             return (
               <div className="timezone-people-column" key={"column-" + idx}>
                 {column.map(function(person) {
-                  return <Person model={person} key={person._id} />;
-                })}
+                  return <Person key={person._id}
+                                 person={person}
+                                 isHighlighted={this.isHighlighted(person)} />;
+                }.bind(this))}
               </div>
             );
-          })}
+          }.bind(this))}
         </div>
       </div>
     );

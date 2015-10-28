@@ -1,4 +1,5 @@
 var React    = require('react');
+var classNames = require('classnames');
 var Timezone = require('./timezone.jsx');
 
 const PEOPLE_PER_COL = 8;
@@ -42,13 +43,20 @@ module.exports = React.createClass({
     var numCols = this.getColumnNumber(this.props.timezones);
     var sizeClass = 'timezone-list-' + (numCols > 10 ? 'wide' : 'normal');
 
+    var containerClasses = classNames('timezone-list', {
+      'timezone-list-normal': numCols <= 10,
+      'timezone-list-wide': numCols > 10,
+      'timezone-list-active-filter': !!this.props.activeFilter
+    });
+
     return (
-      <div className={'timezone-list ' + sizeClass}>
-        {this.props.timezones.map(function(timezone){
+      <div className={containerClasses}>
+        {this.props.timezones.map(function(timezone) {
           return <Timezone key={timezone.tz}
+                           timezone={timezone}
                            time={this.props.time}
                            timeFormat={timeFormat}
-                           model={timezone} />
+                           activeFilter={this.props.activeFilter} />
         }.bind(this))}
         { this.props.showStats &&
           <div className="team-stats"><em>{stats}</em></div>

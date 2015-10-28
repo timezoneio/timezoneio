@@ -32,6 +32,60 @@ $sidebarPadding = 1em
   button
     width: 100%
 
+// TOOLBAR DESIGN START ------------------------------------------------------
+.app-container.app-with-toolbar
+  display block
+
+$toolbarItemHeight = 32px;
+
+.app-toolbar
+  display: flex
+  justify-content: space-between
+  align-items: center
+  padding: 0.5em 1em
+  border-bottom: 1px solid $lightBorderColor
+
+  .site-branding
+    margin: 0
+
+  .app-sidebar--time
+    font-size: 1.4em
+
+  button.material-icons
+    height: $toolbarItemHeight
+    width: $toolbarItemHeight
+
+.team-search
+
+  .team-search-input
+    $padding = 1.2em
+
+    height: $toolbarItemHeight
+    padding-left: $padding
+    padding-right: $padding
+
+    font-size: 14px
+    border: 1px solid $lightBorderColor
+    border-radius: 100px
+
+.app-toolbar-branding
+  width: 25%
+
+.app-toolbar-main
+  width: 30%
+
+
+.app-toolbar-actions
+  display: flex
+  justify-content: flex-end
+  width: 25%
+
+  > *
+    margin-left: 1rem
+
+
+// TOOLBAR DESIGN END ------------------------------------------------------
+
 
 .timezone-list
   position relative
@@ -117,6 +171,13 @@ for hour in 0 1 2 3 4 5 6 7 22 23
   font-size: 0.7em
   color: #61676F
 
+// Using css for potential faster rendering performance
+.timezone-list-active-filter
+  .avatar,
+  .avatar-placeholder
+    // opacity: 0.3
+    filter: opacity(0.3)
+
 .person
   position: relative
   margin: 0.8em 0
@@ -126,6 +187,21 @@ for hour in 0 1 2 3 4 5 6 7 22 23
     .person-info
       opacity: 1
       z-index: 110
+
+  .avatar,
+  .avatar-placeholder
+    // manual reverse stack for max compatibility
+    transition: filter 400ms, -moz-filter 400ms, -webkit-filter 400ms
+
+// For team filter - NOTE - this may cause poor rendering performance
+.person-highlight
+  .avatar,
+  .avatar-placeholder
+    filter: opacity(1)
+
+  .person-info
+    opacity: 1
+    z-index: 110
 
 .person-info
   position: absolute
