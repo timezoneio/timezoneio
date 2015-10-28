@@ -34,7 +34,8 @@ class Admin extends React.Component {
 
   getAdminInfo(adminIds) {
     if (!adminIds.length) return 'No admin';
-    return <a href={getUserAdminUrl({ _id: adminIds[0] })}
+    var admin = typeof adminIds[0] === 'string' ? { _id: adminIds[0] } : adminIds[0];
+    return <a href={getUserAdminUrl(admin)}
               className="admin-list--action">admin</a>;
   }
 
