@@ -4,8 +4,8 @@ var AppDispatcher = require('../dispatchers/appDispatcher');
 var ActionTypes = require('../actions/actionTypes');
 var Branding = require('./branding');
 var UserMenu = require('./userMenu');
-var Time = require('./Time');
 var TeamSearch = require('./TeamSearch');
+var TimeControl = require('./TimeControl');
 
 class AppToolbar extends React.Component {
 
@@ -25,10 +25,7 @@ class AppToolbar extends React.Component {
         </div>
 
         <div className="app-toolbar-main">
-          <h2 className="app-sidebar--time">
-            <Time timeFormat={this.props.timeFormat}
-                  time={this.props.time} />
-          </h2>
+          <TimeControl {...this.props} />
         </div>
 
         <div className="app-toolbar-actions">
