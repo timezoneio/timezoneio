@@ -10,7 +10,8 @@ module.exports = function() {
     compile: function (str, path, fn) {
       return stylus(str)
         .use(autoprefixer())
-        .set('filename', path);
+        .set('filename', path)
+        .set('sourcemap', { inline: true });
     }
   });
 
