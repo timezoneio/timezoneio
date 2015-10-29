@@ -42,6 +42,7 @@
     "multer": "^0.1.8",
     "mustache": "^2.0.0",
     "node-jsx": "^0.13.3",
+    "nodemailer": "^1.8.0",
     "passport": "^0.3.0",
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.3",

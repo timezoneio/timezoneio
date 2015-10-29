@@ -3,8 +3,6 @@ var path = require('path');
 var Mustache = require('mustache');
 var mandrill = require('mandrill-api/mandrill');
 
-var mandrillClient = new mandrill.Mandrill(process.env.MANDRILL_KEY);
-
 const FROM_EMAIL = 'hi@timezone.io';
 const FROM_NAME = 'Dan from Timezone.io';
 
@@ -28,7 +26,7 @@ var createMessage = function(subject, html, to, options) {
       // name: "Recipient Name"
     }],
     headers: {
-      "Reply-To": FROM_EMAIL
+      'Reply-To': FROM_EMAIL
     },
     // google_analytics_domains: ['timezone.io'],
     // google_analytics_campaign: options.campaign || 'timezone',
@@ -51,6 +49,59 @@ var EMAIL_TYPES = {
     tags: ['invite']
   }
 };
+
+var transport = {};
+
+// We use Mandrill for production then nodemailer during dev
+if (process.env.NODE_ENV === 'production') {
+
+  var mandrillClient = new mandrill.Mandrill(process.env.MANDRILL_KEY);
+
+  transport.send = function(message) {
+    return new Promise(function(resolve, reject) {
+      mandrillClient.messages.send({ message: message }, function(result) {
+        // NOTE - May want to reject on mail bouncing
+        resolve(result);
+      }, function(e) {
+        console.info(e);
+        // Mandrill returns the error as an object with name and message keys
+        console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+        // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
+        reject(e.message);
+      });
+    });
+  };
+
+} else {
+
+  // Use with MailDev
+  var nodemailer = require('nodemailer');
+  var transporter = nodemailer.createTransport({
+    port: 1025,
+    ignoreTLS: true
+  });
+
+  transport.send = function(message) {
+    return new Promise(function(resolve, reject) {
+      transporter.sendMail({
+          from: {
+            name: message.from_name,
+            address: message.from_email
+          },
+          to: message.to[0].email,
+          subject: message.subject,
+          html: message.html,
+          replyTo: message.headers['Reply-To']
+      }, function(err, info) {
+        if (err) {
+          console.log(err);
+          return reject(err.message);
+        }
+        resolve(info);
+      });
+    });
+  };
+}
 
 
 module.exports = function sendEmail(type, to, params) {
@@ -75,15 +126,19 @@ module.exports = function sendEmail(type, to, params) {
       tags: EMAIL_TYPES[type].tags
     });
 
-    mandrillClient.messages.send({ message: message }, function(result) {
-      // NOTE - May want to reject on mail bouncing
-      resolve(result);
-    }, function(e) {
-      console.info(e);
-      // Mandrill returns the error as an object with name and message keys
-      console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
-      // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
-      reject(e.message);
-    });
+    transport
+      .send(message)
+      .then(resolve, reject);
+
+    // mandrillClient.messages.send({ message: message }, function(result) {
+    //   // NOTE - May want to reject on mail bouncing
+    //   resolve(result);
+    // }, function(e) {
+    //   console.info(e);
+    //   // Mandrill returns the error as an object with name and message keys
+    //   console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+    //   // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
+    //   reject(e.message);
+    // });
   });
 };
