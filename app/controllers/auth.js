@@ -3,6 +3,7 @@ var TeamModel = require('../models/team');
 var sendEmail = require('../email/send');
 var redis = require('redis');
 var redisClient = require('../helpers/redis');
+var sendEmail = require('../email/send');
 var isValidEmail = require('../utils/strings').isValidEmail;
 var getProfileUrl = require('../helpers/urls').getProfileUrl;
 
@@ -242,8 +243,15 @@ auth.passwordResetRequest = function(req, res, next) {
       var token = user.createPasswordResetToken();
       redisClient.set(key, token, redis.print);
       redisClient.expire(key, 60 * 60); // expire in 1 hour
-      // generate url
-      // Send email
+
+      const BASE_URL = require('../helpers/baseUrl');
+      var url = `${BASE_URL}/account/password-reset?userId=${user._id}&resetToken=${token}`;
+
+      // Send the user their reset email
+      sendEmail('passwordReset', user.email, {
+        name: user.name,
+        resetUrl: url
+      });
 
       res.render('PasswordReset', {
         title: 'Reset your password',
@@ -268,7 +276,8 @@ auth.passwordResetForm = function(req, res) {
     res.render('PasswordReset', {
       title: 'Reset your password',
       hideForm: true,
-      errors: 'Sorry, that url seems to be invalid. Please try to grab the link from your email again ;)',
+      errors: 'Sorry, that url seems to be invalid or may have expired after 60 minutes. ' +
+              'Please try to grab the link from your email again ;)',
       noScript: true
     });
   };

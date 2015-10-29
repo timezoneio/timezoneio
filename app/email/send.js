@@ -120,6 +120,16 @@ module.exports = function sendEmail(type, to, params) {
       return reject('Email template not found');
     }
 
+    // Add basic style - double quotes to not break style tags
+    params.style = {
+      body: [
+        "font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;",
+        "font-size: 13px;",
+        "line-height: 1.5;",
+        "max-width: 600px;"
+      ].join('')
+    };
+
     var html = Mustache.render(template, params || {});
     var subject = EMAIL_TYPES[type].subject;
     subject = typeof subject === 'function' ?
