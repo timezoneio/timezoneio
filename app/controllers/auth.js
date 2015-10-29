@@ -353,9 +353,14 @@ auth.passwordReset = function(req, res) {
         if (err)
           return res.render('PasswordReset', {
             title: 'Reset your password',
-            errors: 'Sorry, We weren\'t able to log you in!',
+            errors: [ 'Sorry, We weren\'t able to log you in!', err.message],
             noScript: true
           });
+
+        // Disable the password reset key immediately
+        redisClient.del(req.query.resetToken);
+
+        req.flash('message', 'Awesome, your new password is set and you\'re ready to go!');
 
         res.redirect(req.user.getProfileUrl());
       });
