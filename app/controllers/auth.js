@@ -42,8 +42,9 @@ var getPasswordValidationError = function(p1, p2) {
   if (p1.length < 8)
     return 'Passwords must be at least 8 characters';
 
-  if (!/\d/.test(p1))
-    return 'Passwords must contain a number';
+  // Let's loosen up for now!
+  // if (!/\d/.test(p1))
+  //   return 'Passwords must contain a number';
 
   return null;
 };
@@ -267,7 +268,8 @@ auth.passwordResetRequest = function(req, res, next) {
 
 };
 
-auth.passwordResetForm = function(req, res) {
+// Middlware
+auth.verifyPasswordResetToken = function(req, res, next) {
 
   var userId = req.query.userId;
   var resetToken = req.query.resetToken;
@@ -298,13 +300,56 @@ auth.passwordResetForm = function(req, res) {
         if (!token || token !== resetToken)
           return invalidUrlResponse();
 
-        res.render('PasswordReset', {
-          title: 'Reset your password',
-          noScript: true
-        });
+        // We're valid, move along!
+        req.user = user;
+        next();
       });
     })
     .catch(function() {
-      next();
+      invalidUrlResponse();
     });
+};
+
+auth.passwordResetForm = function(req, res) {
+  res.render('PasswordReset', {
+    title: 'Reset your password',
+    noScript: true
+  });
+};
+
+auth.passwordReset = function(req, res) {
+
+  var pwError = getPasswordValidationError(req.body.password, req.body.password2);
+  if (pwError) {
+    return res.render('PasswordReset', {
+      title: 'Reset your password',
+      errors: pwError,
+      noScript: true
+    });
+  }
+
+  // req.user is added in verifyPasswordResetToken middleware above
+  req.user.password = req.body.password;
+
+  req.user.save(function(err) {
+    if (err)
+      return res.render('PasswordReset', {
+        title: 'Reset your password',
+        errors: 'Sorry, We weren\'t able to reset your password at this time, please try again',
+        noScript: true
+      });
+
+
+      req.logIn(req.user, function(err) {
+        if (err)
+          return res.render('PasswordReset', {
+            title: 'Reset your password',
+            errors: 'Sorry, We weren\'t able to log you in!',
+            noScript: true
+          });
+
+        res.redirect(req.user.getProfileUrl());
+      });
+  });
+
 };

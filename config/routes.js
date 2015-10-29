@@ -42,7 +42,8 @@ module.exports = function(app, passport) {
 
   app.get('/account/request-password-reset', auth.passwordResetRequestForm);
   app.post('/account/request-password-reset', auth.passwordResetRequest);
-  app.get('/account/password-reset', auth.passwordResetForm);
+  app.get('/account/password-reset', auth.verifyPasswordResetToken, auth.passwordResetForm);
+  app.post('/account/password-reset', auth.verifyPasswordResetToken, auth.passwordReset);
 
   app.get('/connect/twitter', oauthConnectFlast,
                               passport.authorize('twitter', {

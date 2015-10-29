@@ -1,7 +1,8 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto');
 var Schema = mongoose.Schema;
-var userSettings = require('./sub/userSettings')
+var userSettings = require('./sub/userSettings');
+var getProfileUrl = require('../helpers/urls').getProfileUrl;
 var isValidEmail = require('../utils/strings').isValidEmail;
 
 // Inspiration: https://github.com/madhums/node-express-mongoose-demo/blob/master/app/models/user.js
@@ -310,6 +311,10 @@ userSchema.methods = {
 
   setUserSetting: function(settingName, value) {
     return userSettings.setSettingValue(settingName, value, this.settings);
+  },
+
+  getProfileUrl: function() {
+    return getProfileUrl(this);
   }
 
 };

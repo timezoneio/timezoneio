@@ -46,6 +46,7 @@ class PasswordReset extends React.Component {
   }
 
   renderResetForm() {
+    //action="/account/password-reset"
     return (
       <div>
 
@@ -60,7 +61,7 @@ class PasswordReset extends React.Component {
                       text={this.props.errors} />
 
         { !this.props.hideForm && (
-          <form action="/account/password-reset" method="post" className="login-form">
+          <form method="post" className="login-form">
 
             <CSRFToken {...this.props} />
 
