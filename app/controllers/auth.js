@@ -1,6 +1,8 @@
 var UserModel = require('../models/user');
 var TeamModel = require('../models/team');
 var sendEmail = require('../email/send');
+var redis = require('redis');
+var redisClient = require('../helpers/redis');
 var isValidEmail = require('../utils/strings').isValidEmail;
 var getProfileUrl = require('../helpers/urls').getProfileUrl;
 
@@ -211,4 +213,89 @@ auth.logout = function(req, res) {
 
 auth.connectTwitter = function(req, res) {
   res.redirect(getProfileUrl(req.user));
+};
+
+auth.passwordResetRequestForm = function(req, res) {
+  res.render('PasswordReset', {
+    title: 'Reset your password',
+    requestReset: true,
+    noScript: true
+  });
+};
+
+auth.passwordResetRequest = function(req, res, next) {
+
+  UserModel
+    .findOneByEmail(req.body.email)
+    .then(function(user) {
+
+      if (!user)
+        return res.render('PasswordReset', {
+          title: 'Reset your password',
+          requestReset: true,
+          errors: 'We couldn\'t find an account with that email, please try again!',
+          noScript: true
+        });
+
+      // create temp token
+      var key = user.getPasswordResetKey();
+      var token = user.createPasswordResetToken();
+      redisClient.set(key, token, redis.print);
+      redisClient.expire(key, 60 * 60); // expire in 1 hour
+      // generate url
+      // Send email
+
+      res.render('PasswordReset', {
+        title: 'Reset your password',
+        requestReset: true,
+        success: true,
+        noScript: true
+      });
+
+    })
+    .catch(function() {
+      next();
+    });
+
+};
+
+auth.passwordResetForm = function(req, res) {
+
+  var userId = req.query.userId;
+  var resetToken = req.query.resetToken;
+
+  var invalidUrlResponse = function() {
+    res.render('PasswordReset', {
+      title: 'Reset your password',
+      hideForm: true,
+      errors: 'Sorry, that url seems to be invalid. Please try to grab the link from your email again ;)',
+      noScript: true
+    });
+  };
+
+  if (!userId || !resetToken)
+    return invalidUrlResponse();
+
+  UserModel
+    .findOneById(userId)
+    .then(function(user) {
+      if (!user)
+        return invalidUrlResponse();
+
+      var key = user.getPasswordResetKey();
+      redisClient.get(key, function(err, token) {
+        if (err) return next();
+
+        if (!token || token !== resetToken)
+          return invalidUrlResponse();
+
+        res.render('PasswordReset', {
+          title: 'Reset your password',
+          noScript: true
+        });
+      });
+    })
+    .catch(function() {
+      next();
+    });
 };

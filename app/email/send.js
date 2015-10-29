@@ -47,6 +47,9 @@ var EMAIL_TYPES = {
       return `${p.adminName} wants you to join the ${p.teamName} team on Timezone.io!`;
     },
     tags: ['invite']
+  },
+  'passwordReset': {
+    subject: 'Reset your Timezone.io password',
   }
 };
 

@@ -40,6 +40,10 @@ module.exports = function(app, passport) {
   app.get('/join/:inviteHash/:userId-:emailHash', auth.joinTeam);
   app.get('/logout', auth.logout);
 
+  app.get('/account/request-password-reset', auth.passwordResetRequestForm);
+  app.post('/account/request-password-reset', auth.passwordResetRequest);
+  app.get('/account/password-reset', auth.passwordResetForm);
+
   app.get('/connect/twitter', oauthConnectFlast,
                               passport.authorize('twitter', {
                                 scope: 'email',

@@ -48,6 +48,7 @@
     "passport-twitter": "^1.0.3",
     "react": "^0.13.3",
     "react-tools": "^0.13.3",
+    "redis": "^2.2.5",
     "request": "^2.60.0",
     "stylus": "^0.52.4",
     "underscore": "^1.8.3",
