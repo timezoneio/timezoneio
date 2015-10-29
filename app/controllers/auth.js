@@ -218,6 +218,9 @@ auth.connectTwitter = function(req, res) {
 };
 
 auth.passwordResetRequestForm = function(req, res) {
+  if (req.user)
+    return res.redirect(req.user.getProfileUrl());
+
   res.render('PasswordReset', {
     title: 'Reset your password',
     requestReset: true,
@@ -226,6 +229,9 @@ auth.passwordResetRequestForm = function(req, res) {
 };
 
 auth.passwordResetRequest = function(req, res, next) {
+
+  if (req.user)
+    return res.redirect(req.user.getProfileUrl());
 
   UserModel
     .findOneByEmail(req.body.email)
@@ -270,6 +276,9 @@ auth.passwordResetRequest = function(req, res, next) {
 
 // Middlware
 auth.verifyPasswordResetToken = function(req, res, next) {
+
+  if (req.user)
+    return res.redirect(req.user.getProfileUrl());
 
   var userId = req.query.userId;
   var resetToken = req.query.resetToken;
