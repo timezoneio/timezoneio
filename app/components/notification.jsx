@@ -15,6 +15,12 @@ class Notification extends React.Component {
     this.setState({ active: false });
   }
 
+  renderArray(arr) {
+    return arr.map(function(item) {
+      return <span>{item}</span>
+    });
+  }
+
   render() {
     var className = 'notification';
 
@@ -25,10 +31,10 @@ class Notification extends React.Component {
       className += ' notification-dismissable';
 
     var text = Array.isArray(this.props.text) ?
-               this.props.text.join('<br>') :
+               this.renderArray(this.props.text) :
                this.props.text;
 
-    if (!text || !this.state.active)
+    if (!text || !text.length || !this.state.active)
       return <span style={{display: 'none'}}></span>;
 
     return (
