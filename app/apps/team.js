@@ -36,7 +36,7 @@ renderApp();
 // Allow arrow keys to change time by selecting time range input
 // Allow / key to select search
 // NOTE - not caching variables b/c of manage view removes items from DOM
-var handleKeyUp = function(e) {
+var handleKeyDown = function(e) {
   if (e.target.nodeName === 'INPUT' || e.target.nodeName === 'TEXTAREA')
     return;
 
@@ -49,7 +49,9 @@ var handleKeyUp = function(e) {
     return;
   }
 
-  if (keyCode === KEY.RIGHT || keyCode === KEY.LEFT) {
+  // NOTE - This doesn't work anymore when the slider is hidden
+  if (key === 'ArrowLeft' || key === 'ArrowRight' ||
+      keyCode === KEY.RIGHT || keyCode === KEY.LEFT) {
     e.preventDefault();
     disableAutoUpdate();
     document.querySelector('.time-slider').focus();
@@ -57,15 +59,15 @@ var handleKeyUp = function(e) {
   }
 };
 
-var enableKeyTimeChange = function() {
-  window.addEventListener('keyup', handleKeyUp);
+var enableKeyboardShortcuts = function() {
+  window.addEventListener('keydown', handleKeyDown);
 };
-var disableKeyTimeChange = function() {
-  window.removeEventListener('keyup', handleKeyUp);
+var disableKeyboardShortcuts = function() {
+  window.removeEventListener('keydown', handleKeyDown);
 };
 
 if (appState.getCurrentView() === 'app') {
-  enableKeyTimeChange();
+  enableKeyboardShortcuts();
 }
 
 
@@ -139,9 +141,9 @@ function updateCurrentView(view, shouldUpdateUrl) {
 
     if (view !== 'app') {
       path += '/' + view;
-      disableKeyTimeChange();
+      disableKeyboardShortcuts();
     } else {
-      enableKeyTimeChange();
+      enableKeyboardShortcuts();
     }
 
     window.history.pushState({}, null, path);
