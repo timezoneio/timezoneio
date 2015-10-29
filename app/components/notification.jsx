@@ -16,8 +16,8 @@ class Notification extends React.Component {
   }
 
   renderArray(arr) {
-    return arr.map(function(item) {
-      return <span>{item}</span>
+    return arr.map(function(item, idx) {
+      return <span key={idx}>{item}</span>
     });
   }
 
