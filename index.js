@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-
+var redisClient = require('./app/helpers/redis');
 var server = require('./app/server.js');
 
 var MAX_RETRIES = 100;
@@ -26,11 +26,12 @@ var connect = function () {
 };
 connect();
 
+
 mongoose.connection.on('error', console.error);
 mongoose.connection.on('disconnected', connect);
 mongoose.connection.once('open', function (callback) {
 
   console.info('We\'re connected, booyah! Starting up the server...');
-  server(mongoose.connection);
+  server(mongoose.connection, redisClient);
 
 });

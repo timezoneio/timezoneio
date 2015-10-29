@@ -43,7 +43,7 @@ module.exports = React.createClass({
           </p>
 
           <p className="txt-center">
-            Forgot your password? <a href="/contact">Click here</a>
+            Forgot your password? <a href="/account/request-password-reset">Click here</a>
           </p>
 
         </form>

@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto');
 var Schema = mongoose.Schema;
+const BASE_URL = require('../helpers/baseUrl');
 
 
 var teamSchema = new Schema({
@@ -30,9 +31,6 @@ teamSchema.index({ slug: 1 });
 teamSchema.index({ people: 1 });
 
 const INVITE_SALT = '***REMOVED***';
-const BASE_URL = process.env.NODE_ENV === 'production' ?
-                 'http://timezone.io' :
-                 'http://localhost:8080';
 
 // Populate the invite hash on first save
 teamSchema.pre('save', function(next) {

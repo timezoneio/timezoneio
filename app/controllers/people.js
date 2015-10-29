@@ -38,6 +38,7 @@ people.index = function(req, res, next) {
             teams: teams,
             time: time,
             timeFormat: timeFormat,
+            message: req.flash('message'),
             errors: req.flash('error')
           });
         } /* TODO - Handle errors? */);

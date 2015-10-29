@@ -18,7 +18,7 @@ var stylusMiddleware = require('../config/middleware/stylus.js');
 var render = require('./helpers/render.js');
 
 
-module.exports = function(mongooseConnection) {
+module.exports = function(mongooseConnection, redisClient) {
 
   require('../config/passport.js')(passport);
 
@@ -49,8 +49,9 @@ module.exports = function(mongooseConnection) {
     saveUninitialized: false, // don't create session until something stored
     secret: 'bodhi',
     store: new RedisStore({
-      host: '127.0.0.1',
-      port: 6379,
+      client: redisClient,
+      // host: '127.0.0.1',
+      // port: 6379,
       ttl: 14 * 86400 // 14 days expiration
     })
   }));

@@ -1,6 +1,9 @@
 var UserModel = require('../models/user');
 var TeamModel = require('../models/team');
 var sendEmail = require('../email/send');
+var redis = require('redis');
+var redisClient = require('../helpers/redis');
+var sendEmail = require('../email/send');
 var isValidEmail = require('../utils/strings').isValidEmail;
 var getProfileUrl = require('../helpers/urls').getProfileUrl;
 
@@ -39,8 +42,9 @@ var getPasswordValidationError = function(p1, p2) {
   if (p1.length < 8)
     return 'Passwords must be at least 8 characters';
 
-  if (!/\d/.test(p1))
-    return 'Passwords must contain a number';
+  // Let's loosen up for now!
+  // if (!/\d/.test(p1))
+  //   return 'Passwords must contain a number';
 
   return null;
 };
@@ -211,4 +215,155 @@ auth.logout = function(req, res) {
 
 auth.connectTwitter = function(req, res) {
   res.redirect(getProfileUrl(req.user));
+};
+
+auth.passwordResetRequestForm = function(req, res) {
+  if (req.user)
+    return res.redirect(req.user.getProfileUrl());
+
+  res.render('PasswordReset', {
+    title: 'Reset your password',
+    requestReset: true,
+    noScript: true
+  });
+};
+
+auth.passwordResetRequest = function(req, res, next) {
+
+  if (req.user)
+    return res.redirect(req.user.getProfileUrl());
+
+  UserModel
+    .findOneByEmail(req.body.email)
+    .then(function(user) {
+
+      if (!user)
+        return res.render('PasswordReset', {
+          title: 'Reset your password',
+          requestReset: true,
+          errors: 'We couldn\'t find an account with that email, please try again!',
+          noScript: true
+        });
+
+      // create temp token
+      var key = user.getPasswordResetKey();
+      var token = user.createPasswordResetToken();
+      redisClient.set(key, token, redis.print);
+      redisClient.expire(key, 60 * 60); // expire in 1 hour
+
+      const BASE_URL = require('../helpers/baseUrl');
+      var url = `${BASE_URL}/account/password-reset?userId=${user._id}&resetToken=${token}`;
+
+      // Send the user their reset email
+      sendEmail('passwordReset', user.email, {
+        name: user.name,
+        resetUrl: url
+      });
+
+      res.render('PasswordReset', {
+        title: 'Reset your password',
+        requestReset: true,
+        success: true,
+        noScript: true
+      });
+
+    })
+    .catch(function() {
+      next();
+    });
+
+};
+
+// Middlware
+auth.verifyPasswordResetToken = function(req, res, next) {
+
+  if (req.user)
+    return res.redirect(req.user.getProfileUrl());
+
+  var userId = req.query.userId;
+  var resetToken = req.query.resetToken;
+
+  var invalidUrlResponse = function() {
+    res.render('PasswordReset', {
+      title: 'Reset your password',
+      hideForm: true,
+      errors: 'Sorry, that url seems to be invalid or may have expired after 60 minutes. ' +
+              'Please try to grab the link from your email again ;)',
+      noScript: true
+    });
+  };
+
+  if (!userId || !resetToken)
+    return invalidUrlResponse();
+
+  UserModel
+    .findOneById(userId)
+    .then(function(user) {
+      if (!user)
+        return invalidUrlResponse();
+
+      var key = user.getPasswordResetKey();
+      redisClient.get(key, function(err, token) {
+        if (err) return next();
+
+        if (!token || token !== resetToken)
+          return invalidUrlResponse();
+
+        // We're valid, move along!
+        req.user = user;
+        next();
+      });
+    })
+    .catch(function() {
+      invalidUrlResponse();
+    });
+};
+
+auth.passwordResetForm = function(req, res) {
+  res.render('PasswordReset', {
+    title: 'Reset your password',
+    noScript: true
+  });
+};
+
+auth.passwordReset = function(req, res) {
+
+  var pwError = getPasswordValidationError(req.body.password, req.body.password2);
+  if (pwError) {
+    return res.render('PasswordReset', {
+      title: 'Reset your password',
+      errors: pwError,
+      noScript: true
+    });
+  }
+
+  // req.user is added in verifyPasswordResetToken middleware above
+  req.user.password = req.body.password;
+
+  req.user.save(function(err) {
+    if (err)
+      return res.render('PasswordReset', {
+        title: 'Reset your password',
+        errors: 'Sorry, We weren\'t able to reset your password at this time, please try again',
+        noScript: true
+      });
+
+
+      req.logIn(req.user, function(err) {
+        if (err)
+          return res.render('PasswordReset', {
+            title: 'Reset your password',
+            errors: [ 'Sorry, We weren\'t able to log you in!', err.message],
+            noScript: true
+          });
+
+        // Disable the password reset key immediately
+        redisClient.del(req.query.resetToken);
+
+        req.flash('message', 'Awesome, your new password is set and you\'re ready to go!');
+
+        res.redirect(req.user.getProfileUrl());
+      });
+  });
+
 };

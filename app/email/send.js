@@ -47,6 +47,9 @@ var EMAIL_TYPES = {
       return `${p.adminName} wants you to join the ${p.teamName} team on Timezone.io!`;
     },
     tags: ['invite']
+  },
+  'passwordReset': {
+    subject: 'Reset your Timezone.io password',
   }
 };
 
@@ -116,6 +119,16 @@ module.exports = function sendEmail(type, to, params) {
     } catch(err) {
       return reject('Email template not found');
     }
+
+    // Add basic style - double quotes to not break style tags
+    params.style = {
+      body: [
+        "font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;",
+        "font-size: 13px;",
+        "line-height: 1.5;",
+        "max-width: 600px;"
+      ].join('')
+    };
 
     var html = Mustache.render(template, params || {});
     var subject = EMAIL_TYPES[type].subject;

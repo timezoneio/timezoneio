@@ -1,7 +1,8 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto');
 var Schema = mongoose.Schema;
-var userSettings = require('./sub/userSettings')
+var userSettings = require('./sub/userSettings');
+var getProfileUrl = require('../helpers/urls').getProfileUrl;
 var isValidEmail = require('../utils/strings').isValidEmail;
 
 // Inspiration: https://github.com/madhums/node-express-mongoose-demo/blob/master/app/models/user.js
@@ -59,6 +60,7 @@ var OWNER_FIELDS = [
 ];
 
 const EMAIL_HASH_SALT = '***REMOVED***';
+const PASSWORD_RESET_TOKEN_SALT = '***REMOVED***';
 
 // See toOwnerJSON below
 userSchema.set('toJSON', {
@@ -227,6 +229,16 @@ userSchema.methods = {
                  .substr(0, 16);
   },
 
+  getPasswordResetKey: function() {
+    return 'password_reset_' + this._id.toString();
+  },
+
+  createPasswordResetToken: function() {
+    return crypto.createHash('md5')
+                 .update(PASSWORD_RESET_TOKEN_SALT + this._id.toString() + Date.now())
+                 .digest('hex');
+  },
+
   isSuperAdmin: function() {
     return this._id.toString() === SUPER_ADMIN_ID;
   },
@@ -299,6 +311,10 @@ userSchema.methods = {
 
   setUserSetting: function(settingName, value) {
     return userSettings.setSettingValue(settingName, value, this.settings);
+  },
+
+  getProfileUrl: function() {
+    return getProfileUrl(this);
   }
 
 };
@@ -325,6 +341,10 @@ userSchema.statics = {
 
   findOneByUsername: function(username, done) {
     return User.findOne({ username: username }, done);
+  },
+
+  findOneById: function(id, done) {
+    return this.findOne({ _id: id }, done);
   },
 
   findOneByUsernameOrId: function(usernameOrId, done) {
