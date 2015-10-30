@@ -116,11 +116,12 @@ access.requireEditPrivlidges = function(req, res, next) {
 
   if (isOwner) return next();
 
+  // Re allowing a admin to edit a registered team member
   // Do not allow admin editing of registered users (for now)
-  if (req.activeUser.isRegistered)
-    return res.status(403).json({
-      message: 'Only this user can edit their own account info'
-    });
+  // if (req.activeUser.isRegistered)
+  //   return res.status(403).json({
+  //     message: 'Only this user can edit their own account info'
+  //   });
 
   TeamModel.find({ people: req.activeUser._id })
     .then(function(teams) {
