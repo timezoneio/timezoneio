@@ -269,7 +269,7 @@ module.exports = React.createClass({
                     <LocationAutocomplete location={this.state.location}
                                           handleChange={this.handleLocationAutocompleteChange} />
                     <span className="edit-person--timezone-display">
-                      {this.props.user.tz}
+                      {this.state.tz}
                     </span>
                   </div>
                 ) : (
