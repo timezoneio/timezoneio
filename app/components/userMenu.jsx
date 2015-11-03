@@ -79,6 +79,11 @@ class UserMenu extends React.Component {
               View profile
             </a>
 
+            <a href="/account"
+               className="user-menu-item">
+              Account settings
+            </a>
+
             <a href="/logout"
                className="user-menu-item">
               Sign out

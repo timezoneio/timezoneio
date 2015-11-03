@@ -20,6 +20,16 @@ userSettings.types = {
       12,
       24
     ]
+  },
+
+  privacyLocation: {
+    defaultValue: 'public',
+    valueType: Schema.Types.String,
+    options: [
+      'public',
+      'team',
+      'time-only'
+    ]
   }
 
 };
@@ -42,6 +52,14 @@ userSettings.getSettingDoc = function(name, settingsList) {
   return settingsList.filter(function(doc) {
     return doc.name === name;
   })[0];
+};
+
+userSettings.getAllSettingValues = function(settingsList) {
+  var settingValues = {};
+  for (var name in this.types) {
+    settingValues[name] = this.getSettingValue(name, settingsList);
+  }
+  return settingValues;
 };
 
 userSettings.getSettingValue = function(name, settingsList) {

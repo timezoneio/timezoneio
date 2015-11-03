@@ -301,6 +301,10 @@ userSchema.methods = {
     return true;
   },
 
+  getAllUserSettings: function() {
+    return userSettings.getAllSettingValues(this.settings);
+  },
+
   getUserSetting: function(settingName) {
     return userSettings.getSettingValue(settingName, this.settings);
   },
