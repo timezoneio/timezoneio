@@ -29,10 +29,18 @@ account.saveAccountInfo = function(req, res) {
   }
 
   req.user.save(function(err) {
-    if (err)
-      req.flash('error', 'We couldn\'t save your changes, please try again -' + err.message);
-    else
+    if (err) {
+      if (err.errors) {
+        let validationErrors = Object.keys(err.errors).map(function(key) {
+          return err.errors[key].message;
+        });
+        req.flash('error', 'There was an issue - ' + validationErrors.join(', '));
+      } else {
+        req.flash('error', 'We couldn\'t save your changes, please try again -');
+      }
+    } else {
       req.flash('message', 'All your changes have been saved. Sweet.');
+    }
 
     res.redirect('/account');
   });
