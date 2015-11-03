@@ -20,6 +20,10 @@ class Person extends React.Component {
     var personClasses = 'person';
     if (this.props.isHighlighted) personClasses += ' person-highlight';
 
+    var location = person.location === null ? '' :
+                   person.location === '' ? 'Location needed!' :
+                   person.location;
+
     return (
       <div className={personClasses}
            key={person._id}
@@ -35,7 +39,7 @@ class Person extends React.Component {
 
         <div className="person-info">
           <p className="person-name">{person.name}</p>
-          <p className="person-city">{person.location || 'Location needed!'}</p>
+          <p className="person-city">{location}</p>
         </div>
       </div>
     );

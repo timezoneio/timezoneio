@@ -48,7 +48,7 @@ class Account extends React.Component {
         value: 'team'
       },
       {
-        label: 'Only show my local time. Hide my location for everyone but me',
+        label: 'Only show my local time - hide my location for everyone but me',
         value: 'time-only'
       }
     ];
