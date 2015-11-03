@@ -54,12 +54,14 @@ module.exports = function(app, passport) {
                                        auth.connectTwitter);
 
   app.get('/account', access.requireLoggedIn, account.index);
+  app.post('/account', access.requireLoggedIn, account.saveAccountInfo);
+
   app.get('/account/request-password-reset', auth.passwordResetRequestForm);
   app.post('/account/request-password-reset', auth.passwordResetRequest);
   app.get('/account/password-reset', auth.verifyPasswordResetToken, auth.passwordResetForm);
   app.post('/account/password-reset', auth.verifyPasswordResetToken, auth.passwordReset);
-  // app.get('/account/password', access.requireLoggedIn, account.password);
 
+  // app.get('/account/password', access.requireLoggedIn, account.password);
 
   app.get('/get-started', people.getStarted);
   app.get('/people/:usernameOrId', people.index);

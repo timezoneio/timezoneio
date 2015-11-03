@@ -1,18 +1,20 @@
 'use strict';
 var React = require('react');
 var Page = require('../components/Page');
+var Notification = require('../components/notification');
+var CSRFToken = require('../components/CSRFToken');
 
 class Account extends React.Component {
 
   renderOption(name, option, idx) {
     var id = `${name}-${option.value}`;
     return (
-      <div className="form-row">
+      <div className="form-row" key={id}>
         <label htmlFor={id} className="label-radio">
           <input type="radio"
-                 name={name}
+                 name={`settings[${name}]`}
                  value={option.value}
-                 checked={this.props.userSettings[name] === option.value}
+                 defaultChecked={this.props.userSettings[name] === option.value}
                  id={id} />
           {option.label}
         </label>
@@ -58,13 +60,18 @@ class Account extends React.Component {
     return (
       <Page {...this.props}>
         <div className="content-container account-container">
+
+          <Notification {...this.props} allowDismiss={true} />
+
           <h1>{this.props.title}</h1>
 
           <p>
             Change your basic account and privacy information
           </p>
 
-          <form>
+          <form method="post">
+
+            <CSRFToken {...this.props} />
 
             <div className="form-row">
               <label>Display name</label>
@@ -89,6 +96,7 @@ class Account extends React.Component {
             </button>
 
           </form>
+
         </div>
       </Page>
     );
