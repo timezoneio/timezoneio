@@ -10,21 +10,27 @@ input.autocomplete--field
   margin-top: 0
   margin-bottom: 0
 
-.autocomplete--field:focus
-  border-bottom-right-radius: 0
-  border-bottom-left-radius: 0
+// RM for rounded corners
+// .autocomplete--field:focus
+//   border-bottom-right-radius: 0
+//   border-bottom-left-radius: 0
 
 
 .autocomplete--results
-  shadow(2)
   position: absolute
+  top: 101%
+  top calc(100% + 2px)
+  shadow(2)
+  border-radius: 16px // roughly half the input height
+  overflow: hidden
   background: #fff
 
 .autocomplete--option
-  padding: 0.45em 0.6em
+  padding: 0.45em 1em
   cursor: pointer
   white-space: nowrap
 
   &.selected,
   &:hover
-    background: $fillColor
+    background: $lightFillColor
+    color: $linkColor
