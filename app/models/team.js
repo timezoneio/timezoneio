@@ -116,6 +116,13 @@ teamSchema.methods = {
     return true;
   },
 
+  hasTeamMember: function(user) {
+    if (this.people[0] && this.people[0]._id)
+      return ~this.people.map(function(u) { return u._id.toString(); })
+                         .indexOf(user._id.toString());
+    return ~this.people.indexOf(user._id.toString());
+  },
+
   addTeamMember: function(user) {
     if (!~this.people.indexOf(user._id.toString()))
       this.people.push(user);

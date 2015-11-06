@@ -277,8 +277,13 @@ userSchema.methods = {
     return !this.hashedPassword;
   },
 
+  toTeamJSON: function() {
+    return this.toJSON({ fields: 'team' });
+  },
+
   toAdminJSON: function() {
     var json = this.toJSON({ fields: 'admin' });
+    // NOTE - I think with the fields=admin we can skip this next line?
     json.email = this.email;
     return json;
   },
@@ -299,11 +304,11 @@ userSchema.methods = {
     return json;
   },
 
-  isOnTeam: function(team) {
-    return !!team && !!this.teams.filter(function(t) {
-      return t.toString() === team._id.toString();
-    }).length;
-  },
+  // isOnTeam: function(team) {
+  //   return !!team && !!this.teams.filter(function(t) {
+  //     return t.toString() === team._id.toString();
+  //   }).length;
+  // },
 
   addToTeam: function(team) {
     if (!team) return false;

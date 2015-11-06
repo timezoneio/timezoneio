@@ -14,7 +14,8 @@ people.index = function(req, res, next) {
   if (!usernameOrId) return next('User not found :(');
 
   // NOTE - if this is for the user's own profile, we can skip this query
-  UserModel.findOneByUsernameOrId(usernameOrId)
+  UserModel
+    .findOneByUsernameOrId(usernameOrId)
     .then(function(user) {
       if (!user) return next('User not found :(');
 
@@ -24,7 +25,8 @@ people.index = function(req, res, next) {
         return res.redirect('/get-started');
       }
 
-      Team.findAllByUser(user)
+      Team
+        .findAllByUser(user)
         .then(function(teams) {
 
           var time = moment();
@@ -32,9 +34,16 @@ people.index = function(req, res, next) {
 
           teams.sort(function(a, b){ return a.createdAt - b.createdAt; });
 
+          var isTeamMember = req.user &&
+                             !!teams.filter(function(t) { return t.hasTeamMember(req.user); }).length;
+
+          var toJSONMethod = isOwner ? 'toOwnerJSON' :
+                             isTeamMember ? 'toTeamJSON' :
+                             'toJSON';
+
           res.render('person', {
             title: strings.capFirst(user.name || ''),
-            profileUser: isOwner ? user.toOwnerJSON() : user.toJSON(),
+            profileUser: user[toJSONMethod](),
             teams: teams,
             time: time,
             timeFormat: timeFormat,
