@@ -54,23 +54,53 @@ var PUBLIC_FIELDS = [
   'isRegistered'
 ];
 
-var OWNER_FIELDS = [
+var OWNER_FIELDS = PUBLIC_FIELDS.concat([
   'coords',
   'email'
-];
+]);
+
+var ADMIN_FIELDS = PUBLIC_FIELDS.concat([
+  'email'
+]);
 
 const EMAIL_HASH_SALT = '***REMOVED***';
 const PASSWORD_RESET_TOKEN_SALT = '***REMOVED***';
+
+var getVisibleFields = function(fieldSet) {
+
+  if (!fieldSet)
+    return PUBLIC_FIELDS;
+
+  if (fieldSet === 'owner')
+    return PUBLIC_FIELDS.concat(OWNER_FIELDS);
+
+  if (fieldSet === 'admin')
+    return ADMIN_FIELDS;
+
+  return PUBLIC_FIELDS;
+};
 
 // See toOwnerJSON below
 userSchema.set('toJSON', {
   getters: true,
   virtuals: true,
+  versionKey: false,
+
+  // field option is 'admin', 'owner', 'team' (team member)
   transform: function (doc, ret, options) {
-    return PUBLIC_FIELDS.reduce(function(obj, field) {
+
+    var visibleFields = getVisibleFields(options.fields);
+    var json = visibleFields.reduce(function(obj, field) {
       obj[field] = ret[field];
       return obj;
     }, {});
+
+    var isOwner = options.fields === 'owner';
+    var isTeamMember = options.fields === 'admin' || options.fields === 'team';
+
+    json.location = doc.getUserLocation(isOwner, isTeamMember);
+
+    return json;
   }
 });
 
@@ -247,8 +277,13 @@ userSchema.methods = {
     return !this.hashedPassword;
   },
 
+  toTeamJSON: function() {
+    return this.toJSON({ fields: 'team' });
+  },
+
   toAdminJSON: function() {
-    var json = this.toJSON();
+    var json = this.toJSON({ fields: 'admin' });
+    // NOTE - I think with the fields=admin we can skip this next line?
     json.email = this.email;
     return json;
   },
@@ -262,21 +297,18 @@ userSchema.methods = {
 
   // NOTE - this needs to be recursively turned into JSON acceptable objects?
   toOwnerJSON: function() {
-    var json = this.toJSON();
-    OWNER_FIELDS.forEach(function(field) {
-      json[field] = this[field];
-    }.bind(this));
+    var json = this.toJSON({ fields: 'owner' });
     if (this.teams) {
       json.teams = this.teams.map(function(t){ return t.toJSON(); });
     }
     return json;
   },
 
-  isOnTeam: function(team) {
-    return !!team && !!this.teams.filter(function(t) {
-      return t.toString() === team._id.toString();
-    }).length;
-  },
+  // isOnTeam: function(team) {
+  //   return !!team && !!this.teams.filter(function(t) {
+  //     return t.toString() === team._id.toString();
+  //   }).length;
+  // },
 
   addToTeam: function(team) {
     if (!team) return false;
@@ -299,6 +331,25 @@ userSchema.methods = {
     if (provider === 'twitter')
       this.avatar = this.twitter.profile_image_url_https.replace('_normal', '_200x200');
     return true;
+  },
+
+  getUserLocation: function(isOwner, isTeamMember) {
+    if (isOwner)
+      return this.location;
+
+    var setting = this.getUserSetting('privacyLocation');
+
+    if (setting === 'public')
+      return this.location;
+
+    if (setting === 'team' && isTeamMember)
+      return this.location;
+
+    return null;
+  },
+
+  getAllUserSettings: function() {
+    return userSettings.getAllSettingValues(this.settings);
   },
 
   getUserSetting: function(settingName) {

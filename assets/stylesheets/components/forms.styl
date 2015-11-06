@@ -6,14 +6,14 @@ textarea
   box-sizing: border-box
 
   // Underline style:
-  padding: 0.45em 0.6em
-  border: 0;
-  border-bottom: 1px solid $inputBorderColor
+  // padding: 0.45em 0.6em
+  // border: 0;
+  // border-bottom: 1px solid $inputBorderColor
 
   // Rounded style:
-  // padding: 0.4em 1em 0.5em
-  // border: 1px solid $inputBorderColor
-  // border-radius: 100px
+  padding: 0.4em 1em 0.5em
+  border: 1px solid $inputBorderColor
+  border-radius: 100px
 
   &:focus
     outline: none
@@ -25,12 +25,22 @@ input:-webkit-autofill
   -webkit-box-shadow: 0 0 0px 1000px white inset
 
 label
+  display: block
   margin-left: 0.5em
   // For rounded style:
-  // margin-left: 1rem
-  // margin-left: calc(1rem + 1px)
+  margin-left: 1rem
+  margin-left: calc(1rem + 1px)
+  margin-bottom: 0.5em
   font-size: 0.8em
   color: $mutedColor
+
+  &.label-radio
+    margin-left: 0
+    font-size: 1em
+    color: inherit
+
+    input
+      margin: 0 0.5em
 
 
 .form-row

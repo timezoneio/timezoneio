@@ -24,6 +24,13 @@ access.allowImpersonate = function(req, res, next) {
     });
 };
 
+access.requireLoggedIn = function(req, res, next) {
+  if (req.user)
+    return next();
+
+  res.redirect('/login');
+};
+
 access.requireSuperUser = function(req, res, next) {
   if (req.user && req.user.isSuperAdmin())
     return next();

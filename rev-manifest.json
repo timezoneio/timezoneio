@@ -1,11 +1,12 @@
 {
-  "js/bundles/about.js": "js/bundles/about-6a493c4ad1.js.gz",
-  "js/bundles/admin.js": "js/bundles/admin-58cd3b9734.js.gz",
-  "js/bundles/contact.js": "js/bundles/contact-7f6004ae00.js.gz",
-  "js/bundles/createTeam.js": "js/bundles/createTeam-2207917d4b.js.gz",
-  "js/bundles/getStarted.js": "js/bundles/getStarted-35a2bf26e1.js.gz",
-  "js/bundles/homepage.js": "js/bundles/homepage-0a66de36c7.js.gz",
-  "js/bundles/person.js": "js/bundles/person-e96d9f963a.js.gz",
-  "js/bundles/team.js": "js/bundles/team-575054d045.js.gz",
-  "stylesheets/index.css": "stylesheets/index-6d5572760d.css.gz"
+  "js/bundles/about.js": "js/bundles/about-41c24eba45.js.gz",
+  "js/bundles/account.js": "js/bundles/account-a869a94cf1.js.gz",
+  "js/bundles/admin.js": "js/bundles/admin-397aae0916.js.gz",
+  "js/bundles/contact.js": "js/bundles/contact-8e51bf295f.js.gz",
+  "js/bundles/createTeam.js": "js/bundles/createTeam-760522e803.js.gz",
+  "js/bundles/getStarted.js": "js/bundles/getStarted-ee8cfb1b5c.js.gz",
+  "js/bundles/homepage.js": "js/bundles/homepage-adb7dcb975.js.gz",
+  "js/bundles/person.js": "js/bundles/person-ea8363cffc.js.gz",
+  "js/bundles/team.js": "js/bundles/team-dc8053cd4d.js.gz",
+  "stylesheets/index.css": "stylesheets/index-e6f1d22c65.css.gz"
 }

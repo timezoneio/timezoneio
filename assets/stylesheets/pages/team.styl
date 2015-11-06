@@ -160,6 +160,7 @@ $toolbarItemHeight = 32px;
 
 .timezone-list
   position relative
+  z-index: 5
   display: flex
   height: 100%;
   justify-content: center
@@ -293,13 +294,16 @@ for hour in 0 1 2 3 4 5 6 7 22 23
   font-weight: bold
   text-align: center
 
+  &.person-info-short
+    bottom: -1em
+
   p
     margin: 0
     line-height: 1.1em
     white-space: nowrap
 
-  .person-name
-    margin-bottom: 0.3em
+  .person-city
+    margin-top: 0.3em
 
 .person-city
   font-size: 0.8em

@@ -22,6 +22,14 @@ team.index = function(req, res, next) {
       if (!team) return next();
 
       var isAdmin = team.isAdmin(req.user) || team.isAdmin(res.locals.impersonateUser);
+      var isTeamMember = req.user && team.hasTeamMember(req.user);
+
+      var toJSONMethod = isAdmin ? 'toAdminJSON' :
+                         isTeamMember ? 'toTeamJSON' :
+                         'toJSON';
+
+      // Ensure we're exposing the right data
+      team.people = team.people.map(function(u) { return u[toJSONMethod](); });
 
       // Organize into timezones
       var time = moment();
@@ -30,13 +38,9 @@ team.index = function(req, res, next) {
                        req.user.getUserSetting('timeFormat') :
                        UserModel.getDefaultSettingValue('timeFormat');
 
-      var people = !isAdmin ?
-                    team.people :
-                    team.people.map(function(u) { return u.toAdminJSON(); });
-
       res.render('team', {
         title: strings.capFirst(team.name || ''),
-        people: people,
+        people: team.people,
         isAdmin: isAdmin,
         time: time,
         team: isAdmin ? team.toAdminJSON() : team,

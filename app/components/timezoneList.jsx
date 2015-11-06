@@ -6,6 +6,8 @@ const PEOPLE_PER_COL = 8;
 
 var count = function(metric, people) {
   var items = people.reduce(function(list, p) {
+    if (!p[metric])
+      return list;
     if (list.indexOf(p[metric].toLowerCase()) === -1)
       list.push(p[metric].toLowerCase());
     return list;

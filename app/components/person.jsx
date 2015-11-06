@@ -1,5 +1,6 @@
 'use strict';
 var React = require('react');
+var classNames = require('classnames');
 var Avatar = require('./avatar.jsx');
 var ActionCreators = require('../actions/actionCreators.js');
 const DEFAULT_AVATAR = require('../helpers/images').DEFAULT_AVATAR;
@@ -20,6 +21,14 @@ class Person extends React.Component {
     var personClasses = 'person';
     if (this.props.isHighlighted) personClasses += ' person-highlight';
 
+    var location = person.location === null ? '' :
+                   person.location === '' ? 'Location needed!' :
+                   person.location;
+
+    var infoClasses = classNames('person-info', {
+      'person-info-short': !person.location
+    });
+
     return (
       <div className={personClasses}
            key={person._id}
@@ -33,9 +42,9 @@ class Person extends React.Component {
             </div>
         }
 
-        <div className="person-info">
+        <div className={infoClasses}>
           <p className="person-name">{person.name}</p>
-          <p className="person-city">{person.location || 'Location needed!'}</p>
+          {location && <p className="person-city">{location}</p>}
         </div>
       </div>
     );

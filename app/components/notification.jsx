@@ -15,6 +15,27 @@ class Notification extends React.Component {
     this.setState({ active: false });
   }
 
+
+  getStyle(props) {
+    if (props.style)
+      return props.style;
+    if (props.errors && props.errors.length)
+      return 'error';
+    if (props.message && props.message.length)
+      return 'success';
+    return '';
+  }
+
+  getText(props) {
+    if (props.text)
+      return props.text;
+    if (props.errors && props.errors.length)
+      return props.errors;
+    if (props.message && props.message.length)
+      return props.message;
+    return '';
+  }
+
   renderArray(arr) {
     return arr.map(function(item, idx) {
       return <span key={idx}>{item}</span>
@@ -22,24 +43,25 @@ class Notification extends React.Component {
   }
 
   render() {
+    var style = this.getStyle(this.props);
+    var text = this.getText(this.props);
+
     var className = 'notification';
 
-    if (this.props.style)
-      className += ' notification-' + this.props.style;
+    if (style)
+      className += ' notification-' + style;
 
     if (this.props.allowDismiss)
       className += ' notification-dismissable';
 
-    var text = Array.isArray(this.props.text) ?
-               this.renderArray(this.props.text) :
-               this.props.text;
+    var displayText = Array.isArray(text) ? this.renderArray(text) : text;
 
-    if (!text || !text.length || !this.state.active)
+    if (!displayText || !displayText.length || !this.state.active)
       return <span style={{display: 'none'}}></span>;
 
     return (
       <div className={className}>
-        {text}
+        {displayText}
         { this.props.allowDismiss &&
           <span className="notification-dismiss material-icons md-18"
                   name="Dismiss notification"

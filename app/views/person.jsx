@@ -163,11 +163,14 @@ module.exports = React.createClass({
       requestChange: this.handleChange.bind(null, 'avatar')
     };
 
+    var locationHidden = !this.isOwnProfile() && this.state.location === null;
     var locationText = this.state.location ||
                        (this.state.checkingLocation ?
                         'Searching...' :
                         'Click to set location'
                        );
+    if (locationHidden)
+      locationText = 'Location private';
     var locationError = !this.state.location &&
                         !this.state.checkingLocation &&
                         this.state.useLocationFallback;
