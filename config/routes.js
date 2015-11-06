@@ -32,7 +32,7 @@ module.exports = function(app, passport) {
                       }),
                       function(req, res) {
                         var next = req.flash('next');
-                        next = (next && next[0]) || getProfileUrl(req.user);
+                        next = (next && next[0]) || req.user.getDefaultPageUrl();
                         res.redirect(next);
                       });
   app.get('/signup', auth.signup);

@@ -28,13 +28,6 @@ module.exports = function (passport) {
       user.teams = values[1];
       done(null, user);
     });
-    /*
-    UserModel.findOne({ _id: id })
-      .then(function(user) {
-        // Save to cache
-        done(null, user);
-      });
-    */
   });
 
   passport.use(local);
