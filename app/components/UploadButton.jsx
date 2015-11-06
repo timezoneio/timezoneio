@@ -31,10 +31,15 @@ class UploadButton extends React.Component {
     // TODO - https://www.npmjs.com/package/crop-rotate-resize-in-browser
     s3.uploadFile(file, generateAvatarUploadFilename(this.props.fileName, file))
       .then(function(fileUrl) {
+
         this.setState({ isUploading: false });
 
         // Lambda function will resize image and rename it
         var resizedUrl = fileUrl.replace('_full', '');
+
+        // Reset input file for users that need to re-upload the same file
+        this.refs.avatarFileinput.getDOMNode().value = '';
+
         return {
           full: fileUrl,
           resized: resizedUrl
@@ -49,6 +54,7 @@ class UploadButton extends React.Component {
            title="Images are preferably square and under 500kb">
         <input type="file"
                name="avatar_file"
+               ref="avatarFileinput"
                onChange={this.handleFileChange.bind(this)} />
         { this.state.isUploading ? 'Uploading...' : 'Upload a photo' }
       </div>
