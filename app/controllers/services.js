@@ -1,9 +1,9 @@
 var aws = require('aws-sdk');
+const ENV = require('../../env.json');
 
-// TODO - Enure these are on the server!
-var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
-var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
-var S3_BUCKET = process.env.S3_BUCKET;
+var AWS_ACCESS_KEY = ENV.AWS_ACCESS_KEY;
+var AWS_SECRET_KEY = ENV.AWS_SECRET_KEY;
+var S3_BUCKET = ENV.S3_BUCKET;
 
 var services = module.exports = {};
 

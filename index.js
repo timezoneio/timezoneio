@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var redisClient = require('./app/helpers/redis');
 var server = require('./app/server.js');
+const ENV = require('./env.json');
 
 var MAX_RETRIES = 100;
 var retries = -1;
@@ -8,19 +9,14 @@ var retries = -1;
 var env = process.env.NODE_ENV;
 var isProduction = env === 'production';
 
-// In production 'db' is added to the hosts file during linking
-var auth = 'prod:[WexeYHJcqXjxA3;gT.8';
-// var dbHost = isProduction ?
-//               auth + '@' + process.env.DB_PORT_27017_TCP_ADDR :
-//               'localhost';
-var dbHost = 'localhost';
+var MONGO_URL = ENV.MONGO_URL || 'mongodb://localhost/timezone';
 
 var connect = function () {
   if (retries >= MAX_RETRIES)
     return console.info('Couldn\'t connect to the database');
 
   var options = { server: { socketOptions: { keepAlive: 1 } } };
-  mongoose.connect('mongodb://' + dbHost + '/timezone', options);
+  mongoose.connect(MONGO_URL);
 
   retries++;
 };

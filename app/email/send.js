@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var Mustache = require('mustache');
 var mandrill = require('mandrill-api/mandrill');
+const ENV = require('../../env.json');
 
 const FROM_EMAIL = 'hi@timezone.io';
 const FROM_NAME = 'Dan from Timezone.io';
@@ -58,7 +59,7 @@ var transport = {};
 // We use Mandrill for production then nodemailer during dev
 if (process.env.NODE_ENV === 'production') {
 
-  var mandrillClient = new mandrill.Mandrill(process.env.MANDRILL_KEY);
+  var mandrillClient = new mandrill.Mandrill(ENV.MANDRILL_KEY);
 
   transport.send = function(message) {
     return new Promise(function(resolve, reject) {

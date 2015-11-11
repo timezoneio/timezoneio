@@ -1,13 +1,14 @@
 var TwitterStrategy = require('passport-twitter').Strategy;
 var UserModel = require('../../app/models/user');
+const ENV = require('../../env.json');
 
 const CALLBACK_URL = process.env.NODE_ENV === 'production' ?
                      'http://timezone.io/connect/twitter/callback' :
                      'http://localhost:8080/connect/twitter/callback';
 
 module.exports = new TwitterStrategy({
-    consumerKey: process.env.TWITTER_KEY,
-    consumerSecret: process.env.TWITTER_SECRET,
+    consumerKey: ENV.TWITTER_KEY,
+    consumerSecret: ENV.TWITTER_SECRET,
     callbackURL: CALLBACK_URL,
     passReqToCallback: true
   },
