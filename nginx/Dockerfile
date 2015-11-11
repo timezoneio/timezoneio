@@ -1,3 +1,10 @@
 FROM nginx
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY conf.d/default.conf /etc/nginx/conf.d/default.conf
+
+ADD nginx.conf /etc/nginx/nginx.conf
+ADD conf.d/* /etc/nginx/conf.d/
+# ADD config.sh /home/config.sh
+
+# CMD /home/config.sh && nginx
+
+# NOTE
+# Mount the /var/log/nginx volme to read the logs

@@ -1,3 +1,10 @@
 FROM node:5.0.0
-EXPOSE 8080
-ENV NODE_ENV production
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+COPY package.json /usr/src/app/
+RUN npm install --production
+COPY . /usr/src/app
+
+CMD [ "npm", "start" ]
