@@ -28,8 +28,7 @@ module.exports = new LocalStrategy({
         .then(function(teams) {
           user.teams = teams;
           done(null, user);
-        })
-        .catch(function(err) {
+        }, function(err) {
           done(null, user);
         });
     });

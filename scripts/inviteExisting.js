@@ -42,8 +42,7 @@ connect(function(err, connection) {
           adminName: admin.name,
           teamName: team.name
         })
-          .then(function() { done(); })
-          .catch(function(){ done(); });
+          .then(function() { done(); }, function(){ done(); });
 
       }, function() {
         connection.close();

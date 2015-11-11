@@ -116,7 +116,7 @@ auth.create = function(req, res) {
 
         // this is async
         sendEmail('welcome', newUser.email);
-          // .catch(function(err){ ...mark user email invalid })
+          // .then(null, function(err){ ...mark user email invalid })
           // TODO - handle bounced and error'd emails!
 
         // login the user manually
@@ -133,8 +133,7 @@ auth.create = function(req, res) {
           }
         });
       });
-    })
-    .catch(function(err) {
+    }, function(err) {
       renderError(err.message ||
                   'Something didn\'t work right there, can you try again?');
     });
@@ -198,12 +197,10 @@ auth.joinTeam = function(req, res) {
               team: team,
               noScript: true,
             });
-          })
-          .catch(function(err) {
+          }, function(err) {
             invalidHashResponse();
           });
-    })
-    .catch(function(err) {
+    }, function(err) {
       return invalidHashResponse();
     });
 };
@@ -267,8 +264,7 @@ auth.passwordResetRequest = function(req, res, next) {
         noScript: true
       });
 
-    })
-    .catch(function() {
+    }, function() {
       next();
     });
 
@@ -313,8 +309,7 @@ auth.verifyPasswordResetToken = function(req, res, next) {
         req.user = user;
         next();
       });
-    })
-    .catch(function() {
+    }, function() {
       invalidUrlResponse();
     });
 };

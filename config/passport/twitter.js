@@ -65,8 +65,7 @@ module.exports = new TwitterStrategy({
         }
 
         done('Error connecting to Twitter');
-      })
-      .catch(function(err) {
+      }, function(err) {
         done(err);
       });
   }

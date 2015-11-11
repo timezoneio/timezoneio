@@ -46,8 +46,7 @@ ActionCreators.getUserLocationAndTimezone(state.user)
       state.checkingLocation = false;
     }
     renderApp();
-  })
-  .catch(function(err) {
+  }, function(err) {
     console.error(err);
     state.locationField = true;
     state.checkingLocation = false;

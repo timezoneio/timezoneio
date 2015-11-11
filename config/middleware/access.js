@@ -18,8 +18,7 @@ access.allowImpersonate = function(req, res, next) {
 
       res.locals.impersonateUser = user;
       next();
-    })
-    .catch(function(err) {
+    }, function(err) {
       next();
     });
 };
@@ -143,8 +142,7 @@ access.requireEditPrivlidges = function(req, res, next) {
       res.status(403).json({
         message: 'You\'re not an admin ;)'
       });
-    })
-    .catch(function(err) {
+    }, function(err) {
       res.status(403).json({
         message: 'We got team issues'
       });

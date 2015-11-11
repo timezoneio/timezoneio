@@ -51,8 +51,7 @@ people.index = function(req, res, next) {
             errors: req.flash('error')
           });
         } /* TODO - Handle errors? */);
-    })
-    .catch(function(err) {
+    }, function(err) {
       next();
     });
 

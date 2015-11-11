@@ -132,8 +132,7 @@ team.create = function(req, res, next) {
   if (createSameName) {
     getNewTeamSlug(req.body.name)
       .then(createTeam.bind(null, req.body.name))
-      .then(createTeamSuccess)
-      .catch(handleCreateError);
+      .then(createTeamSuccess, handleCreateError);
 
   } else {
     getPotentialDuplicateTeams(req.body.name)
@@ -151,8 +150,7 @@ team.create = function(req, res, next) {
           .then(createTeamSuccess);
           // NOTE - Do we need another handler here since the last one doens't
           // return a promise?
-      })
-      .catch(handleCreateError);
+      }, handleCreateError);
   }
 
 };

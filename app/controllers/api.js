@@ -43,8 +43,7 @@ api.getUserByEmail = function(req, res, next) {
         hash: emailHash,
         message: 'No user with that email!'
       });
-    })
-    .catch(function(err) {
+    }, function(err) {
       handleError(res, err);
     });
 };
@@ -168,13 +167,10 @@ api.userDelete = function(req, res) {
               .remove({ _id: user._id })
               .then(function() {
                 res.json({ message: 'User was deleted', results: results });
-              })
-              .catch(createErrorHandler());
+              }, createErrorHandler());
           });
-        })
-        .catch(createErrorHandler());
-    })
-    .catch(createErrorHandler());
+        }, createErrorHandler());
+    }, createErrorHandler());
 
 };
 
@@ -191,8 +187,7 @@ api.team = function(req, res) {
           message: 'I can\'t find a team with that id (' + req.params.id + ') man...'
         });
       res.json(team);
-    })
-    .catch(function(err) {
+    }, function(err) {
       res.status(400).json({ message: err });
     });
 };
@@ -218,8 +213,7 @@ api.teamDelete = function(req, res) {
     .remove({ _id: req.params.id })
     .then(function() {
       res.json({ message: 'Team was successfully deleted' });
-    })
-    .catch(createErrorHandler());
+    }, createErrorHandler());
 };
 
 api.teamAddMember = function(req, res, next) {
@@ -250,8 +244,7 @@ api.teamAddMember = function(req, res, next) {
           message: 'Team member successfully added!'
         });
       });
-    })
-    .catch(function(err) {
+    }, function(err) {
       failedToAdd();
     });
 };

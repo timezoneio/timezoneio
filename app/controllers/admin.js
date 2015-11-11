@@ -85,8 +85,7 @@ admin.users = function(req, res) {
         prevPage: page > 1 ? (page - 1) : null,
         nextPage: users && users.length === COUNT ? (page + 1) : null
       });
-    })
-    .catch(handleError(res));
+    }, handleError(res));
 };
 
 admin.user = function(req, res) {
@@ -111,8 +110,7 @@ admin.user = function(req, res) {
           });
         });
 
-    })
-    .catch(handleError(res));
+    }, handleError(res));
 };
 
 admin.userUpdate = function(req, res) {
@@ -142,8 +140,7 @@ admin.userUpdate = function(req, res) {
         res.redirect(req.url);
       });
 
-    })
-    .catch(handleError(res));
+    }, handleError(res));
 };
 
 admin.teams = function(req, res) {
@@ -169,6 +166,5 @@ admin.teams = function(req, res) {
         prevPage: page > 1 ? (page - 1) : null,
         nextPage: teams && teams.length === COUNT ? (page + 1) : null
       });
-    })
-    .catch(handleError(res));
+    }, handleError(res));
 };

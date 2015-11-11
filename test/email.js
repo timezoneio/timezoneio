@@ -8,7 +8,6 @@ console.info('Testing send email');
 sendEmail('invite', TO, { adminName: 'Bohdi', teamName: 'Ex-presidents', inviteUrl: 'test' })
   .then(function(result) {
     console.info('Send test succeded: ', result);
-  })
-  .catch(function(err) {
+  }, function(err) {
     console.error('Send test failed: %s', err);
   });
