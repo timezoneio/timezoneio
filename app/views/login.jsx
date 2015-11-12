@@ -6,7 +6,7 @@ var postCrash = [
   `Hi there!`,
   ``,
   `
-  I'm sorry to report that Timezone had an irrecoverable data loss Monday, Novemeber
+  I'm sorry to report that Timezone had an irrecoverable data loss Monday, November
   9th and all login and team data was lost. Timezone has been rebuilt with a brand
   new data infrastructure with frequent backups to prevent a loss like this again.
   If you had an account before then, please click the "Sign up now" link below to
