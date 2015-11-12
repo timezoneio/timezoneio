@@ -97,7 +97,7 @@ module.exports = function(app, passport) {
   };
 
   var emojiUrls = {
-    '🐶': '/user/56435e1f41596305083170a2' // marc anythony
+    '🐶': '/people/56435e1f41596305083170a2' // marc anythony
   };
 
   // special \xF0\x9F\x90\xB6
