@@ -84,12 +84,42 @@ module.exports = function(app, passport) {
   app.post('/admin/user/:userId', admin.userUpdate);
   app.get('/admin/teams', admin.teams);
 
+  var emojiStringToArray = function (str) {
+    var split = str.split(/([\uD800-\uDBFF][\uDC00-\uDFFF])/);
+    var arr = [];
+    for (var i=0; i<split.length; i++) {
+      var char = split[i];
+      if (char !== "") {
+        arr.push(char);
+      }
+    }
+    return arr;
+  };
+
+  var emojiUrls = {
+    '🐶': '/user/56435e1f41596305083170a2' // marc anythony
+  };
+
+  // special \xF0\x9F\x90\xB6
+  app.get('/:emoji', function(req, res, next) {
+    var emojis = emojiStringToArray(req.params.emoji);
+    if (!emojis.length)
+      return next();
+
+    if (emojis[0] in emojiUrls)
+      return res.redirect(emojiUrls[emojis[0]]);
+
+    next();
+  });
 
   /**
    * Error handling
    */
 
   app.use(function (err, req, res, next) {
+
+    console.info(req.url);
+
     // treat as 404
     if (err.message &&
         (~err.message.indexOf('not found') ||
