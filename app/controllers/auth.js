@@ -27,6 +27,7 @@ auth.signup = function(req, res) {
 
   res.render('signup', {
     errors: req.flash('error'),
+    welcomeBack: req.query.welcome == 'back',
     noScript: true
   });
 };

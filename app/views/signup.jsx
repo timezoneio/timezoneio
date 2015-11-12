@@ -7,6 +7,14 @@ var Notification = require('../components/notification.jsx');
 class Signup extends React.Component {
 
   renderHeadline() {
+    if (this.props.welcomeBack)
+      return (
+        <div>
+          <h1 className="page-headline">Welcome back!!!</h1>
+          <p className="txt-center">Please sign up below</p>
+        </div>
+      );
+
     if (!this.props.teamInvite)
       return <h1 className="page-headline">Sign up</h1>;
 
@@ -22,8 +30,10 @@ class Signup extends React.Component {
 
         {this.renderHeadline()}
 
-        <Notification style="error"
-                      text={this.props.errors} />
+        <Notification
+          style="error"
+          text={this.props.errors}
+        />
 
         <form action="/signup" method="post" className="login-form">
 
