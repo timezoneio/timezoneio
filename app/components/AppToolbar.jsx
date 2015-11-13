@@ -31,7 +31,7 @@ class AppToolbar extends React.Component {
         <div className="app-toolbar-actions">
           <TeamSearch people={this.props.people} />
           { this.props.isAdmin && (
-            <button className="material-icons md-18 clear"
+            <button className="manage-team-button material-icons md-18 clear"
                     title="Manage your team"
                     onClick={this.handleClickManage}>
               settings

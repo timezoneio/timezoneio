@@ -463,6 +463,37 @@ input[type="text"].manage-team--invite-url
     height: auto
     flex-direction: column
 
+  .app-toolbar
+    position fixed
+    top 0
+    width: 100%
+
+  .app-with-toolbar
+    margin-top:
+
+    .site-branding
+      width 22px;
+      color transparent
+      padding-left 0
+
+    .app-toolbar-branding,
+    .app-toolbar-actions
+      width: auto
+      min-width: auto
+
+    .timezone-list
+      margin-top: 60px
+
+    .person-info
+      transform: none
+
+  .team-search input
+    width 10em
+
+  button.manage-team-button
+    display: none
+
+
   .app-sidebar
     position: fixed
     z-index: 1
@@ -559,7 +590,8 @@ input[type="text"].manage-team--invite-url
   .person-city
     display: none
 
-  .avatar
+  .avatar,
+  .avatar-placeholder
     width: 84%
     height: 84% // height will match width
     margin: 0 auto
