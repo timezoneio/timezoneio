@@ -466,7 +466,11 @@ input[type="text"].manage-team--invite-url
   .app-toolbar
     position fixed
     top 0
+    z-index 10
+    background rgba(255,255,255,0.9)
     width: 100%
+    padding-left 0.8em
+    padding-right 0.8em
 
   .app-with-toolbar
     margin-top:
@@ -481,6 +485,12 @@ input[type="text"].manage-team--invite-url
       width: auto
       min-width: auto
 
+    .app-toolbar-actions > *
+      margin-left 0.5em
+
+    .app-toolbar-actions:first-child
+      margin-left 0
+
     .timezone-list
       margin-top: 60px
 
@@ -488,7 +498,7 @@ input[type="text"].manage-team--invite-url
       transform: none
 
   .team-search input
-    width 10em
+    width 8em
 
   button.manage-team-button
     display: none
@@ -548,7 +558,8 @@ input[type="text"].manage-team--invite-url
     padding: 1em 0
     order -1
 
-  .timezone
+  .timezone,
+  .timezone-list-wide .timezone
     display: flex
     width: auto
     padding: 0
