@@ -18,8 +18,9 @@ var links = [
     text: 'Login'
   },
   {
-    url: '/roadmap',
-    text: 'Roadmap'
+    url: 'https://trello.com/b/ugfyF3BE/timezone-io',
+    text: 'Roadmap',
+    target: '_blank'
   },
 ];
 
@@ -51,6 +52,7 @@ module.exports = React.createClass({
               return (
                 <a key={idx}
                    href={link.url}
+                   target={link.target}
                    className="footer-link">
                   {link.text}
                 </a>
