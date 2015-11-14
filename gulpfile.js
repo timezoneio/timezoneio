@@ -7,8 +7,6 @@ var WebpackDevServer = require('webpack-dev-server');
 var plumber = require('gulp-plumber');
 var rename = require('gulp-rename');
 var transform = require('vinyl-transform');
-var browserify = require('browserify');
-var babelify = require('babelify');
 var uglify = require('gulp-uglify');
 var stylus = require('gulp-stylus');
 var autoprefixer = require('gulp-autoprefixer');
@@ -104,24 +102,6 @@ gulp.task('webpack-dev-server', function(callback) {
   });
 });
 
-/*
-gulp.task('browserify', function() {
-
-  var browserified = transform(function(filename) {
-    return browserify(filename)
-      .transform(babelify)
-      .bundle();
-  });
-
-  return gulp.src(['app/apps/*.js'])
-    .pipe(plumber())
-    .pipe(browserified)
-    .pipe(gulp.dest('public/js/bundles'));
-
-});
-*/
-
-
 var getExpires = function() {
   var expires = new Date();
   expires.setFullYear(expires.getFullYear()+10);
@@ -178,20 +158,6 @@ gulp.task('upload-js', ['webpack'], function() {
     .pipe(gulp.dest('./'));
 });
 
-
-gulp.task('uglify', function() {
-  return gulp.src(['public/js/bundles/*.js'])
-    .pipe(uglify())
-    .pipe(gulp.dest('public/js/bundles'));
-});
-
-gulp.task('watch', ['webpack'], function() {
-  return gulp.watch([
-    'app/**/*.js',
-    'app/**/*.jsx'
-  ], ['browserify']);
-});
-
 gulp.task('predeploy', ['webpack', 'upload-images', 'upload-css', 'upload-js']);
 
-gulp.task('default', ['browserify']);
+gulp.task('default', ['webpack']);
