@@ -30,7 +30,7 @@ class Team extends React.Component {
       return <ManageTeam {...this.props} />;
 
     // Only Super admin has this design right now
-    if (true || this.props.user &&
+    if (this.props.user &&
         this.props.user._id &&
         this.props.user._id.toString() === '5513998f6d1aacc66f7e7eff')
       return (

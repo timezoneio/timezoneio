@@ -1,6 +1,7 @@
 require('../helpers/fetchPolyfill');
 var React  = require('react');
 var moment = require('moment-timezone');
+var throttle = require('lodash/function/throttle');
 
 var transform = require('../utils/transform.js');
 var timeUtils = require('../utils/time.js');
@@ -99,6 +100,8 @@ function updateTimeAsPercent(percentDelta) {
   renderApp();
 }
 
+var updateTimeAsPercentThrottled = throttle(updateTimeAsPercent, 100);
+
 
 function json(res) {
   return res.json();
@@ -191,7 +194,7 @@ var handleViewAction = function(action) {
       break;
     case ActionTypes.ADJUST_TIME_DISPLAY:
       disableAutoUpdate();
-      updateTimeAsPercent(value);
+      updateTimeAsPercentThrottled(value);
       break;
 
     case ActionTypes.CLOSE_MODAL:
