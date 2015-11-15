@@ -21,7 +21,10 @@ class AppToolbar extends React.Component {
       <div className="app-toolbar">
 
         <div className="app-toolbar-branding">
-          <Branding link={true} />
+          <Branding
+            link={true}
+            minimal={true}
+          />
         </div>
 
         <div className="app-toolbar-main">
@@ -37,7 +40,14 @@ class AppToolbar extends React.Component {
               settings
             </button>
           )}
-          <UserMenu {...this.props.user} />
+          {
+            this.props.user ?
+            <UserMenu {...this.props.user} /> :
+            <a href="/login" className="button hollow">
+              Login
+            </a>
+          }
+
         </div>
 
       </div>

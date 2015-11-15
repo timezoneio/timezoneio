@@ -40,13 +40,12 @@ $toolbarItemHeight = 32px;
 
 .app-toolbar
   display: flex
-  justify-content: space-between
   align-items: center
   padding: 0.5em 1em
   border-bottom: 1px solid $lightBorderColor
 
   .site-branding
-    margin: 0
+    margin: 0 1em 0 0
 
   button.material-icons
     height: $toolbarItemHeight
@@ -65,25 +64,26 @@ $toolbarItemHeight = 32px;
     border: 1px solid $lightBorderColor
     border-radius: 100px
 
-.app-toolbar-branding,
-.app-toolbar-actions
-  width: 40%
-
-.app-toolbar-main
-  width: 10%
-  min-width: 120px
-
+// .app-toolbar-main
 
 .app-toolbar-actions
   display: flex
+  flex-grow 2
   justify-content: flex-end
   min-width: 300px; // to max sure we don't flex smaller
 
   > *
-    margin-left: 1rem
+    margin-left 1rem
+    max-height 32px
+
+  .button,
+  button
+    line-height 1.3em
+
 
 .time-control
   position relative
+  display flex
 
   .time-control-menu
     display none
@@ -95,64 +95,32 @@ $toolbarItemHeight = 32px;
   position relative // for menu
   z-index 1001
   margin 0
+  width 94px // so button and slider pos stay consistent
   font-size 1.4em
-  text-align center
+  line-height 32px
   font-weight normal
   cursor pointer
 
-.time-control-menu
-  position absolute
-  z-index 100
-  // top 110%
-  // top calc(100% + 0.5em);
-  top -0.5em
-  left -100px
-  right -100px
-  margin 0 auto
-  padding 2.5em 0.5em 0.5em
-  width 200px
+.time-control-toggle
+  margin 0 0.2em
 
-  background #fff
-  border 1px solid $lightBorderColor
-  shadow(2)
+  &:focus
+    box-shadow none
 
-  transition all 100ms
+.time-control-slider-container
+  display flex
+  align-items center
 
-  &.time-control-menu-slider-only
-    background rgba(255,255,255, 0.2)
-    border-color transparent
-    shadow('none')
-
-    .time-control-buttons
-      opacity 0
+  &.is-hidden
+    display none
 
   .time-slider
-    margin 0.5em 0
+    margin 6px 0
 
-  // Arrow hack
-  // &::before
-  //   content ""
-  //   display block
-  //   position absolute
-  //   top -11px
-  //   left 0
-  //   right 0
-  //   margin 0 auto
-  //   width 0
-  //   border 5px solid transparent
-  //   border-bottom-color $lightBorderColor
-  //
-  // &::after
-  //   content ""
-  //   display block
-  //   position absolute
-  //   top -10px
-  //   left 0
-  //   right 0
-  //   margin 0 auto
-  //   width 0
-  //   border 5px solid transparent
-  //   border-bottom-color #fff
+.time-control-now
+  height 1.4em + 0.7em
+  margin-left 0.5em
+
 
 
 // TOOLBAR DESIGN END ------------------------------------------------------

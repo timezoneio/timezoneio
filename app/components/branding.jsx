@@ -1,15 +1,17 @@
+'use strict';
 var React = require('react');
 
-module.exports = React.createClass({
+class Branding extends React.Component {
 
-  displayName: 'Branding',
-  
-  render: function() {
-    var branding = <h1 className="site-branding">Timezone.io</h1>;
+  render() {
+    var classes = 'site-branding' + (this.props.minimal ? ' minimal' : '');
+    var branding = <h1 className={classes}>Timezone.io</h1>;
 
     if (this.props.link)
       return <a href="/" className="site-branding-link">{branding}</a>;
 
     return branding;
   }
-});
+}
+
+module.exports = Branding;

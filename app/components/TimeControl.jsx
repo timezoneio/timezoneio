@@ -12,34 +12,12 @@ class TimeControl extends React.Component {
     super(props);
 
     this.state =  {
-      isOpen: false,
-      isSliderActive: false
+      isOpen: false
     };
-
-    this.closeMenu = this.closeMenu.bind(this); // for binding/unbinding
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('click', this.closeMenu);
-  }
-
-  openMenu() {
-    this.setState({ isOpen: true });
-    window.addEventListener('click', this.closeMenu);
-  }
-
-  closeMenu() {
-    this.setState({ isOpen: false });
-    window.removeEventListener('click', this.closeMenu);
-  }
-
-  handleClickMenu(e) {
-    e.stopPropagation();
-  }
-
-  handleClickTime(e) {
-    e.stopPropagation();
-    this.state.isOpen ? this.closeMenu() : this.openMenu();
+  handleToggleConsole(e) {
+    this.setState({ isOpen: !this.state.isOpen });
   }
 
   handleFormatChange(value, e) {
@@ -55,54 +33,46 @@ class TimeControl extends React.Component {
     });
   }
 
-  handleSliderMove() {
-    this.setState({ isSliderActive: true });
-  }
-
-  handleSliderStop() {
-    this.setState({ isSliderActive: false });
-  }
-
   render() {
 
     var classes = classNames('time-control', {
       'time-control-open': this.state.isOpen
     });
 
-    var menuClasses = classNames('time-control-menu', {
-      'time-control-menu-slider-only': this.state.isOpen && this.state.isSliderActive
+    var sliderContainerClasses = classNames('time-control-slider-container', {
+      'is-hidden': !this.state.isOpen
     });
+
+    var toggleIcon = this.state.isOpen ? 'chevron_left' : 'chevron_right';
 
     return (
       <div className={classes}>
 
         <h2 className="time-control-time"
-            onClick={this.handleClickTime.bind(this)}>
+            onClick={this.handleToggleConsole.bind(this)}>
           <Time timeFormat={this.props.timeFormat}
                 time={this.props.time} />
         </h2>
 
-        <div className={menuClasses}
-             onClick={this.handleClickMenu}>
+        <button
+          className="time-control-toggle clear material-icons"
+          onClick={this.handleToggleConsole.bind(this)}>
+          {toggleIcon}
+        </button>
 
-          <TimeSlider time={this.props.time}
-                      isCurrentTime={this.props.isCurrentTime}
-                      handleSliderMove={this.handleSliderMove.bind(this)}
-                      handleSliderStop={this.handleSliderStop.bind(this)} />
+        <div className={sliderContainerClasses}>
 
-          <div className="time-control-buttons app-sidebar--button-row">
+          <TimeSlider
+            time={this.props.time}
+            isCurrentTime={this.props.isCurrentTime}
+          />
 
-            <div className="button-group app-sidebar--format-select">
-              <button className={'small hollow ' + (this.props.timeFormat === 12 ? 'selected' : '')}
-                      onClick={this.handleFormatChange.bind(null, 12)}>12</button>
-              <button className={'small hollow ' + (this.props.timeFormat === 24 ? 'selected' : '')}
-                      onClick={this.handleFormatChange.bind(null, 24)}>24</button>
-            </div>
-
-            <button className="small hollow"
-                    disabled={this.props.isCurrentTime ? 'disabled' : ''}
-                    onClick={this.handleGotoCurrentTime}>Now</button>
-          </div>
+          <button
+            className="time-control-now small hollow"
+            disabled={this.props.isCurrentTime ? 'disabled' : ''}
+            onClick={this.handleGotoCurrentTime}>
+            Now
+          </button>
 
         </div>
 

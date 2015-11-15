@@ -18,20 +18,6 @@ class Team extends React.Component {
     });
   }
 
-  getModal() {
-    return;
-    // var currentView = this.props.currentView;
-    //
-    // if (currentView === 'app') return;
-    //
-    // return (
-    //   <div className="modal-container"
-    //        onClick={this.handleClickMask}>
-    //     {modal}
-    //   </div>
-    // );
-  }
-
   getUserMenu() {
     if (!this.props.user) return '';
     return <UserMenu {...this.props.user}
@@ -44,7 +30,7 @@ class Team extends React.Component {
       return <ManageTeam {...this.props} />;
 
     // Only Super admin has this design right now
-    if (this.props.user &&
+    if (true || this.props.user &&
         this.props.user._id &&
         this.props.user._id.toString() === '5513998f6d1aacc66f7e7eff')
       return (
