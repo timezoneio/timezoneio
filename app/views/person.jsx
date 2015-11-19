@@ -207,8 +207,7 @@ module.exports = React.createClass({
                                timeFormat={this.props.timeFormat}
                                error={locationError}
                                loading={this.state.checkingLocation}
-                               onClick={this.state.useLocationFallback &&
-                                        this.handleToggleProfileEdit} />
+                               onClick={this.handleToggleProfileEdit} />
 
               <div className="profile-teams">
                 {this.props.teams.map(function(team, idx) {
@@ -264,7 +263,6 @@ module.exports = React.createClass({
                   <input type="text" name="name" valueLink={nameLink} />
                 </div>
 
-                { this.state.useLocationFallback ? (
                   <div>
                     <p>
                       Type below to search for your location
@@ -275,9 +273,7 @@ module.exports = React.createClass({
                       {this.state.tz}
                     </span>
                   </div>
-                ) : (
-                  <input type="hidden" name="location" value={this.state.location} />
-                )}
+                  {/*<input type="hidden" name="location" value={this.state.location} />*/}
 
 
                 <input type="hidden" name="tz"
