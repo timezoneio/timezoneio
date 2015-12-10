@@ -10,3 +10,8 @@ dump.rdb
 public/stylesheets/*.css
 public/js/bundles/*
 .awspublish-*
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
