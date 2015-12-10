@@ -2,7 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var Mustache = require('mustache');
 var mandrill = require('mandrill-api/mandrill');
-const ENV = require('../../env.json');
+const ENV = require('../../env.js');
 
 const FROM_EMAIL = 'hi@timezone.io';
 const FROM_NAME = 'Dan from Timezone.io';

@@ -1,6 +1,6 @@
 var TwitterStrategy = require('passport-twitter').Strategy;
 var UserModel = require('../../app/models/user');
-const ENV = require('../../env.json');
+const ENV = require('../../env.js');
 
 const CALLBACK_URL = process.env.NODE_ENV === 'production' ?
                      'http://timezone.io/connect/twitter/callback' :

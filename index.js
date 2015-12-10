@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var redisClient = require('./app/helpers/redis');
 var server = require('./app/server.js');
-const ENV = require('./env.json');
+const ENV = require('./env.js');
 
 var MAX_RETRIES = 100;
 var retries = -1;

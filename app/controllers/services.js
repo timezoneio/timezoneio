@@ -1,5 +1,5 @@
 var aws = require('aws-sdk');
-const ENV = require('../../env.json');
+const ENV = require('../../env.js');
 
 var AWS_ACCESS_KEY = ENV.AWS_ACCESS_KEY;
 var AWS_SECRET_KEY = ENV.AWS_SECRET_KEY;
