@@ -16,7 +16,6 @@ const VARS = [
   'MANDRILL_KEY'
 ];
 
-// For produciton
 module.exports = VARS.reduce(function(obj, key) {
   obj[key] = process.env[key];
   return obj;
