@@ -2,19 +2,6 @@ var React = require('react');
 var Header = require('../components/header.jsx');
 var Notification = require('../components/notification.jsx');
 
-var postCrash = [
-  `Hi there!`,
-  ``,
-  `
-  I'm sorry to report that Timezone had an irrecoverable data loss Monday, November
-  9th and all login and team data was lost. Timezone has been rebuilt with a brand
-  new data infrastructure with frequent backups to prevent a loss like this again.
-  If you had an account before then, please click the "Sign up now" link below to
-  create a new account - Thanks for your understanding!
-  `,
-  `- Dan`
-];
-
 module.exports = React.createClass({
 
   render: function() {
@@ -28,11 +15,6 @@ module.exports = React.createClass({
 
         <Notification style="error"
                       text={this.props.errors} />
-
-        <Notification
-          style="notice"
-          text={postCrash}
-        />
 
         <form action="/login" method="post" className="login-form">
 
