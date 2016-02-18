@@ -29,9 +29,10 @@ class Team extends React.Component {
     if (this.props.currentView === 'manage')
       return <ManageTeam {...this.props} />;
 
-    // Only Super admin has this design right now
-    if (this.props.user &&
-        this.props.user._id &&
+    // Only Super admin and buffer have this design right now
+    if (this.props.team &&
+        this.props.team.slug === 'buffer' ||
+        this.props.user &&
         this.props.user._id.toString() === '5513998f6d1aacc66f7e7eff')
       return (
         <div className="container app-container app-with-toolbar">
