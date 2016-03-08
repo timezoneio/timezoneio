@@ -1,28 +1,12 @@
 # [Timezone.io](http://timezone.io)
 
-Timezone is an application aimed at helping remote teams by making it easier
-to see where and **when** their coworkers are.
+This is the official repo for the Timezone.io website. This is a SaaS project
+where all development is done in the open and is open to contributions from
+anyone! The purpose of the Timezone.io project is as follows
 
-# Setup
+> To improve how globally distributed teams coordinate across various timezones
+> in order to be mindful of each other's personal availability and schedule.
 
-Install all the deps and gulp globally:
+- link to article on medium
+- link to contributing and setup documents
 
-```shell
-$ npm i
-$ npm i -g gulp
-```
-
-To start the server and restart on changes, use nodemon:
-```shell
-nodemon
-```
-
-In a separate shell, watch for changes to the files and automatically
-re-browserify the bundles:
-```shell
-gulp watch
-```
-
-# Info
-
-- [Material Design Icons](https://www.google.com/design/icons/)
