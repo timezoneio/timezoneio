@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./index.js",
     "build": "gulp webpack",
-    "watch": "gulp webpack-dev-server",
+    "watch": "nodemon & gulp webpack-dev-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Dan Farrelly <daniel.j.farrelly@gmail.com> (http://djfarrelly.com/)",

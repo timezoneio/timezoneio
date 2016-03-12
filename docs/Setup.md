@@ -35,19 +35,13 @@ $ mongod
 $ redis-server
 ```
 
-Next we run our main node app using Nodemon which will automatically restart the
-app on file change.
+Next we run the main app in watch mode. This one command runs `nodemon` and
+[`webpack-dev-server`](https://webpack.github.io/docs/webpack-dev-server.html).
+Nodemon will automatically restart our server on file changes and webpack-dev-server
+will automatically compile our bundled assets for the browser on file change.
 
 ```shell
-$ nodemon
-```
-
-Lastly, we run the [webpack-dev-server](https://webpack.github.io/docs/webpack-dev-server.html)
-which will sit in front of our node app, serve our JavaScript bundles and
-automatically compile them on file changes. We run this using Gulp.
-
-```shell
-$ gulp webpack-dev-server
+$ npm run watch
 ```
 
 **BOOM!** Now go head over to http://localhost:8888 and you should see the homepage
