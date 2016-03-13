@@ -1,3 +1,4 @@
+// NO LONGER IN USE WITH DESIGN v2 - KEEP FOR NOW - DJFARRELLY
 var React = require('react');
 var timeUtils = require('../utils/time.js');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
