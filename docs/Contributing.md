@@ -34,3 +34,10 @@ feel free to comment on the issue and claim it. Don't see what you want to do
 in the issues? Go ahead and create one and try to explain your idea as best you
 can. Still not sure how to get started? That's ok! Contact me on Twitter at
 [@djfarelly](https://twitter.com/djfarrelly).
+
+## Writing code + Style guide
+When submitting a pull request for the project please try to stay within the
+general style of the code in the project. For JavaScript, reference the
+amazing [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript)
+and for CSS/Stylus you can reference Nicolas Gallager's
+[Idiomatic CSS](https://github.com/necolas/idiomatic-css).
