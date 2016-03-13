@@ -5,6 +5,11 @@ contribute: developers, designers, product-minded people, marketers or whatever
 you consider yourself. Suggest features, create mock ups, fix bugs or improve
 copy. All contribution is encouraged.
 
+First and foremost, this project should be a place welcome to all. Be nice.
+Any harmful language and disrespectful language will not be tolerated. Docker
+does a fantastic way of communicating this, please checkout out [their
+wonderful community guidelines](https://github.com/docker/docker/blob/master/CONTRIBUTING.md#docker-community-guidelines).
+
 At the start of this project's open source journey, I'm not 100% sure how
 the product development will flow. To start off, here's a basic idea of how
 it will work:
