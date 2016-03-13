@@ -34,11 +34,6 @@ module.exports = React.createClass({
     };
   },
 
-  componentDidMount: function() {
-    if (this.isOwnProfile())
-      setTimeout(this.updateUserLocation, 10);
-  },
-
   updateUserLocation: function() {
     this.setState({ checkingLocation: true });
 
@@ -209,7 +204,7 @@ module.exports = React.createClass({
                                loading={this.state.checkingLocation}
                                onClick={this.handleToggleProfileEdit} />
 
-              <div className="profile-teams">
+              <div className="profile-row">
                 {this.props.teams.map(function(team, idx) {
                   return (
                     <a key={idx}
@@ -225,7 +220,7 @@ module.exports = React.createClass({
                 <p>
                   <a href="#"
                      onClick={this.handleToggleProfileEdit}>
-                    Edit your profile
+                    Edit your profile or location
                   </a>
                 </p>
               }
@@ -263,17 +258,27 @@ module.exports = React.createClass({
                   <input type="text" name="name" valueLink={nameLink} />
                 </div>
 
+                <div>
+                  <p>
+                    Type below to search for your location
+                  </p>
                   <div>
-                    <p>
-                      Type below to search for your location
-                    </p>
-                    <LocationAutocomplete location={this.state.location}
-                                          handleChange={this.handleLocationAutocompleteChange} />
-                    <span className="edit-person--timezone-display">
-                      {this.state.tz}
-                    </span>
+                    <LocationAutocomplete
+                      location={this.state.location}
+                      handleChange={this.handleLocationAutocompleteChange}
+                    />
+                    <button
+                      className="profile-use-location-button"
+                      onClick={this.updateUserLocation.bind(this)}
+                    >
+                      Use current location
+                    </button>
                   </div>
-                  {/*<input type="hidden" name="location" value={this.state.location} />*/}
+                  <span className="edit-person--timezone-display">
+                    {this.state.tz}
+                  </span>
+                </div>
+                {/*<input type="hidden" name="location" value={this.state.location} />*/}
 
 
                 <input type="hidden" name="tz"
