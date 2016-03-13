@@ -9,10 +9,10 @@
     "watch": "nodemon & gulp webpack-dev-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Dan Farrelly <daniel.j.farrelly@gmail.com> (http://djfarrelly.com/)",
+  "author": "Dan Farrelly (http://danfarrelly.nyc/)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/djfarrelly/timezoneio"
+    "url": "https://github.com/timezoneio/timezoneio"
   },
   "license": "MIT",
   "dependencies": {
