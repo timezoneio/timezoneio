@@ -53,8 +53,10 @@ module.exports = function render(pathName, locals, cb) {
   params.STATIC_URL = STATIC_URL;
   params.icons = ICON_STYLESHEET;
   params.stylesheet = getStaticUrl('stylesheets/index.css');
-  if (!locals.noScript)
-    params.script = getStaticUrl('js/bundles/' + this.name.toLowerCase() + '.js');
+  if (!locals.noScript) {
+    var camelCase = this.name[0].toLowerCase() + this.name.substr(1);
+    params.script = getStaticUrl('js/bundles/' + camelCase + '.js');
+  }
 
   // IDEA for generic bundle page
   // params.script = this.name ?
