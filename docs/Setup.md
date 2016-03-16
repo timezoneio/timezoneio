@@ -6,8 +6,8 @@ This is a guide on how to get Timezone.io up and running for development.
 
 This project requires you have a few things installed and running:
 
-- [Node.js](https://nodejs.org/en/) 5.x - our runtime (I'd recommend using
-[nvm](https://github.com/creationix/nvm)))
+- [Node.js](https://nodejs.org/en/) 4.x-5.x - our runtime (I'd recommend using
+[nvm](https://github.com/creationix/nvm)), 4.2.1 currently in production)
 - [npm](https://www.npmjs.com/package/npm) - our most favorite package manager
 (comes w/ Node)
 - [MongoDB](https://www.mongodb.org/) 2.6, 3.2+ - our database
