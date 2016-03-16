@@ -19,8 +19,7 @@ module.exports = React.createClass({
 
   componentWillReceiveProps: function(nextProps) {
     // If this component gets it's location cleared or sent a fresh location we update
-    if (nextProps.location === '' ||
-        nextProps.location !== '' && this.state.location === '')
+    if (nextProps.clearLocation === true)
       this.setState({ location: nextProps.location });
   },
 

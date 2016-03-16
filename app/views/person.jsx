@@ -266,12 +266,13 @@ module.exports = React.createClass({
                   </p>
                   <div>
                     <LocationAutocomplete
-                      location={this.state.checkingLocation ? '' : this.state.location}
+                      location={this.state.location}
+                      clearLocation={this.state.checkingLocation}
                       handleChange={this.handleLocationAutocompleteChange}
                     />
                     <button
                       className="profile-use-location-button"
-                      onClick={this.updateUserLocation.bind(this)}
+                      onClick={this.updateUserLocation}
                     >
                       Use current location
                     </button>
