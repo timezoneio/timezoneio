@@ -20,9 +20,7 @@ module.exports = function (passport) {
     // Query
     Promise.all([
       UserModel.findOne({ _id: id }),
-      TeamModel.findAllByUserId(id)
-               .limit(10)
-               .select({ name: 1, slug: 1 })
+      TeamModel.findAllForUserMenu(id)
     ]).then(function(values) {
       var user = values[0];
       user.teams = values[1];

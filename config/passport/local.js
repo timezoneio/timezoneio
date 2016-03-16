@@ -23,10 +23,8 @@ module.exports = new LocalStrategy({
       // We query this to get the user's first url they see post-Login
       TeamModel
         .findAllByUserId(user._id)
-        .sort({ createdAt: 1 }) // oldest first
-        .limit(1)
         .then(function(teams) {
-          user.teams = teams;
+          user.teams = teams.sort((a, b) => a.createdAt - b.createdAt );
           done(null, user);
         }, function(err) {
           done(null, user);

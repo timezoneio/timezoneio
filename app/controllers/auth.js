@@ -162,12 +162,13 @@ auth.joinTeam = function(req, res) {
 
       // If the user is logged in, just add them to the team!
       if (req.user) {
-        team.addTeamMember(req.user);
-        return team.save(function(err) {
-          var next = req.flash('next');
-          next = (next && next[0]) || team.url;
-          res.redirect(next);
-        });
+        return team
+          .addTeamMember(req.user)
+          .then(function(user) {
+            var next = req.flash('next');
+            next = (next && next[0]) || team.url;
+            res.redirect(next);
+          });
       }
 
       req.flash('next'); // clear it

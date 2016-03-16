@@ -2,6 +2,7 @@ var moment = require('moment-timezone');
 
 var UserModel = require('../models/user.js');
 var TeamModel = require('../models/team.js');
+var TeamMemberModel = require('../models/teamMember.js');
 var transform = require('../../app/utils/transform.js');
 var strings = require('../../app/utils/strings.js');
 
@@ -15,14 +16,15 @@ team.index = function(req, res, next) {
   var view = VALID_VIEWS.indexOf(req.params.view) > -1 ? req.params.view : DEFAULT_VIEW;
 
   TeamModel
-    .findOne({ slug: slug })
-    .populate('people')
+    .findOneWithTeamMembers({ slug: slug })
     .then(function(team) {
       // Team not found
       if (!team) return next();
 
-      var isAdmin = team.isAdmin(req.user) || team.isAdmin(res.locals.impersonateUser);
-      var isTeamMember = req.user && team.hasTeamMember(req.user);
+      var isAdmin = team.isAdmin(req.user) ||
+                    team.isAdmin(res.locals.impersonateUser);
+      var isTeamMember = req.user &&
+                         !!team.people.filter((u) => u.equals(req.user) ).length;
 
       var toJSONMethod = isAdmin ? 'toAdminJSON' :
                          isTeamMember ? 'toTeamJSON' :
@@ -113,9 +115,16 @@ team.create = function(req, res, next) {
     });
 
     newTeam.addAdmin(req.user);
-    newTeam.addTeamMember(req.user);
 
-    return newTeam.save();
+    return Promise
+      .all([
+        newTeam.save(),
+        newTeam.addTeamMember(req.user)
+      ])
+      .then(function(values) {
+        // We're only interested in the team right for now for createTeamSuccess
+        return values[0];
+      });
   }
 
   function createTeamSuccess(team) {

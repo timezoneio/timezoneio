@@ -77,22 +77,24 @@ api.userCreate = function(req, res, next) {
     var newUser = new UserModel(validData);
 
     // Add user to team
-    req.team.addTeamMember(newUser);
-    req.team.save(function(err) {
-      if (err) return handleError(res, 'Failed to save: ' + err);
-      newUser.save(function(err) {
-        if (err) return handleError(res, 'Failed to save: ' + err);
+    req.team
+      .addTeamMember(newUser)
+      .then(function(user) {
+        newUser.save(function(err) {
+          if (err) return handleError(res, 'Failed to save: ' + err);
 
-        sendEmail('invite', newUser.email, {
-          inviteUrl: req.team.getInviteUrl(newUser),
-          adminName: req.user.name,
-          name: newUser.name || 'there', // Hi <there>!,
-          teamName: req.team.name
+          sendEmail('invite', newUser.email, {
+            inviteUrl: req.team.getInviteUrl(newUser),
+            adminName: req.user.name,
+            name: newUser.name || 'there', // Hi <there>!,
+            teamName: req.team.name
+          });
+
+          res.json(newUser);
         });
-
-        res.json(newUser);
+      }, function(err) {
+        return handleError(res, 'Failed to save: ' + err);
       });
-    });
 
   });
 
@@ -234,16 +236,17 @@ api.teamAddMember = function(req, res, next) {
       if (!user)
         return failedToAdd('Sorry, we couldn\'t find that team member');
 
-      team.addTeamMember(user);
-      team.save(function(err) {
-        if (err)
-          return failedToAdd();
-
-        res.json({
-          user: user.toAdminJSON(),
-          message: 'Team member successfully added!'
+      team
+        .addTeamMember(user)
+        .then(function(teamMember) {
+          res.json({
+            user: user.toAdminJSON(),
+            message: 'Team member successfully added!'
+          });
+        }, function() {
+          failedToAdd();
         });
-      });
+
     }, function(err) {
       failedToAdd();
     });

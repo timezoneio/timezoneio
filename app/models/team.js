@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto');
 var Schema = mongoose.Schema;
+var TeamMember = require('./teamMember');
 const BASE_URL = require('../helpers/baseUrl');
 
 
@@ -12,7 +13,9 @@ var teamSchema = new Schema({
 
   //NOTE - I think this schema works w/ the nested array of objects
   admins: [{ type: Schema.ObjectId, ref: 'User' }],
-  people: [{ type: Schema.ObjectId, ref: 'User' }],
+
+  // DEPRECATED - User TeamMember instead
+  // people: [{ type: Schema.ObjectId, ref: 'User' }],
 
   createdAt: { type : Date, default : Date.now },
   updatedAt: { type : Date, default : Date.now }
@@ -28,7 +31,6 @@ var teamSchema = new Schema({
 
 // Indexes
 teamSchema.index({ slug: 1 });
-teamSchema.index({ people: 1 });
 
 const INVITE_SALT = '***REMOVED***';
 
@@ -52,8 +54,9 @@ var PUBLIC_FIELDS = [
   'name',
   'slug',
   'admins',
+  'url',
+  // We attach user objects as people
   'people',
-  'url'
 ];
 
 teamSchema.set('toJSON', {
@@ -116,24 +119,25 @@ teamSchema.methods = {
     return true;
   },
 
-  hasTeamMember: function(user) {
-    if (this.people[0] && this.people[0]._id)
-      return ~this.people.map(function(u) { return u._id.toString(); })
-                         .indexOf(user._id.toString());
-    return ~this.people.indexOf(user._id.toString());
+  getTeamMembers: function() {
+    return TeamMember
+      .find({ team: this._id })
+      .populate('user')
+      .then(function(teamMembers) {
+        return teamMembers.map( (tm) => tm.user );
+      });
   },
 
   addTeamMember: function(user) {
-    if (!~this.people.indexOf(user._id.toString()))
-      this.people.push(user);
-    return true;
+    return TeamMember
+      .findOrCreate(this._id, user._id)
+      .then(function(teamMember) {
+        return user;
+      });
   },
 
   removeTeamMember: function(user) {
-    var idx = this.people.indexOf(user._id.toString());
-    if (idx > -1)
-      this.people.splice(idx, 1);
-    return true;
+    return TeamMember.remove({ team: this._id, user: user._id }).exec();
   },
 
 };
@@ -153,8 +157,45 @@ teamSchema.statics = {
     return Team.find({ _id: { $in: teamIds } }, 'name slug', done);
   },
 
+  findOneWithTeamMembers: function(query) {
+    return Team
+      .findOne(query)
+      .then(function(team) {
+        if (!team)
+          return null;
+        return team
+          .getTeamMembers()
+          .then(function(users) {
+            team.people = users;
+            return team;
+          });
+      });
+  },
+
+  findAllForUserMenu: function(userId, done) {
+    return TeamMember
+      .findAllByUserId(userId)
+      .limit(10)
+      .populate({
+        path: 'team',
+        select: { name: 1, slug: 1 }
+      })
+      .then(function(teamMembers) {
+        var teams = teamMembers.map(function(tm) { return tm.team; })
+        if (done) done(null, teams);
+        return teams;
+      });
+  },
+
   findAllByUserId: function(userId, done) {
-    return Team.find({ people: userId }, done);
+    return TeamMember
+      .findAllByUserId(userId)
+      .populate('team')
+      .then(function(teamMembers) {
+        var teams = teamMembers.map(function(tm) { return tm.team; })
+        if (done) done(null, teams);
+        return teams;
+      });
   },
 
   findAllByUser: function(user, done) {

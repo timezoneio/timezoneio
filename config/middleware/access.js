@@ -129,7 +129,8 @@ access.requireEditPrivlidges = function(req, res, next) {
   //     message: 'Only this user can edit their own account info'
   //   });
 
-  TeamModel.find({ people: req.activeUser._id })
+  TeamModel
+    .findAllByUserId(req.activeUser._id)
     .then(function(teams) {
 
       var isAdmin = teams.reduce(function(isAdmin, team) {

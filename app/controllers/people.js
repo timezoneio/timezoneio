@@ -1,7 +1,9 @@
 var moment = require('moment-timezone');
+var _ = require('lodash');
 
 var UserModel = require('../models/user.js');
 var Team = require('../models/team.js');
+var TeamMember = require('../models/teamMember.js');
 var transform = require('../../app/utils/transform.js');
 var strings = require('../../app/utils/strings.js');
 var getProfileUrl = require('../../app/helpers/urls').getProfileUrl;
@@ -25,17 +27,33 @@ people.index = function(req, res, next) {
         return res.redirect('/get-started');
       }
 
-      Team
-        .findAllByUser(user)
-        .then(function(teams) {
+      var isTeamMemberQuery = function() {
+        if (isOwner || !req.user)
+          return Promise.resolve(false);
+        return TeamMember
+          .find({ user: { $in: [ req.user._id, user._id ] } })
+          .then(function(teamMembers) {
+            var groups = _.groupBy(teamMembers, (tm) => tm.user);
+            var groupReqUser = groups[req.user._id.toString()].map((tm) => tm.team.toString());
+            var groupProfileUser = groups[user._id.toString()].map((tm) => tm.team.toString());
+            var intersection = _.intersection(groupReqUser, groupProfileUser)
+            return !!intersection.length;
+          });
+      };
 
-          var time = moment();
-          var timeFormat = 12; // hardcode default for now
+      Promise
+        .all([
+          isTeamMemberQuery(),
+          Team.findAllByUser(user)
+        ])
+        .then(function(values) {
+          var isTeamMember = values[0];
+          var teams = values[1];
 
           teams.sort(function(a, b){ return a.createdAt - b.createdAt; });
 
-          var isTeamMember = req.user &&
-                             !!teams.filter(function(t) { return t.hasTeamMember(req.user); }).length;
+          var time = moment();
+          var timeFormat = 12; // hardcode default for now
 
           var toJSONMethod = isOwner ? 'toOwnerJSON' :
                              isTeamMember ? 'toTeamJSON' :
@@ -50,7 +68,11 @@ people.index = function(req, res, next) {
             message: req.flash('message'),
             errors: req.flash('error')
           });
-        } /* TODO - Handle errors? */);
+
+        }, function() {
+          next();
+        });
+
     }, function(err) {
       next();
     });
