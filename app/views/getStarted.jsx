@@ -38,7 +38,7 @@ class GetStarted extends React.Component {
 
           <input type="hidden" name="_csrf" value={this.props.csrf_token} />
 
-          <p>
+          <p className="txt-center">
             First, enter your name
           </p>
 
@@ -51,7 +51,7 @@ class GetStarted extends React.Component {
 
           { this.props.locationField ? (
             <div>
-              <p>
+              <p className="txt-center">
                 Now, type below to search for your location
               </p>
               <LocationAutocomplete location={this.props.user.location}
@@ -61,7 +61,7 @@ class GetStarted extends React.Component {
               </span>
             </div>
           ) : (
-            <div className="form-row">
+            <div className="form-row txt-center">
               <ProfileLocation location={this.props.user.location || 'Looking up your location...'}
                                tz={this.props.user.tz}
                                time={this.props.time}
