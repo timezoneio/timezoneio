@@ -17,6 +17,13 @@ module.exports = React.createClass({
     };
   },
 
+  componentWillReceiveProps: function(nextProps) {
+    // If this component gets it's location cleared or sent a fresh location we update
+    if (nextProps.location === '' ||
+        nextProps.location !== '' && this.state.location === '')
+      this.setState({ location: nextProps.location });
+  },
+
   handleFocus: function() {
     this.setState({ active: true });
   },

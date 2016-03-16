@@ -65,7 +65,9 @@ module.exports = React.createClass({
   handleLocationAutocompleteChange: function(location, tz) {
     this.setState({
       location: location,
-      tz: tz
+      tz: tz,
+      // If a user manually updates their location, let's erase any old coords
+      coords: {}
     });
   },
 
@@ -264,7 +266,7 @@ module.exports = React.createClass({
                   </p>
                   <div>
                     <LocationAutocomplete
-                      location={this.state.location}
+                      location={this.state.checkingLocation ? '' : this.state.location}
                       handleChange={this.handleLocationAutocompleteChange}
                     />
                     <button
@@ -275,7 +277,7 @@ module.exports = React.createClass({
                     </button>
                   </div>
                   <span className="edit-person--timezone-display">
-                    {this.state.tz}
+                    {this.state.checkingLocation ? 'Updating...' : this.state.tz}
                   </span>
                 </div>
                 {/*<input type="hidden" name="location" value={this.state.location} />*/}
