@@ -101,7 +101,6 @@ admin.user = function(req, res) {
 
       TeamModel
         .findAllByUser(user)
-        .limit(50)
         .then(function(teams) {
           res.render('admin', {
             title: 'Admin',

@@ -148,7 +148,7 @@ class Admin extends React.Component {
                     <div className="admin-list--item" key={idx}>
                       <div className="admin-list--name">
                         <a href={team.url}>{team.name || 'No name'}</a>
-                        {' '}has {team.people.length} team members
+                        {' '}has {team.people ? team.people.length : 'n/a'} team members
                       </div>
                       {this.getAdminInfo(team.admins)}
                       <a href={getTeamApiEndpoint(team)}

@@ -180,15 +180,16 @@ api.team = function(req, res) {
 
   // NOTE - no security on this yet
   TeamModel
-    .findOne({ _id: req.params.id })
-    .populate('people')
-    .populate('admins')
+    .findOneWithTeamMembers({ _id: req.params.id })
+    // .populate('admins')
     .then(function(team) {
       if (!team)
         return res.status(400).json({
           message: 'I can\'t find a team with that id (' + req.params.id + ') man...'
         });
-      res.json(team);
+      var json = team.toJSON();
+      json.people = team.people.map((p) => p.toJSON());
+      res.json(json);
     }, function(err) {
       res.status(400).json({ message: err });
     });
