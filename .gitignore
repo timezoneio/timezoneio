@@ -8,6 +8,7 @@ dump.rdb
 
 *.log
 public/stylesheets/*.css
+!public/stylesheets/material-design-icons.css
 public/js/bundles/*
 .awspublish-*
 
