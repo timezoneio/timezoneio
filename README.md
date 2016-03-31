@@ -12,7 +12,7 @@ anyone! The purpose of the Timezone.io project is as follows
 ## Contributing
 Are you a developer, designer, copywriter or product-minded person? We'd
 love your contributions and input! Learn more about in the
-[Contributing document](https://github.com/timezoneio/timezoneio/blob/master/docs/Contributing.md).
+[Contributing document](https://github.com/timezoneio/timezoneio/blob/master/CONTRIBUTING.md).
 You can also learn how to run this project locally in the
 [Setup guide](https://github.com/timezoneio/timezoneio/blob/master/docs/Setup.md).
 
