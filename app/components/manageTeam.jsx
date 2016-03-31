@@ -149,11 +149,15 @@ var ManageTeam = React.createClass({
               edit
             </button>
           }
-          <button className="circle clear material-icons md-18"
-                  name="Remove from Team"
-                  onClick={this.handleClickUserRemove.bind(null, person)}>
-            clear
-          </button>
+          { this.props.user._id.toString() !== person._id.toString() && (
+            <button
+              className="circle clear material-icons md-18"
+              name="Remove from Team"
+              onClick={this.handleClickUserRemove.bind(null, person)}
+            >
+              clear
+            </button>
+          )}
         </div>
 
       </div>
