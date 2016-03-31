@@ -155,7 +155,7 @@ api.userDelete = function(req, res) {
       if (!user)
         return res.status(400).json({ message: 'User not found' });
       if (user.isSuperAdmin())
-        return res.status(403).json({ message: 'FORBIDDEN! Cannot delte that user' });
+        return res.status(403).json({ message: 'FORBIDDEN! Cannot delete that user' });
 
       TeamModel
         .findAllByUser(user)

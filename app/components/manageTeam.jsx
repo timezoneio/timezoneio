@@ -15,7 +15,7 @@ var ManageTeam = React.createClass({
 
   getInitialState: function() {
     return {
-      editingPerson: null, // user obejct that we are editing
+      editingPerson: null, // user object that we are editing
       editingTeamInfo: false,
       filterText: '',
       filter: null,

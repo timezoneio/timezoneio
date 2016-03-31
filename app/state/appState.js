@@ -184,7 +184,7 @@ class AppState {
                                                 Math.max(6, workStartHour - 1),
                                                 Math.min(21, workEndHour + 1));
 
-    // Get the suggested metting time in hours GMT
+    // Get the suggested meeting time in hours GMT
     var gmtAvailableHours = gmtHours.map(function(hour, idx) {
       return availableHoursIndexes[idx] ? hour : null;
     });
@@ -241,7 +241,7 @@ class AppState {
 
 }
 
-// Helper funcitons
+// Helper functions
 
 var createHoursArray = function() {
   var hours = [];

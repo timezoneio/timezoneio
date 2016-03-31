@@ -24,7 +24,7 @@ module.exports = React.createClass({
       }, {});
   },
 
-  getHighestOccuring: function(counts) {
+  getHighestOccurring: function(counts) {
     var keys = Object.keys(counts);
     return keys.reduce(function(prev, curr){
       return counts[curr] > counts[prev] ? curr : prev;
@@ -34,7 +34,7 @@ module.exports = React.createClass({
   getTopTimezone: function() {
 
     var tzCounts = this.getCountsOf(this.props.timezone.people, 'tz');
-    var topTz = this.getHighestOccuring(tzCounts);
+    var topTz = this.getHighestOccurring(tzCounts);
 
     return topTz.replace(/.+\//g, '').replace(/_/g,' ');
   },
@@ -42,7 +42,7 @@ module.exports = React.createClass({
   getTopCity: function() {
 
     var cityCounts = this.getCountsOf(this.props.timezone.people, 'location');
-    var topCity = this.getHighestOccuring(cityCounts);
+    var topCity = this.getHighestOccurring(cityCounts);
 
     return cityCounts[topCity] === 1 && this.props.timezone.people.length > 1 ?
       this.getTopTimezone() :

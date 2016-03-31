@@ -157,7 +157,7 @@ team.create = function(req, res, next) {
         return getNewTeamSlug(req.body.name)
           .then(createTeam.bind(null, req.body.name))
           .then(createTeamSuccess);
-          // NOTE - Do we need another handler here since the last one doens't
+          // NOTE - Do we need another handler here since the last one doesn't
           // return a promise?
       }, handleCreateError);
   }

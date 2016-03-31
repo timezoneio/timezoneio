@@ -272,7 +272,7 @@ auth.passwordResetRequest = function(req, res, next) {
 
 };
 
-// Middlware
+// Middleware
 auth.verifyPasswordResetToken = function(req, res, next) {
 
   if (req.user)

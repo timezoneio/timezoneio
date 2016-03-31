@@ -28,7 +28,7 @@ var EditPerson = React.createClass({
       isExistingUser: !!this.props._id,
       // Are we in invite mode here?
       inviteTeamMember: this.props.inviteTeamMember,
-      // Is the user registerd for their own account?
+      // Is the user registered for their own account?
       isRegistered: this.props.isRegistered,
 
       userId: this.props._id,

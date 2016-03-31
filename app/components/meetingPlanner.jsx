@@ -33,15 +33,15 @@ module.exports = React.createClass({
       <div className="meeting-planner">
 
         { this.props.suggestedTime ?
-            <div className="meeting-planner-sugggested">
+            <div className="meeting-planner-suggested">
               {this.props.suggestedTime}
-              <div className="meeting-planner-sugggested-copy">
+              <div className="meeting-planner-suggested-copy">
                 Local time
               </div>
             </div>
           :
-            <div className="meeting-planner-sugggested">
-              <div className="meeting-planner-sugggested-copy">
+            <div className="meeting-planner-suggested">
+              <div className="meeting-planner-suggested-copy">
                 No good time window
               </div>
             </div>

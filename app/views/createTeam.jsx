@@ -35,7 +35,7 @@ module.exports = React.createClass({
             <div>
               <p>
                 We found {this.props.existingTeams.length} existing teams with the same name,
-                a person on your team may ahve already created your team on Timezone.io.
+                a person on your team may have already created your team on Timezone.io.
                 Check them out below:
               </p>
               <div className="team-card-container">
