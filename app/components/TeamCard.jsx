@@ -18,7 +18,7 @@ class TeamCard extends React.Component {
         <h3 className="team-card-name">
           <a href={team.url}>{team.name}</a>
         </h3>
-        {this.renderAdmin(team.admins[0])}
+        {team.admins.length ? this.renderAdmin(team.admins[0]) : ''}
       </div>
     );
   }
