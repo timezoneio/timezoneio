@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 var userSettings = require('./sub/userSettings');
 var getProfileUrl = require('../helpers/urls').getProfileUrl;
 var isValidEmail = require('../utils/strings').isValidEmail;
+const ENV = require('../../env');
 
 // Inspiration: https://github.com/madhums/node-express-mongoose-demo/blob/master/app/models/user.js
 
@@ -62,9 +63,6 @@ var OWNER_FIELDS = PUBLIC_FIELDS.concat([
 var ADMIN_FIELDS = PUBLIC_FIELDS.concat([
   'email'
 ]);
-
-const EMAIL_HASH_SALT = '***REMOVED***';
-const PASSWORD_RESET_TOKEN_SALT = '***REMOVED***';
 
 var getVisibleFields = function(fieldSet) {
 
@@ -254,7 +252,7 @@ userSchema.methods = {
   // Used for team invite emails and verifying user's identity
   getEmailHash: function() {
     return crypto.createHash('md5')
-                 .update(EMAIL_HASH_SALT + this.email)
+                 .update(ENV.EMAIL_HASH_SALT + this.email)
                  .digest('hex')
                  .substr(0, 16);
   },
@@ -265,7 +263,7 @@ userSchema.methods = {
 
   createPasswordResetToken: function() {
     return crypto.createHash('md5')
-                 .update(PASSWORD_RESET_TOKEN_SALT + this._id.toString() + Date.now())
+                 .update(ENV.PASSWORD_RESET_TOKEN_SALT + this._id.toString() + Date.now())
                  .digest('hex');
   },
 

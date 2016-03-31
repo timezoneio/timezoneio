@@ -3,6 +3,7 @@ var crypto = require('crypto');
 var Schema = mongoose.Schema;
 var TeamMember = require('./teamMember');
 const BASE_URL = require('../helpers/baseUrl');
+const ENV = require('../../env');
 
 
 var teamSchema = new Schema({
@@ -32,13 +33,11 @@ var teamSchema = new Schema({
 // Indexes
 teamSchema.index({ slug: 1 });
 
-const INVITE_SALT = '***REMOVED***';
-
 // Populate the invite hash on first save
 teamSchema.pre('save', function(next) {
   if (!this.inviteHash)
     this.inviteHash = crypto.createHash('md5')
-                           .update(INVITE_SALT + this._id)
+                           .update(ENV.INVITE_SALT + this._id)
                            .digest('hex')
                            .substr(0, 16); // only need 16 characters
   next();

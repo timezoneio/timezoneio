@@ -1,18 +1,7 @@
 {
   "env": {
     "NODE_ENV": "development",
-
-    "AWS_ACCESS_KEY": "***REMOVED***",
-    "AWS_SECRET_KEY": "***REMOVED***",
-    "S3_BUCKET": "timezone-uploads-dev",
-
-    "TWITTER_KEY": "***REMOVED***",
-    "TWITTER_SECRET": "***REMOVED***",
-
-    "SLACK_CLIENT_ID": "***REMOVED***",
-    "SLACK_CLIENT_SECRET" : "***REMOVED***",
-
-    "MANDRILL_KEY": "***REMOVED***"
+    "S3_BUCKET": "timezone-uploads-dev"
   },
   "ignore": ["public/**/*.js"],
   "ext": "js json hjs jsx"
