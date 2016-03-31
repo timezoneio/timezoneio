@@ -14,8 +14,6 @@ var cssmin = require('gulp-cssmin');
 var rev = require('gulp-rev');
 var awspublish = require('gulp-awspublish');
 
-var awsCredentials = require('./aws.json');
-
 
 var entries = glob.sync('./app/apps/*.js').reduce(function(obj, path) {
   var filename = path.match(/.+\/(\w+).js/)[1];
@@ -69,6 +67,10 @@ var webpackConfig = {
   ]
 };
 
+var getAWSConfig = function() {
+  return require('./aws.json');
+};
+
 gulp.task('webpack', function(callback) {
   webpack(webpackConfig, function(err, stats) {
     if(err) throw new gutil.PluginError('webpack', err);
@@ -114,7 +116,7 @@ var s3Headers = {
 };
 
 gulp.task('upload-images', function() {
-  var publisher = awspublish.create(awsCredentials);
+  var publisher = awspublish.create(getAWSConfig());
   return gulp.src(['public/images/**/*'])
     .pipe(rename(function (path) {
       path.dirname = 'images/' + path.dirname;
@@ -125,7 +127,7 @@ gulp.task('upload-images', function() {
 });
 
 gulp.task('upload-css', function() {
-  var publisher = awspublish.create(awsCredentials);
+  var publisher = awspublish.create(getAWSConfig());
   return gulp.src(['assets/stylesheets/index.styl'])
     .pipe(stylus())
     .pipe(autoprefixer({ browsers: ['last 2 versions'] }))
@@ -143,7 +145,7 @@ gulp.task('upload-css', function() {
 });
 
 gulp.task('upload-js', ['webpack'], function() {
-  var publisher = awspublish.create(awsCredentials);
+  var publisher = awspublish.create(getAWSConfig());
   return gulp.src(['public/js/bundles/*.js'])
     .pipe(uglify())
     .pipe(rename(function (path) {
