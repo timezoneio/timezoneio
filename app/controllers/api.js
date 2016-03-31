@@ -22,8 +22,11 @@ var createErrorHandler = function(res) {
 };
 
 var handleError = function(res, statusCode, message) {
-  message = !message && typeof statusCode === 'string' ? message : null;
-  res.status(400).json({
+  if (!message && typeof statusCode === 'string') {
+    message = statusCode;
+    statusCode = 400;
+  }
+  res.status(statusCode).json({
     message: message || 'Something bad happened'
   });
 };
@@ -257,6 +260,9 @@ api.teamRemoveMember = function(req, res, next) {
 
   var team = req.team;
   var userId = req.params.userId;
+
+  if (req.user._id.toString() === userId)
+    return handleError(res, 'You cannot remove yourself from the team');
 
   var failedToRemove = function() {
     res.status(400).json({
