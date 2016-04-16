@@ -1,6 +1,6 @@
 node_modules
 
-people.json
+nodemon.json
 data.js
 notes.md
 aws.json

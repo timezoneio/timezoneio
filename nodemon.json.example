@@ -1,0 +1,18 @@
+{
+  "env": {
+    "NODE_ENV": "development",
+    "S3_BUCKET": "timezone-uploads-dev",
+
+    "EMAIL_HASH_SALT": "ABC",
+    "PASSWORD_RESET_TOKEN_SALT": "DEF",
+    "INVITE_SALT": "GHI",
+
+    "AWS_ACCESS_KEY": "<your key>",
+    "AWS_SECRET_KEY": "<your secret>",
+
+    "TWITTER_KEY": "<your key>",
+    "TWITTER_SECRET": "<your secret>"
+  },
+  "ignore": ["public/**/*.js"],
+  "ext": "js json hjs jsx"
+}
