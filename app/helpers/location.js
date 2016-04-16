@@ -13,7 +13,7 @@ location.getCurrentPosition = function() {
     navigator.geolocation.getCurrentPosition(function(position) {
       resolve(position.coords);
     }, function(err) {
-      reject(err.message);
+      reject(err);
     });
   });
 };

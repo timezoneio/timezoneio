@@ -7,6 +7,7 @@ var LocationAutocomplete = require('../components/locationAutocomplete.jsx');
 var UploadButton = require('../components/UploadButton.jsx');
 var ActionCreators = require('../actions/actionCreators');
 var toolbelt = require('../utils/toolbelt');
+var errorCodes = require('../helpers/errorCodes');
 const DEFAULT_AVATAR = require('../helpers/images').DEFAULT_AVATAR;
 
 const SAVE_BUTTON_STATES = ['Save', 'Saving', 'Saved'];
@@ -55,10 +56,15 @@ module.exports = React.createClass({
         }
       }.bind(this))
       .catch(function(err) {
-        this.setState({
-          checkingLocation: false,
-          useLocationFallback: true
-        });
+        var newState = {
+          checkingLocation: false
+        };
+        if (err.code === errorCodes.CITY_NOT_FOUND) {
+          newState.error = err.message + ', please manually enter your city';
+        } else {
+          newState.useLocationFallback = true;
+        }
+        this.setState(newState);
       }.bind(this));
   },
 

@@ -10,6 +10,7 @@ var LocationModel = require('../models/location');
 var APIClientModel = require('../../app/models/apiClient');
 var APIAuthModel = require('../../app/models/apiAuth');
 var sendEmail = require('../../app/email/send');
+var errorCodes = require('../helpers/errorCodes');
 
 var api = module.exports = {};
 
@@ -21,14 +22,27 @@ var createErrorHandler = function(res) {
   };
 };
 
-var handleError = function(res, statusCode, message) {
+// statusCode is optional, defaulted to 400
+var handleError = function(res, statusCode, message, errorCode) {
+  if (!errorCode && typeof message === 'number') {
+    errorCode = message;
+    message = null;
+  }
   if (!message && typeof statusCode === 'string') {
     message = statusCode;
     statusCode = 400;
   }
-  res.status(statusCode).json({
+
+  var errorResponse = {
     message: message || 'Something bad happened'
-  });
+  };
+
+  if (errorCode)
+    errorResponse.code = errorCode;
+
+  res
+    .status(statusCode)
+    .json(errorResponse);
 };
 
 api.getUserByEmail = function(req, res, next) {
@@ -313,11 +327,12 @@ api.locationGetCity = function(req, res, next) {
 
   if (!req.query.lat || !req.query.long)
     return res.status(400).json({
+      // code: errorCodes.PARAM_MISSING,
       message: 'lat and long params required'
     });
 
   getCityFromCoords(req.query.lat, req.query.long, function(err, city) {
-    if (err) return handleError(res, 'Error finding your city');
+    if (err) return handleError(res, 'Error finding your city', errorCodes.CITY_NOT_FOUND);
 
     res.json({ city: city });
   });
