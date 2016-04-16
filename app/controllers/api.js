@@ -138,8 +138,6 @@ api.userUpdate = function(req, res, next) {
     }
   }
 
-  user.setUserSetting('timeFormat', 24);
-
   user.save(function(err) {
     if (err) return handleError(res, 'Failed to save');
     res.json(isOwner ? user.toOwnerJSON() : user);
