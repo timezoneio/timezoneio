@@ -15,19 +15,17 @@ This project requires you have a few things installed and running:
 - [Gulp](https://www.npmjs.com/package/gulp) 3.9 - our build system
 - [Nodemon](https://www.npmjs.com/package/nodemon) 1.x - for running node in development
 
-You'll also need some of your own keys for various services we use:
-
-> TODO - Try to remove these deps if we can for development!
-
-- AWS
-- Twitter
-- Mandrill
-
 ## Steps
 
 This could definitely be scripted up a bit better, but for now. This works ;)
 
-First we ensure Mongo and Redis are running w/ default settings.
+First, copy the [`nodemon.json.example`](https://github.com/timezoneio/timezoneio/blob/master/nodemon.json.example)
+file into your own `nodemon.json` file and add your own keys for AWS and Twitter.
+> TODO - Add more guidance on how to get your own keys or remove the need for
+these at all
+
+
+Before running the app we ensure Mongo and Redis are running w/ default settings.
 
 ```shell
 $ mongod
