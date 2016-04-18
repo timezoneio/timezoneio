@@ -203,6 +203,14 @@ teamSchema.statics = {
 
   findAllByUser: function(user, done) {
     return this.findAllByUserId(user._id, done);
+  },
+
+  removeById: function(id) {
+    return Promise
+      .all([
+        TeamMember.remove({ team: id }),
+        this.remove({ _id: id })
+      ]);
   }
 
 };

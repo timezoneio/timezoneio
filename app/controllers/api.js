@@ -227,8 +227,9 @@ api.teamUpdate = function(req, res, next) {
 };
 
 api.teamDelete = function(req, res) {
+
   TeamModel
-    .remove({ _id: req.params.id })
+    .removeById(req.params.id)
     .then(function() {
       res.json({ message: 'Team was successfully deleted' });
     }, createErrorHandler());
