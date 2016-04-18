@@ -2,7 +2,7 @@
 
 var React    = require('react');
 var classNames = require('classnames');
-var Timezone = require('./timezone.jsx');
+var Timezone = require('./timezone');
 
 const PEOPLE_PER_COL = 8;
 
@@ -55,11 +55,15 @@ class TimezoneList extends React.Component {
       <div className={containerClasses}>
         <div className="timezone-wrapper">
           {this.props.timezones.map(function(timezone) {
-            return <Timezone key={timezone.tz}
-                             timezone={timezone}
-                             time={this.props.time}
-                             timeFormat={timeFormat}
-                             activeFilter={this.props.activeFilter} />
+            return (
+              <Timezone
+                key={timezone.tz}
+                timezone={timezone}
+                time={this.props.time}
+                timeFormat={timeFormat}
+                activeFilter={this.props.activeFilter}
+              />
+            );
           }.bind(this))}
         </div>
         { this.props.showStats &&
