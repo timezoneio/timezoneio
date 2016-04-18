@@ -78,6 +78,6 @@ class Signup extends React.Component {
       </div>
     );
   }
-};
+}
 
 module.exports = Signup;
