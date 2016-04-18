@@ -53,13 +53,15 @@ class TimezoneList extends React.Component {
 
     return (
       <div className={containerClasses}>
-        {this.props.timezones.map(function(timezone) {
-          return <Timezone key={timezone.tz}
-                           timezone={timezone}
-                           time={this.props.time}
-                           timeFormat={timeFormat}
-                           activeFilter={this.props.activeFilter} />
-        }.bind(this))}
+        <div className="timezone-wrapper">
+          {this.props.timezones.map(function(timezone) {
+            return <Timezone key={timezone.tz}
+                             timezone={timezone}
+                             time={this.props.time}
+                             timeFormat={timeFormat}
+                             activeFilter={this.props.activeFilter} />
+          }.bind(this))}
+        </div>
         { this.props.showStats &&
           <div className="team-stats"><em>{stats}</em></div>
         }
