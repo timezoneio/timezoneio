@@ -1,3 +1,5 @@
+'use strict';
+
 var React    = require('react');
 var classNames = require('classnames');
 var Timezone = require('./timezone.jsx');
@@ -15,11 +17,9 @@ var count = function(metric, people) {
   return items.length;
 };
 
-module.exports = React.createClass({
+class TimezoneList extends React.Component {
 
-  displayName: 'TimezoneList',
-
-  getStats: function(people) {
+  getStats(people) {
 
     // Note the homepage doesn't provide people, only timezones
     if (!people || !Array.isArray(people)) return;
@@ -29,15 +29,15 @@ module.exports = React.createClass({
     var numTimezones = this.props.timezones.length;
 
     return `${numPeople} people in ${numCities} cities across ${numTimezones} timezones`;
-  },
+  }
 
-  getColumnNumber: function(timezones) {
+  getColumnNumber(timezones) {
     return timezones.reduce(function(cols, timezone) {
       return cols + Math.ceil(timezone.people.length / PEOPLE_PER_COL);
     }, 0);
-  },
+  }
 
-  render: function() {
+  render() {
 
     var timeFormat = this.props.timeFormat || 12;
 
@@ -67,4 +67,6 @@ module.exports = React.createClass({
     );
   }
 
-});
+}
+
+module.exports = TimezoneList;
