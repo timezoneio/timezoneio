@@ -36,7 +36,7 @@ people.index = function(req, res, next) {
             var groups = _.groupBy(teamMembers, (tm) => tm.user);
             var groupReqUser = groups[req.user._id.toString()].map((tm) => tm.team.toString());
             var groupProfileUser = groups[user._id.toString()].map((tm) => tm.team.toString());
-            var intersection = _.intersection(groupReqUser, groupProfileUser)
+            var intersection = _.intersection(groupReqUser, groupProfileUser);
             return !!intersection.length;
           });
       };
