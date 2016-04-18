@@ -180,7 +180,9 @@ teamSchema.statics = {
         select: { name: 1, slug: 1 }
       })
       .then(function(teamMembers) {
-        var teams = teamMembers.map(function(tm) { return tm.team; })
+        var teams = teamMembers
+                      .map(function(tm) { return tm.team; })
+                      .filter(function(team) { return !!team; });
         if (done) done(null, teams);
         return teams;
       });
@@ -191,7 +193,9 @@ teamSchema.statics = {
       .findAllByUserId(userId)
       .populate('team')
       .then(function(teamMembers) {
-        var teams = teamMembers.map(function(tm) { return tm.team; })
+        var teams = teamMembers
+                      .map(function(tm) { return tm.team; })
+                      .filter(function(team) { return !!team; });
         if (done) done(null, teams);
         return teams;
       });
