@@ -14,7 +14,7 @@ module.exports = React.createClass({
       buttons.push(
         <a key="demo"
            href="/team/buffer"
-           className="button cta">
+           className="button clear">
           Live demo
         </a>
       );
@@ -25,11 +25,17 @@ module.exports = React.createClass({
                   {...this.props.user} />
       );
     } else {
-      buttons.push(
+      buttons = buttons.concat(
         <a key="login"
            href="/login"
            className="button hollow">
           Login
+        </a>
+        ,
+        <a key="signup"
+           href="/signup"
+           className="button hollow cta">
+          Sign up
         </a>
       );
     }

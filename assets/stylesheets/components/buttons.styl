@@ -10,7 +10,7 @@ button
 
   background-color: lighten($buttonColor, 10%)
   border-radius: $buttonRadius
-  border: 0
+  border: 1px solid transparent
 
   font-size: 15px
   line-height: 1.4em
@@ -53,6 +53,9 @@ button
   &.cta
     background-color: lighten($brandColor, 10%)
     color: #fff
+
+    &.hollow
+      border-color: transparent
 
     &:hover
       background-color: $brandColor
