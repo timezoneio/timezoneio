@@ -59,7 +59,7 @@ class Signup extends React.Component {
           </div>
 
           <p className="muted form-copy">
-            Passwords should be at least 8 characters and contain a number
+            Passwords should be at least 8 characters
           </p>
 
           <div>
