@@ -43,8 +43,8 @@ class AppToolbar extends React.Component {
           {
             this.props.user ?
             <UserMenu {...this.props.user} /> :
-            <a href="/login" className="button hollow">
-              Login
+            <a href="/signup" className="button cta">
+              Sign up
             </a>
           }
 
