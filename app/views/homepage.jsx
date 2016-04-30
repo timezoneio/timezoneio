@@ -143,13 +143,17 @@ module.exports = React.createClass({
 
         <div className="hp-section alt">
 
-          <div className="hp-content-container">
+          <div className="hp-content-container hp-pitch-container">
 
             <h3 className="hp-pitch">
               Easily plan meetings + calls with your remote, nomadic team without having to Google <br/>
               <span className="hp-pitch-search">time in {this.state.searchCity}</span><br/>
               <em>...ever again.</em>
             </h3>
+
+            <a href="/signup" className="button cta large">
+              Sign up and create your team today!
+            </a>
 
           </div>
 
@@ -163,65 +167,18 @@ module.exports = React.createClass({
               Modern global teams have awesome people spread across multiple timezones.
               Lots of teams have <em>digital nomads</em> changing locations faster than
               we can keep up with. Often it gets tricky to remember what time it is
-              where your teammates are. That's why we built <strong>Timezone.io</strong>.
-            </p>
-
-            <h3 className="hp-description">
-              So, what's next?
-            </h3>
-
-            <p className="hp-description">
-              We're starting off with a simple, clear way to display where your team is by timezone.
-              Next we'll add some ways to automatically update people's locations.
-              We have a few ideas we're been thinking about, but we'd love to hear
-              what you would work best for you: Update your location using the
-              location of your last Tweet? Want to use Slackbot or Hubot?
-              What about a command line utility? We can't wait to hear your ideas!
+              where your teammates are. Enter <strong>Timezone.io</strong>.
             </p>
 
             <h4 className="hp-description">
               Send your wants, needs and encouragement over to <a href="https://twitter.com/timezoneio">
-              <strong>@timezone.io</strong> on Twitter</a> and if you would like to
-              be notified when you can sign up, add your email address below:
+              <strong>@timezoneio</strong> on Twitter</a>
             </h4>
 
-            <div className="hp-description">
-
-              <div id="mc_embed_signup">
-              <form action="//timezone.us10.list-manage.com/subscribe/post?u=34f393bbea3791dbad5109a7b&amp;id=cb191e06bc"
-                    method="post"
-                    id="mc-embedded-subscribe-form"
-                    name="mc-embedded-subscribe-form"
-                    className="validate"
-                    target="_blank"
-                    noValidate>
-                <div id="mc_embed_signup_scroll">
-
-                  <div className="mc-field-group">
-                    <input type="email"
-                           defaultValue=""
-                           name="EMAIL"
-                           placeholder="email address"
-                           className="required email"
-                           id="mce-EMAIL"/>
-                  </div>
-                  <div id="mce-responses" className="clear">
-                    <div className="response" id="mce-error-response" style={{display: "none"}}></div>
-                    <div className="response" id="mce-success-response" style={{display: "none"}}></div>
-                  </div>
-                  <div style={honeyPotStyle}>
-                    <input type="text" name="b_34f393bbea3791dbad5109a7b_cb191e06bc" tabIndex="-1" defaultValue="" />
-                  </div>
-                  <div className="clear">
-                    <input type="submit"
-                          value="Sign up for Early Access"
-                          name="subscribe"
-                          id="mc-embedded-subscribe"
-                          className="button cta"/>
-                  </div>
-                </div>
-              </form>
-              </div>
+            <div style={{ textAlign: 'center' }}>
+              <a href="/signup" className="button cta">
+                Sign up now!
+              </a>
             </div>
 
           </div>
