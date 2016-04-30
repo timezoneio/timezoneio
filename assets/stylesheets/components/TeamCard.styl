@@ -1,16 +1,18 @@
 
 .team-card-container
   display: flex
+  flex-wrap: wrap
 
 .team-card
   padding: 1em
-  margin-right: 2em
-  min-width: 12em
+  margin: 0 1em 1em 0
+  width: calc(50% - 1em)
   border: 1px solid $lightBorderColor
   border-radius: $borderRadius
 
 .team-card-name
   margin: 0
+  word-wrap: break-word
 
 .team-card-info
   margin: 0.5em 0
