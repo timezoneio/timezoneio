@@ -18,7 +18,7 @@ var links = [
     text: 'Login'
   },
   {
-    url: 'https://trello.com/b/ugfyF3BE/timezone-io',
+    url: 'https://github.com/timezoneio/timezoneio/issues',
     text: 'Roadmap',
     target: '_blank'
   },
