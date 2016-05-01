@@ -1,38 +1,29 @@
 var fs = require('fs');
 var path = require('path');
 var Mustache = require('mustache');
-var mandrill = require('mandrill-api/mandrill');
 const ENV = require('../../env.js');
+var sendgrid  = require('sendgrid')(ENV.SENDGRID_KEY);
 
-const FROM_EMAIL = 'hi@timezone.io';
+const FROM_EMAIL = 'hi@mail.timezone.io';
 const FROM_NAME = 'Dan from Timezone.io';
+const REPLY_EMAIL = 'hi@timezone.io';
 
 /*
   createMessage('Welcome to Timezone.io!', '<p>My message</p>', 'test@yo.com', {
-    tags: ['signup'],
-    campaign: 'sometracking',
-    metadata: {
-      userId: someUser._id.toString()
-    }
+    category: 'signup'
   });
 */
 var createMessage = function(subject, html, to, options) {
   return {
-    html: html,
+    to: to,
+    from: FROM_EMAIL,
+    fromname: FROM_NAME,
     subject: subject,
-    from_email: FROM_EMAIL,
-    from_name: FROM_NAME,
-    to: [{
-      email: to
-      // name: "Recipient Name"
-    }],
-    headers: {
-      'Reply-To': FROM_EMAIL
-    },
-    // google_analytics_domains: ['timezone.io'],
-    // google_analytics_campaign: options.campaign || 'timezone',
-    // metadata: options.metadata,
-    // tags: options.tags
+    html: html,
+    replyto: REPLY_EMAIL,
+    smtpapi: new sendgrid.smtpapi({
+      category: options.category
+    })
   };
 };
 
@@ -40,38 +31,31 @@ var createMessage = function(subject, html, to, options) {
 var EMAIL_TYPES = {
   'welcome': {
     subject: 'Welcome to Timezone.io!',
-    tags: ['signup']
+    category: 'signup'
   },
   'invite': {
     // params: inviteUrl, adminName, teamName
     subject: function(p) {
       return `${p.adminName} wants you to join the ${p.teamName} team on Timezone.io!`;
     },
-    tags: ['invite']
+    category: 'invite'
   },
   'passwordReset': {
     subject: 'Reset your Timezone.io password',
+    category: 'passwordReset'
   }
 };
 
 var transport = {};
 
-// We use Mandrill for production then nodemailer during dev
+// We use Sendgrid for production then nodemailer during dev
 if (process.env.NODE_ENV === 'production') {
-
-  var mandrillClient = new mandrill.Mandrill(ENV.MANDRILL_KEY);
 
   transport.send = function(message) {
     return new Promise(function(resolve, reject) {
-      mandrillClient.messages.send({ message: message }, function(result) {
-        // NOTE - May want to reject on mail bouncing
-        resolve(result);
-      }, function(e) {
-        console.info(e);
-        // Mandrill returns the error as an object with name and message keys
-        console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
-        // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
-        reject(e.message);
+      sendgrid.send(message, function(err, json) {
+        if (err) return reject(err.message);
+        resolve(json);
       });
     });
   };
@@ -89,13 +73,13 @@ if (process.env.NODE_ENV === 'production') {
     return new Promise(function(resolve, reject) {
       transporter.sendMail({
           from: {
-            name: message.from_name,
-            address: message.from_email
+            name: message.fromname,
+            address: message.from
           },
-          to: message.to[0].email,
+          to: message.to,
           subject: message.subject,
           html: message.html,
-          replyTo: message.headers['Reply-To']
+          replyTo: message.replyto
       }, function(err, info) {
         if (err) {
           console.log(err);
@@ -137,22 +121,11 @@ module.exports = function sendEmail(type, to, params) {
               subject(params) :
               subject;
     var message = createMessage(subject, html, to, {
-      tags: EMAIL_TYPES[type].tags
+      category: EMAIL_TYPES[type].category
     });
 
     transport
       .send(message)
       .then(resolve, reject);
-
-    // mandrillClient.messages.send({ message: message }, function(result) {
-    //   // NOTE - May want to reject on mail bouncing
-    //   resolve(result);
-    // }, function(e) {
-    //   console.info(e);
-    //   // Mandrill returns the error as an object with name and message keys
-    //   console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
-    //   // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
-    //   reject(e.message);
-    // });
   });
 };
