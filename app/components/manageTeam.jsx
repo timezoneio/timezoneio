@@ -199,10 +199,6 @@ var ManageTeam = React.createClass({
     var people = this.props.people;
     var visiblePeople = this.state.filter ? people.filter(this.peopleFilter) : people;
 
-    // DEBUG for #19
-    console.log(this.props.people.length);
-    console.log(JSON.stringify(this.state, null));
-
     var sortedPeople = visiblePeople.sort(userSort);
     var filterValueLink = {
       value: this.state.filterText,
