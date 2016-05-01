@@ -65,7 +65,7 @@ module.exports = function render(pathName, locals, cb) {
 
   params.title = data.title ? 'Timezone.io - ' + data.title : 'Timezone.io';
   params.description = data.description || defaultDescription;
-  params.url = 'http://timezone.io'; // + req.url;
+  params.url = 'https://timezone.io'; // + req.url;
   params.body = params.body || '404 :(';
 
   var html = Mustache.render(template, params);

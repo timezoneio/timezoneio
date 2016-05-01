@@ -43,7 +43,7 @@ var demoTimezones = [
         name: 'Carolyn',
         tz: 'Europe/Rome',
         location: 'Venice',
-        avatar: 'http://www.gravatar.com/avatar/17d551ff33a7b03d93bbd1f8fa18d4f5?s=200'
+        avatar: '//www.gravatar.com/avatar/17d551ff33a7b03d93bbd1f8fa18d4f5?s=200'
       }
     ]
   }

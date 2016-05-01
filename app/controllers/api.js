@@ -363,7 +363,7 @@ api.getGravatar = function(req, res, next) {
   var emailHash = crypto.createHash('md5').update(email).digest('hex');
 
   res.json({
-    avatar: 'http://www.gravatar.com/avatar/' + emailHash + '?s=200'
+    avatar: 'https://www.gravatar.com/avatar/' + emailHash + '?s=200'
   });
 
 };
