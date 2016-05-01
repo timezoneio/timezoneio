@@ -18,7 +18,7 @@ class Avatar extends React.Component {
     if (this.props.size) classes += ' ' + this.props.size;
 
     return (
-      <img src={this.props.avatar}
+      <img src={this.props.avatar.replace(/http:\/\//, 'https://')}
            className={classes}
            onError={this.handleLoadError.bind(this)} />
      );
