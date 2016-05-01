@@ -41,6 +41,7 @@ $toolbarItemHeight = 32px;
 .app-toolbar
   display: flex
   align-items: center
+  justify-content: space-between
   padding: 0.5em 1em
   border-bottom: 1px solid $lightBorderColor
 
@@ -50,6 +51,31 @@ $toolbarItemHeight = 32px;
   button.material-icons
     height: $toolbarItemHeight
     width: $toolbarItemHeight
+
+
+.app-toolbar-section
+  display: flex
+  align-items: center
+  width: 40%
+
+.app-toolbar-center
+  width: 20%
+
+@media screen and (max-width: 880px)
+  .app-toolbar-section
+    width: auto
+
+@media screen and (max-width: 500px)
+  .app-toolbar-center
+    display: none
+
+.app-toolbar-name
+  margin: 0
+  width: 100%
+  font-size: 1.1em
+  font-weight: normal
+  text-align: center
+
 
 .team-search
 
@@ -64,10 +90,9 @@ $toolbarItemHeight = 32px;
     border: 1px solid $lightBorderColor
     border-radius: 100px
 
-// .app-toolbar-main
-
 .app-toolbar-actions
   display: flex
+  width: 40%
   flex-grow 2
   justify-content: flex-end
   min-width: 300px; // to max sure we don't flex smaller
