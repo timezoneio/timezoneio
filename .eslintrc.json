@@ -1,0 +1,14 @@
+{
+  "extends": "airbnb",
+  "plugins": [
+    "react"
+  ],
+  "env": {
+    "commonjs": true,
+    "shared-node-browser": true
+  },
+  "rules": {
+    "comma-dangle": 0,
+    "no-var": 0
+  }
+}
