@@ -3,9 +3,21 @@ var TeamModel = require('../models/team');
 var sendEmail = require('../email/send');
 var redis = require('redis');
 var redisClient = require('../helpers/redis');
-var sendEmail = require('../email/send');
 var isValidEmail = require('../utils/strings').isValidEmail;
 var getProfileUrl = require('../helpers/urls').getProfileUrl;
+
+const getPasswordValidationError = function(p1, p2) {
+  if (!p1 || !p2)
+    return 'Sorry, passwords cannot be blank';
+
+  if (p1 !== p2)
+    return 'Sorry, the two passwords did not match';
+
+  if (p1.length < 8)
+    return 'Passwords must be at least 8 characters';
+
+  return null;
+};
 
 var auth = module.exports = {};
 
@@ -30,24 +42,6 @@ auth.signup = function(req, res) {
     welcomeBack: req.query.welcome == 'back',
     noScript: true
   });
-};
-
-
-var getPasswordValidationError = function(p1, p2) {
-  if (!p1 || !p2)
-    return 'Sorry, passwords cannot be blank';
-
-  if (p1 !== p2)
-    return 'Sorry, the two passwords did not match';
-
-  if (p1.length < 8)
-    return 'Passwords must be at least 8 characters';
-
-  // Let's loosen up for now!
-  // if (!/\d/.test(p1))
-  //   return 'Passwords must contain a number';
-
-  return null;
 };
 
 auth.create = function(req, res) {
@@ -214,6 +208,61 @@ auth.logout = function(req, res) {
 
 auth.connectTwitter = function(req, res) {
   res.redirect(getProfileUrl(req.user));
+};
+
+auth.passwordChangeForm = function(req, res) {
+  res.render('PasswordChange', {
+    title: 'Change your password',
+    noScript: true
+  });
+};
+
+auth.passwordChange = function(req, res) {
+  var user = req.user;
+
+  if (!user.authenticate(req.body.currentPassword)) {
+    return res.render('PasswordChange', {
+      title: 'Change your password',
+      errors: 'Hmm, it doesn\'t look like that current password matches our records',
+      noScript: true
+    });
+  }
+
+  const pwError = getPasswordValidationError(req.body.password, req.body.password2);
+  if (pwError) {
+    return res.render('PasswordChange', {
+      title: 'Change your password',
+      errors: pwError,
+      noScript: true
+    });
+  }
+
+  user.password = req.body.password;
+
+  user.save((err) => {
+    if (err)
+      return res.render('PasswordChange', {
+        title: 'Change your password',
+        errors: 'Sorry, We weren\'t able to change your password at this time, please try again',
+        noScript: true
+      });
+
+
+    req.logIn(req.user, (err) => {
+      if (err)
+        return res.render('PasswordReset', {
+          title: 'Reset your password',
+          errors: [ 'Sorry, We weren\'t able to log you in!', err.message],
+          noScript: true
+        });
+
+      req.flash('message', 'Awesome, your new password is set and you\'re ready to go!');
+
+      res.redirect('/account');
+    });
+  });
+
+
 };
 
 auth.passwordResetRequestForm = function(req, res) {

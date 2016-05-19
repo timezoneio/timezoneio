@@ -85,6 +85,10 @@ class Account extends React.Component {
               <input type="email" name="email" defaultValue={this.props.user.email} />
             </div>
 
+            <a href="/account/password" className="button">
+              Change password
+            </a>
+
             <h3>Time format</h3>
 
             {this.renderTimeFormat()}
