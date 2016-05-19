@@ -7,6 +7,7 @@
     "start": "node ./index.js",
     "build": "gulp webpack",
     "watch": "nodemon & gulp webpack-dev-server",
+    "lint": "./node_modules/eslint/bin/eslint.js --ignore-pattern 'public/js' .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Dan Farrelly (http://danfarrelly.nyc/)",

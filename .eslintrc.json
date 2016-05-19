@@ -3,9 +3,9 @@
   "plugins": [
     "react"
   ],
-  "env": {
-    "commonjs": true,
-    "shared-node-browser": true
+  "globals": {
+    "require": true,
+    "module": true
   },
   "rules": {
     "comma-dangle": 0,
