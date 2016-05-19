@@ -1,13 +1,12 @@
 var apiRouter = require('./routers/api');
 var access = require('./middleware/access');
-var base = require('../app/controllers/base');
+var main = require('../app/controllers/main');
 var auth = require('../app/controllers/auth');
 var account = require('../app/controllers/account');
 var team = require('../app/controllers/team');
 var people = require('../app/controllers/people');
 var services = require('../app/controllers/services');
 var admin = require('../app/controllers/admin');
-var getProfileUrl = require('../app/helpers/urls').getProfileUrl;
 
 var oauthConnectFlast = function(req, res, next) {
   if (req.query.use_avatar)
@@ -20,10 +19,10 @@ module.exports = function(app, passport) {
 
   app.use('*', access.allowImpersonate);
 
-  app.get('/', base.index);
-  app.get('/about', base.about);
-  app.get('/roadmap', base.roadmap);
-  app.get('/contact', base.contact);
+  app.get('/', main.index);
+  app.get('/about', main.about);
+  app.get('/roadmap', main.roadmap);
+  app.get('/contact', main.contact);
 
   app.get('/login', auth.login);
   app.post('/login', passport.authenticate('local', {
