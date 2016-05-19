@@ -6,16 +6,18 @@ var CSRFToken = require('../components/CSRFToken');
 
 class Account extends React.Component {
 
-  renderOption(name, option, idx) {
+  renderOption(name, option) {
     var id = `${name}-${option.value}`;
     return (
       <div className="form-row" key={id}>
         <label htmlFor={id} className="label-radio">
-          <input type="radio"
-                 name={`settings[${name}]`}
-                 value={option.value}
-                 defaultChecked={this.props.userSettings[name] === option.value}
-                 id={id} />
+          <input
+            type="radio"
+            name={`settings[${name}]`}
+            value={option.value}
+            defaultChecked={this.props.userSettings[name] === option.value}
+            id={id}
+          />
           {option.label}
         </label>
       </div>
