@@ -68,6 +68,8 @@ module.exports = function(app, passport) {
   app.post('/people/:usernameOrId', people.save);
   app.get('/my-profile', people.myProfile);
 
+  app.get('/home', access.requireLoggedIn, main.home);
+
   app.get('/team', team.createForm);
   app.post('/team', team.create);
   app.get('/team/:name', team.index);

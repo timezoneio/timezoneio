@@ -9,3 +9,5 @@ strings.isValidEmail = function(email) {
   var re = /.+@.+\..+/i;
   return re.test(email);
 };
+
+strings.pluralize = (items) => (items.length === 1 ? '' : 's');

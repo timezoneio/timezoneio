@@ -2,6 +2,7 @@ var AppDispatcher = require('../dispatchers/appDispatcher');
 var ActionTypes = require('../actions/actionTypes');
 var location = require('../helpers/location');
 var api = require('../helpers/api');
+const getUserHomepage = require('../helpers/urls').getUserHomepage;
 var toolbelt = require('../utils/toolbelt');
 
 var ActionCreators = module.exports = {
@@ -25,7 +26,7 @@ var ActionCreators = module.exports = {
       .delete('/team/' + teamId)
       .then(function(res) {
         // Redirect to user profile
-        window.location = '/my-profile';
+        window.location = getUserHomepage();
       });
   },
 

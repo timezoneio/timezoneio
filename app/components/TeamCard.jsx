@@ -13,12 +13,13 @@ class TeamCard extends React.Component {
 
   render() {
     var team = this.props.team;
+    var admin = this.admins && this.admins.length && this.admins[0];
     return (
       <div className="team-card">
         <h3 className="team-card-name">
           <a href={team.url}>{team.name}</a>
         </h3>
-        {team.admins.length ? this.renderAdmin(team.admins[0]) : ''}
+        {admin && this.renderAdmin(admin)}
       </div>
     );
   }
