@@ -8,7 +8,11 @@
     "module": true
   },
   "rules": {
+    "curly": 0,
     "comma-dangle": 0,
+    "consistent-return": 0,
+    "func-names": 0,
+    "space-before-function-paren": 0,
     "no-var": 0
   }
 }
