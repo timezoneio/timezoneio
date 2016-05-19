@@ -3,10 +3,6 @@
   "plugins": [
     "react"
   ],
-  "globals": {
-    "require": true,
-    "module": true
-  },
   "rules": {
     "curly": 0,
     "comma-dangle": 0,
@@ -15,6 +11,7 @@
     "no-param-reassign": 0,
     "no-underscore-dangle": 0,
     "no-var": 0,
+    "react/prop-types": 0,
     "space-before-function-paren": 0,
     "vars-on-top": 0
   }
