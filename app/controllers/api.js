@@ -50,12 +50,14 @@ api.getUserByEmail = function(req, res, next) {
   if (!req.query.email)
     return res.status(400).json({ message: 'Please provide email parameter' });
 
-  UserModel.findOne({ email: req.query.email })
+  const email = req.query.email.toLowerCase();
+
+  UserModel.findOneByEmail(email)
     .then(function(user) {
       if (user)
         return res.json(user);
 
-      var emailHash = crypto.createHash('md5').update(req.query.email).digest('hex');
+      var emailHash = crypto.createHash('md5').update(email).digest('hex');
       res.json({
         hash: emailHash,
         message: 'No user with that email!'
@@ -79,10 +81,12 @@ api.userCreate = function(req, res, next) {
   if (!userData.tz)
     return handleError(res, 'An timezone is required');
 
-  UserModel.findOne({ email: userData.email }, function(err, user) {
+  UserModel.findOneByEmail(userData.email, function(err, user) {
 
     // NOTE - in the future we should do a search before creating user
     if (user) return handleError(res, 'That user already exists!');
+
+    userData.email = userData.email.toLowerCase();
 
     var validData = {};
     for (var key in userData) {
