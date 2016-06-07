@@ -9,8 +9,8 @@ var React = require('react');
 
 const STATIC_VERSIONS = require('../../rev-manifest.json');
 const STATIC_DOMAIN = '//s3.amazonaws.com/timezoneio/';
-const STATIC_URL = IS_PRODUCTION ? STATIC_DOMAIN : '/';
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+const STATIC_URL = IS_PRODUCTION ? STATIC_DOMAIN : '/';
 const ICON_STYLESHEET = IS_PRODUCTION ?
                         'https://fonts.googleapis.com/icon?family=Material+Icons' :
                         '/stylesheets/material-design-icons.css';
