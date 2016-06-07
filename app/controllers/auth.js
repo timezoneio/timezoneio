@@ -56,6 +56,8 @@ auth.create = function(req, res) {
   if (!isValidEmail(req.body.email))
     return renderError('Please provide a valid email address');
 
+  const email = req.body.email.toLowerCase();
+
   // The invite hash may be in post body or the session
   var inviteCode = req.body.inviteCode || function() {
     var code = req.flash('inviteCode');
@@ -68,7 +70,7 @@ auth.create = function(req, res) {
     return renderError(pwError);
   }
 
-  UserModel.findOneByEmail(req.body.email)
+  UserModel.findOneByEmail(email)
     .then(function(user) {
       if (user && user.isRegistered)
         return Promise.reject('A user with that email already exists, please login instead');
@@ -96,11 +98,11 @@ auth.create = function(req, res) {
       // Update the existing unregistered user or create a new one
       if (user) {
         newUser = user;
-        newUser.email = req.body.email;
+        newUser.email = email;
         newUser.password = req.body.password;
       } else {
         newUser = new UserModel({
-          email: req.body.email,
+          email: email,
           password: req.body.password
         });
       }

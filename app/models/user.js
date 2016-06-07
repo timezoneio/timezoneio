@@ -393,7 +393,8 @@ userSchema.statics = {
   },
 
   findOneByEmail: function(email, done) {
-    return User.findOne({ email: email }, done);
+    const reg = new RegExp('^' + email + '$', 'i');
+    return User.findOne({ email: reg }, done);
   },
 
   findAllRegistered: function(done) {

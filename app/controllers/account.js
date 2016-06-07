@@ -18,7 +18,7 @@ account.saveAccountInfo = function(req, res) {
 
   for (var key in req.body) {
     if (UserModel.ADMIN_WRITABLE_FIELDS.indexOf(key) > -1) {
-      req.user[key] = req.body[key];
+      req.user[key] = key === 'email' ? req.body[key].toLowerCase() : req.body[key];
     }
   }
 
@@ -44,8 +44,5 @@ account.saveAccountInfo = function(req, res) {
 
     res.redirect('/account');
   });
-
-
-
 
 };
