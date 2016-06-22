@@ -13,7 +13,7 @@ class Team extends React.Component {
 
   handleClickMask(e) {
     AppDispatcher.dispatchViewAction({
-      actionType: ActionTypes.CLOSE_MODAL
+      actionType: ActionTypes.CLOSE_VIEW
     });
   }
 

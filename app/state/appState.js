@@ -16,7 +16,7 @@ class AppState {
       people: []
     };
 
-    this.updateTimezones();
+    this.updateGrouping();
   }
 
   getState() {
@@ -39,8 +39,17 @@ class AppState {
     return this._state.people.filter(function(p) { return p._id === id; })[0];
   }
 
-  updateTimezones() {
-    this._state.timezones = transform(this._state.time, this._state.people);
+  getGrouping() {
+    return this._state.grouping;
+  }
+
+  setGrouping(grouping) {
+    this._state.grouping = grouping;
+    this.updateGrouping();
+  }
+
+  updateGrouping() {
+    this._state.timezones = transform(this._state.time, this._state.people, this.getGrouping());
   }
 
 
@@ -111,7 +120,7 @@ class AppState {
     }
 
     // Update the timezone data:
-    this.updateTimezones();
+    this.updateGrouping();
   }
 
   removeTeamMember(data) {
@@ -119,7 +128,7 @@ class AppState {
                                 .indexOf(data.usedId);
     if (idx > -1) {
       this._state.people.splice(idx, 1);
-      this.updateTimezones();
+      this.updateGrouping();
     }
   }
 

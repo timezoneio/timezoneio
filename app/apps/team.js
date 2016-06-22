@@ -1,11 +1,9 @@
 require('../helpers/fetchPolyfill');
-var React  = require('react');
+var React = require('react');
 var moment = require('moment-timezone');
 var throttle = require('lodash/function/throttle');
 
-var transform = require('../utils/transform.js');
 var timeUtils = require('../utils/time.js');
-var clone = require('../utils/toolbelt.js').clone;
 var KEY = require('../helpers/keyConstants');
 
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
@@ -18,6 +16,15 @@ var Team = React.createFactory(require('../views/team.jsx'));
 
 // Application state:
 var appState = new AppState(window.appData);
+
+const BETA_TEAMS = [
+  '5513953c6d1aacc66f7e7efe', // Local dev team
+  '5673125b842964a40b80cfe3', // Slack-CE
+];
+
+if (BETA_TEAMS.indexOf(appState.getTeam()._id) > -1) {
+  appState._state.isBeta = true;
+}
 
 // Get non-user settings:
 if (!appState.getUser()) {
@@ -197,7 +204,12 @@ var handleViewAction = function(action) {
       updateTimeAsPercentThrottled(value);
       break;
 
-    case ActionTypes.CLOSE_MODAL:
+    case ActionTypes.CHANGE_GROUP_BY:
+      appState.setGrouping(value);
+      shouldRender = true;
+      break;
+
+    case ActionTypes.CLOSE_VIEW:
       updateCurrentView('app', true);
       break;
     case ActionTypes.SHOW_VIEW:

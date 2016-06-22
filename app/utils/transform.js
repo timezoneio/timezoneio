@@ -22,28 +22,34 @@ function sortByNameAndId(a, b) {
          -1;
 }
 
-
- var transform = function(time, people) {
-
-  // Append a moment date to each person
-  people.forEach(appendTime.bind(null, time));
-  people.sort(sortByTimezone);
-
-  var timezones = people.reduce(function(zones, person){
+function groupPeopleBy(people, field) {
+  return people.reduce(function(zones, person) {
     var last = zones[ zones.length - 1 ];
-    var utcOffset = last && last.people[0].utcOffset;
+    var value = last && last.people[0][field];
 
-    if (last && utcOffset === person.utcOffset) {
+    if (last && value === person[field]) {
       last.people.push(person);
     } else {
       zones.push({
         tz: person.tz,
-        people: [ person ]
+        people: [person]
       });
     }
 
     return zones;
   }, []);
+}
+
+
+ var transform = function(time, people, grouping) {
+
+  // Append a moment date to each person
+  people.forEach(appendTime.bind(null, time));
+  people.sort(sortByTimezone);
+
+  // location or offset is default
+  var field = grouping || 'utcOffset';
+  var timezones = groupPeopleBy(people, field);
 
   timezones.forEach(function(timezone){
     timezone.people.sort(sortByNameAndId);

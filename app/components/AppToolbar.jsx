@@ -16,6 +16,13 @@ class AppToolbar extends React.Component {
     });
   }
 
+  handleChangeGrouping(e) {
+    AppDispatcher.dispatchViewAction({
+      actionType: ActionTypes.CHANGE_GROUP_BY,
+      value: e.target.value
+    });
+  }
+
   render() {
     return (
       <div className="app-toolbar">
@@ -43,6 +50,18 @@ class AppToolbar extends React.Component {
 
         <div className="app-toolbar-section app-toolbar-right">
           <div className="app-toolbar-actions">
+
+            {this.props.isBeta && (
+              <select
+                defaultValue="placeholder"
+                onChange={this.handleChangeGrouping}
+              >
+                <option value="placeholder" disabled="disabled">Group by</option>
+                <option value="utcOffset">Timezone</option>
+                <option value="location">City</option>
+              </select>
+            )}
+
             <TeamSearch people={this.props.people} />
             { this.props.isAdmin && (
               <button className="manage-team-button material-icons md-18 clear"

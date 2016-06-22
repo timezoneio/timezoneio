@@ -9,9 +9,10 @@ module.exports = keyMirror({
   TOGGLE_SELECT_PERSON: 0,
   CLEAR_MEETING_GROUPS: 0,
   SEARCH_TEAM: 0,
+  CHANGE_GROUP_BY: 0,
 
-  SHOW_MODAL: 0,
-  CLOSE_MODAL: 0,
+  SHOW_VIEW: 0,
+  CLOSE_VIEW: 0,
 
   // State actions
   UPDATE_TEAM_URL: 0,
