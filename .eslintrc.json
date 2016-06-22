@@ -13,6 +13,7 @@
     "consistent-return": 0,
     "func-names": 0,
     "space-before-function-paren": 0,
+    "no-underscore-dangle": 0,
     "no-var": 0
   }
 }
