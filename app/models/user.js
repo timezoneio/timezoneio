@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto');
+var escapeStringRegexp = require('escape-string-regexp');
 var Schema = mongoose.Schema;
 var userSettings = require('./sub/userSettings');
 var getProfileUrl = require('../helpers/urls').getProfileUrl;
@@ -393,7 +394,7 @@ userSchema.statics = {
   },
 
   findOneByEmail: function(email, done) {
-    const reg = new RegExp('^' + email + '$', 'i');
+    const reg = new RegExp('^' + escapeStringRegexp(email) + '$', 'i');
     return User.findOne({ email: reg }, done);
   },
 

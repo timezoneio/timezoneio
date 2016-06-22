@@ -29,6 +29,7 @@
     "cookie-session": "^1.2.0",
     "csurf": "^1.8.0",
     "es6-promise": "^3.0.2",
+    "escape-string-regexp": "1.0.5",
     "express": "^4.10.7",
     "express-session": "^1.10.4",
     "flux": "^2.0.1",
