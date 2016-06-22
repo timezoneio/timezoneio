@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./index.js",
     "build": "gulp webpack",
-    "watch": "./node_modules/nodemon/bin/nodemon.js index.js & ./node_modules/gulp/bin/gulp.js webpack-dev-server",
+    "watch": "nodemon index.js & ./node_modules/gulp/bin/gulp.js webpack-dev-server",
     "lint": "./node_modules/eslint/bin/eslint.js --ignore-pattern 'public/js' .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
