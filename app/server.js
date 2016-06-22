@@ -17,6 +17,7 @@ require('node-jsx').install({extension: '.jsx'});
 var stylusMiddleware = require('../config/middleware/stylus.js');
 var render = require('./helpers/render.js');
 
+const isProduction = process.env.NODE_ENV === 'production';
 
 module.exports = function(mongooseConnection, redisClient) {
 
@@ -27,7 +28,7 @@ module.exports = function(mongooseConnection, redisClient) {
   // Middleware
 
   // In production we use a CDN
-  if (process.env.NODE_ENV !== 'production') {
+  if (!isProduction) {
     app.use(stylusMiddleware());
   }
 
@@ -50,8 +51,7 @@ module.exports = function(mongooseConnection, redisClient) {
     secret: 'bodhi',
     store: new RedisStore({
       client: redisClient,
-      // host: '127.0.0.1',
-      // port: 6379,
+      host: isProduction ? '127.0.0.1' : 'redis',
       ttl: 14 * 86400 // 14 days expiration
     })
   }));

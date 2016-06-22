@@ -93,14 +93,9 @@ gulp.task('webpack-dev-server', function(callback) {
     proxy: {
       '*': 'http://localhost:8080'
     }
-  }).listen(8888, 'localhost', function(err) {
+  }).listen(8888, function(err) {
     if(err) throw new gutil.PluginError('webpack-dev-server error', err);
-    // Server listening
-    gutil.log('[webpack-dev-server]',
-      'http://localhost:8080/webpack-dev-server/index.html');
-
-    // Comment out to keep the server running
-    // callback();
+    gutil.log('[webpack-dev-server]', 'http://localhost:8888');
   });
 });
 

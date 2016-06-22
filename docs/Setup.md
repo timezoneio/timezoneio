@@ -6,14 +6,11 @@ This is a guide on how to get Timezone.io up and running for development.
 
 This project requires you have a few things installed and running:
 
-- [Node.js](https://nodejs.org/en/) 4.x-5.x - our runtime (I'd recommend using
+- [Node.js](https://nodejs.org/en/) 4.x or 6.x - our runtime (I'd recommend using
 [nvm](https://github.com/creationix/nvm)), 4.2.1 currently in production)
 - [npm](https://www.npmjs.com/package/npm) - our most favorite package manager
 (comes w/ Node)
-- [MongoDB](https://www.mongodb.org/) 2.6, 3.2+ - our database
-- [Redis](http://redis.io/) 3.x - our in memory db
-- [Gulp](https://www.npmjs.com/package/gulp) 3.9 - our build system
-- [Nodemon](https://www.npmjs.com/package/nodemon) 1.x - for running node in development
+- [Docker](https://www.docker.com/products/docker) - How we'll run everything during development
 
 ## Steps
 
@@ -24,25 +21,15 @@ file into your own `nodemon.json` file and add your own keys for AWS and Twitter
 > TODO - Add more guidance on how to get your own keys or remove the need for
 these at all
 
-
-Before running the app we ensure Mongo and Redis are running w/ default settings.
-
-```shell
-$ mongod
-# in another terminal window
-$ redis-server
-```
-
-Next we run the main app in watch mode. This one command runs `nodemon` and
-[`webpack-dev-server`](https://webpack.github.io/docs/webpack-dev-server.html).
-Nodemon will automatically restart our server on file changes and webpack-dev-server
-will automatically compile our bundled assets for the browser on file change.
+Kick everything off using Docker Compose:
 
 ```shell
-$ npm run watch
+$ docker-compose up -d
 ```
 
-**BOOM!** Now go head over to http://localhost:8888 and you should see the homepage
+It will take a little bit to download the node, mongo, and redis images, but when it's complete,
+the app should be available at http://localhost:80. Note - it takes a little bit for the server
+to start up initially.
 
 ## Initial data
 

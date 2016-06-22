@@ -1,0 +1,22 @@
+version: "2"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.development
+    volumes:
+     - .:/app
+    ports:
+     - "80:8888"
+    expose:
+     - "8080"
+     - "8888"
+    links:
+     - db
+     - redis
+  db:
+    image: mongo:3.0
+    ports:
+      - "27017:27017"
+  redis:
+    image: redis:3.0

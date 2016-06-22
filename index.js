@@ -9,7 +9,7 @@ var retries = -1;
 var env = process.env.NODE_ENV;
 var isProduction = env === 'production';
 
-var MONGO_URL = ENV.MONGO_URL || 'mongodb://localhost/timezone';
+var MONGO_URL = ENV.MONGO_URL || 'mongodb://db/timezone';
 
 var connect = function () {
   if (retries >= MAX_RETRIES)
