@@ -1,11 +1,9 @@
 require('../helpers/fetchPolyfill');
-var React  = require('react');
+var React = require('react');
 var moment = require('moment-timezone');
 var throttle = require('lodash/function/throttle');
 
-var transform = require('../utils/transform.js');
 var timeUtils = require('../utils/time.js');
-var clone = require('../utils/toolbelt.js').clone;
 var KEY = require('../helpers/keyConstants');
 
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
@@ -21,28 +19,51 @@ var appState = new AppState(window.appData);
 
 // Get non-user settings:
 if (!appState.getUser()) {
-  var fmt = window.localStorage.getItem('tz:timeFormat');
+  const fmt = window.localStorage.getItem('tz:timeFormat');
   if (fmt) appState.setTimeFormat(parseInt(fmt, 10));
 }
 
 // Add the component to the DOM
-var targetNode = document.querySelector('#page');
+const targetNode = document.querySelector('#page');
 
 function renderApp() {
-  React.render( Team( appState.getState() ), targetNode );
+  React.render(Team(appState.getState()), targetNode);
 }
 
 renderApp();
 
+function updateToCurrentTime() {
+  appState.updateToCurrentTime();
+  renderApp();
+}
+
+// Auto updating the time
+var autoUpdateIntervalId = null;
+function enableAutoUpdate() {
+  // Check every 20 seconds for an updated time
+  autoUpdateIntervalId = setInterval(updateToCurrentTime, 1000 * 20);
+
+  // Check on window focus
+  window.onfocus = updateToCurrentTime;
+}
+
+function disableAutoUpdate() {
+  clearInterval(autoUpdateIntervalId);
+  window.onfocus = null;
+}
+
+enableAutoUpdate();
+
+
 // Allow arrow keys to change time by selecting time range input
 // Allow / key to select search
 // NOTE - not caching variables b/c of manage view removes items from DOM
-var handleKeyDown = function(e) {
+const handleKeyDown = function(e) {
   if (e.target.nodeName === 'INPUT' || e.target.nodeName === 'TEXTAREA')
     return;
 
-  var keyCode = e.keyCode;
-  var key = e.key || '';
+  const keyCode = e.keyCode;
+  const key = e.key || '';
 
   if (key === '/' || keyCode === KEY.SLASH) {
     e.preventDefault();
@@ -60,10 +81,10 @@ var handleKeyDown = function(e) {
   }
 };
 
-var enableKeyboardShortcuts = function() {
+const enableKeyboardShortcuts = function() {
   window.addEventListener('keydown', handleKeyDown);
 };
-var disableKeyboardShortcuts = function() {
+const disableKeyboardShortcuts = function() {
   window.removeEventListener('keydown', handleKeyDown);
 };
 
@@ -72,27 +93,21 @@ if (appState.getCurrentView() === 'app') {
 }
 
 
-function updateToCurrentTime() {
-  appState.updateToCurrentTime();
-  renderApp();
-}
-
 // 0 is now, 1.0 is in 12 hours, -1.0 is 12 hours ago
 function updateTimeAsPercent(percentDelta) {
-
   if (percentDelta === 0) {
     enableAutoUpdate();
     return updateToCurrentTime();
   }
 
-  var MIN_IN_12_HOURS = 720;
-  var deltaMinutes = MIN_IN_12_HOURS * percentDelta;
+  const MIN_IN_12_HOURS = 720;
+  const deltaMinutes = MIN_IN_12_HOURS * percentDelta;
 
   var now = moment();
   now.add(deltaMinutes, 'm');
 
   // Round to quarter hour
-  var minutes = now.minutes();
+  const minutes = now.minutes();
   now.add(timeUtils.roundToQuarterHour(minutes) - minutes, 'm');
 
   appState.setTime(now);
@@ -107,24 +122,20 @@ function json(res) {
   return res.json();
 }
 function saveTeamInfo(info) {
-
   info._csrf = appState.getCSRF();
 
   var options = {
     method: 'PUT',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json'
     },
     credentials: 'include',
     body: JSON.stringify(info)
   };
 
-  return fetch('/api/team/' + appState.getTeam()._id, options)
-    .then(json)
-    .then(function(res){
-      return res;
-    });
+  return fetch(`/api/team/${appState.getTeam()._id}`, options)
+    .then(json);
 }
 
 function saveUserTimeFormat(format) {
@@ -136,14 +147,13 @@ function saveUserTimeFormat(format) {
 }
 
 function updateCurrentView(view, shouldUpdateUrl) {
-
   appState.setCurrentView(view);
 
   if (shouldUpdateUrl) {
     var path = appState.getTeam().url;
 
     if (view !== 'app') {
-      path += '/' + view;
+      path += `/${view}`;
       disableKeyboardShortcuts();
     } else {
       enableKeyboardShortcuts();
@@ -155,7 +165,7 @@ function updateCurrentView(view, shouldUpdateUrl) {
   renderApp();
 }
 
-function handlePopState(e) {
+function handlePopState() {
   var path = window.location.pathname;
   var segment = path.replace(appState.getTeam().url, '');
   var view = segment.length ? segment.substr(1) : 'app';
@@ -222,6 +232,8 @@ var handleViewAction = function(action) {
       updateTeamUrl(value);
       break;
 
+    default:
+      break;
   }
 
   if (shouldRender) renderApp();
@@ -248,35 +260,15 @@ var handleAPIAction = function(action) {
       renderApp();
       break;
 
+    default:
+      break;
+
   }
 };
 
-AppDispatcher.register(function(payload) {
-
+AppDispatcher.register((payload) => {
   if (payload.source === 'API_ACTION')
     handleAPIAction(payload.action);
   else if (payload.source === 'VIEW_ACTION')
     handleViewAction(payload.action);
-
 });
-
-
-
-// Auto updating the time
-
-var autoUpdateIntervalId = null;
-function enableAutoUpdate() {
-
-  // Check every 20 seconds for an updated time
-  autoUpdateIntervalId = setInterval(updateToCurrentTime, 1000 * 20);
-
-  // Check on window focus
-  window.onfocus = updateToCurrentTime;
-}
-
-function disableAutoUpdate() {
-  clearInterval(autoUpdateIntervalId);
-  window.onfocus = null;
-}
-
-enableAutoUpdate();

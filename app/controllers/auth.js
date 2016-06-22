@@ -5,6 +5,8 @@ var redis = require('redis');
 var redisClient = require('../helpers/redis');
 var isValidEmail = require('../utils/strings').isValidEmail;
 var getProfileUrl = require('../helpers/urls').getProfileUrl;
+var getUserHomepage = require('../helpers/urls').getUserHomepage;
+const BASE_URL = require('../helpers/baseUrl');
 
 const getPasswordValidationError = function(p1, p2) {
   if (!p1 || !p2)
@@ -24,7 +26,7 @@ var auth = module.exports = {};
 auth.login = function(req, res) {
 
   if (req.user)
-    return res.redirect( getProfileUrl(req.user) );
+    return res.redirect(getUserHomepage());
 
   res.render('login', {
     errors: req.flash('error'),
@@ -35,7 +37,7 @@ auth.login = function(req, res) {
 auth.signup = function(req, res) {
 
   if (req.user)
-    return res.redirect( getProfileUrl(req.user) );
+    return res.redirect(getUserHomepage());
 
   res.render('signup', {
     errors: req.flash('error'),
@@ -301,7 +303,6 @@ auth.passwordResetRequest = function(req, res, next) {
       redisClient.set(key, token, redis.print);
       redisClient.expire(key, 60 * 60); // expire in 1 hour
 
-      const BASE_URL = require('../helpers/baseUrl');
       var url = `${BASE_URL}/account/password-reset?userId=${user._id}&resetToken=${token}`;
 
       // Send the user their reset email
