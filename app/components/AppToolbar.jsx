@@ -58,7 +58,7 @@ class AppToolbar extends React.Component {
               >
                 <option value="placeholder" disabled="disabled">Group by</option>
                 <option value="utcOffset">Timezone</option>
-                <option value="location">City</option>
+                <option value="location">Location</option>
               </select>
             )}
 
