@@ -123,7 +123,7 @@ teamSchema.methods = {
       .find({ team: this._id })
       .populate('user')
       .then(function(teamMembers) {
-        return teamMembers.map( (tm) => tm.user );
+        return teamMembers.map((tm) => tm.user).filter((user) => !!user);
       });
   },
 

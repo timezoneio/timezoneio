@@ -44,7 +44,7 @@ var EditPerson = React.createClass({
   },
 
   getFileName: function() {
-    return this.state.userId || this.state.emailHash;
+    return this.state.userId || this.state.emailHash || `${this.props.teamId}_${Date.now()}`;
   },
 
   handleChange: function(name, value) {
@@ -77,6 +77,10 @@ var EditPerson = React.createClass({
     var data = extend(this.state, { teamId: this.props.teamId });
     delete data.error;
     delete data.saveButtonText;
+
+    if (!data.email) {
+      data.stub = true;
+    }
 
     var createOrUpdateUser = this.state.isNewUser ?
                               ActionCreators.addNewTeamMember(data) :
@@ -147,6 +151,14 @@ var EditPerson = React.createClass({
   },
 
   handleCheckUserEmail: function() {
+
+    // Allow empty email
+    if (!this.state.email || !this.state.email.length) {
+      return this.setState({
+        isNewUser: true,
+        isExistingUser: false
+      });
+    }
 
     if (!isValidEmail(this.state.email))
       return this.setState({ error: 'Please enter a valid email ;)' });
