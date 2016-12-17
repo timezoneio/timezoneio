@@ -311,6 +311,10 @@ userSchema.methods = {
     return true;
   },
 
+  isUsingTwitterAvatar: function() {
+    return !!this.avatar.match(/twimg\.com/i);
+  },
+
   getUserLocation: function(isOwner, isTeamMember) {
     if (isOwner)
       return this.location;

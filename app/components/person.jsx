@@ -15,6 +15,10 @@ class Person extends React.Component {
     return name.replace(/[^A-Z]/g, '') || (name[0] && name[0].toUpperCase());
   }
 
+  handleAvatarLoadError() {
+    ActionCreators.fixBrokenAvatar(this.props.person._id);
+  }
+
   render() {
     var person = this.props.person;
 
@@ -35,7 +39,10 @@ class Person extends React.Component {
            onClick={this.handleToggleSelected.bind(this)}>
         {
           person.avatar ?
-            <Avatar avatar={person.avatar || DEFAULT_AVATAR} />
+            <Avatar
+              avatar={person.avatar || DEFAULT_AVATAR}
+              onImageLoadError={this.handleAvatarLoadError.bind(this)}
+            />
           :
             <div className="avatar-placeholder">
               {this.getInitials(person.name)}

@@ -28,6 +28,9 @@ module.exports = new TwitterStrategy({
       return data;
     }, {});
 
+    twitterProfileData.token = token;
+    twitterProfileData.tokenSecret = tokenSecret;
+
     UserModel.findOne({ 'twitter.id': twitterProfileData.id })
       .then(function(user) {
 

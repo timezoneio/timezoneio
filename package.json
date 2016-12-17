@@ -53,6 +53,7 @@
     "request": "^2.60.0",
     "sendgrid": "^2.0.0",
     "stylus": "0.54.5",
+    "twitter": "1.7.0",
     "underscore": "^1.8.3",
     "webpack": "^1.12.6",
     "whatwg-fetch": "^0.10.0"

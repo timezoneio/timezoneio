@@ -1,8 +1,8 @@
 var crypto = require('crypto');
-var moment = require('moment-timezone');
 var async = require('async');
 var getTimezoneFromLocation = require('../helpers/getTimezoneFromLocation');
 var getCityFromCoords = require('../helpers/getCityFromCoords');
+var twitterHelper = require('../helpers/twitter');
 
 var UserModel = require('../models/user');
 var TeamModel = require('../models/team');
@@ -188,11 +188,31 @@ api.userDelete = function(req, res) {
               .remove({ _id: user._id })
               .then(function() {
                 res.json({ message: 'User was deleted', results: results });
-              }, createErrorHandler());
+              }, createErrorHandler(res));
           });
-        }, createErrorHandler());
-    }, createErrorHandler());
+        }, createErrorHandler(res));
+    }, createErrorHandler(res));
+};
 
+api.userFixBrokenImage = function(req, res) {
+  UserModel
+    .findOneById(req.params.id)
+    .then(function(user) {
+      if (!user.twitter || !user.isUsingTwitterAvatar()) {
+        return res.status(400).json({ message: 'User does not use their twitter avatar' });
+      }
+
+      return twitterHelper.getTwitterAvatar(user.twitter)
+        .then(function(avatar) {
+          user.twitter.profile_image_url_https = avatar;
+          user.useAvatar('twitter');
+          return user.save()
+            .then(function() {
+              res.json(user);
+            });
+        });
+    })
+    .catch(createErrorHandler(res));
 };
 
 api.team = function(req, res) {

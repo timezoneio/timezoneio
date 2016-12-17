@@ -55,6 +55,15 @@ var ActionCreators = module.exports = {
       });
   },
 
+  fixBrokenAvatar: function(userId) {
+    return api.post('/user/' + userId + '/fix-broken-image').then(function(data) {
+      AppDispatcher.dispatchApiAction({
+        actionType: ActionTypes.UPDATED_USER_DATA,
+        value: data
+      });
+    });
+  },
+
   getUserByEmail: function(email, teamId) {
     return api.get('/user',{ email: email, teamId: teamId });
   },
