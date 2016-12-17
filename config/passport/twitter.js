@@ -4,7 +4,7 @@ const ENV = require('../../env.js');
 
 const CALLBACK_URL = process.env.NODE_ENV === 'production' ?
                      'https://timezone.io/connect/twitter/callback' :
-                     'http://localhost:8080/connect/twitter/callback';
+                     'http://timezone.dev/connect/twitter/callback';
 
 module.exports = new TwitterStrategy({
     consumerKey: ENV.TWITTER_KEY,
