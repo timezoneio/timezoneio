@@ -1,12 +1,21 @@
-var mongoose = require('mongoose');
-var crypto = require('crypto');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const crypto = require('crypto');
+const Schema = mongoose.Schema;
 
 
-var apiClientSchema = new Schema({
-  name: { type: String, default: '' },
-  user: { type: Schema.ObjectId, ref: 'User' },
-  createdAt: { type : Date, default : Date.now }
+const apiClientSchema = new Schema({
+  name: { type: String, default: '', unique: true, required: true },
+  secret: { type: String, required: true },
+  user: { type: Schema.ObjectId, ref: 'User', required: true },
+  createdAt: { type: Date, default: Date.now }
 });
 
-var APIClient = module.exports = mongoose.model('APIClient', apiClientSchema);
+apiClientSchema.methods = {
+
+  generateSecret: function() {
+    this.secret = crypto.randomBytes(20).toString('hex');
+  }
+
+};
+
+const Client = module.exports = mongoose.model('Client', apiClientSchema);

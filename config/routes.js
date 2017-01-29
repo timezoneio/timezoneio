@@ -84,6 +84,9 @@ module.exports = function(app, passport) {
   app.get('/admin/user/:userId', admin.user);
   app.post('/admin/user/:userId', admin.userUpdate);
   app.get('/admin/teams', admin.teams);
+  app.get('/admin/clients', admin.clients);
+  app.post('/admin/clients', admin.clientCreate);
+  app.get('/admin/client/:clientId', admin.client);
 
   var emojiStringToArray = function (str) {
     var split = str.split(/([\uD800-\uDBFF][\uDC00-\uDFFF])/);

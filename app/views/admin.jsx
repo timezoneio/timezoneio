@@ -20,6 +20,10 @@ var getTeamApiEndpoint = function(team) {
   return `/api/team/${team._id}`;
 };
 
+var getClientAdminUrl = function(client) {
+  return `/admin/client/${client._id}`;
+};
+
 
 class Admin extends React.Component {
 
@@ -84,7 +88,13 @@ class Admin extends React.Component {
 
         <h1 className="page-headline">Admin</h1>
         <p className="txt-center">
-          <a href="/admin">Home</a> - <a href="/admin/teams">Teams</a> - <a href="/admin/users">Users</a>
+          <a href="/admin">Home</a>
+          {" - "}
+          <a href="/admin/teams">Teams</a>
+          {" - "}
+          <a href="/admin/users">Users</a>
+          {" - "}
+          <a href="/admin/clients">API Clients</a>
         </p>
 
         <Notification text={this.state.message}
@@ -186,16 +196,59 @@ class Admin extends React.Component {
             </div>
           ) }
 
-            <p>
-              { this.props.prevPage && (
-                <a href={this.props.baseUrl + '?p=' + this.props.prevPage}>Prev page</a>
-              ) }
-              { this.props.prevPage && this.props.nextPage && ' - ' }
-              { this.props.nextPage && (
-                <a href={this.props.baseUrl + '?p=' + this.props.nextPage}>Next page</a>
-              ) }
-            </p>
+          { this.props.clients && (
+            <div>
+              <div className="admin-list">
+                {this.props.clients.map(function(client, idx) {
+                  return (
+                    <div className="admin-list--item" key={idx}>
+                      <div className="admin-list--name">
+                        <a href={getClientAdminUrl(cleint)}>{client.name}</a>
+                      </div>
+                    </div>
+                  );
+                }.bind(this))}
+              </div>
+              <form action="/admin/clients" method="post">
+                <CSRFToken {...this.props} />
+                <input type="text" name="name" placeholder="name" />
+                <button type="submit">
+                  Create new client
+                </button>
+              </form>
+            </div>
+          ) }
 
+          { this.props.client && (
+            <div className="admin-section">
+              <form action={`/admin/client/${this.props.client._id}`}
+                    method="post">
+                <CSRFToken {...this.props} />
+                <p>
+                  Name:{" "}
+                  <input type="text" name="name" placeholder="name" value={this.props.client.name} />
+                </p>
+                <p>
+                  Secret: {this.props.client.secret}
+                </p>
+                <p>
+                  User: <a href={getUserAdminUrl(this.props.client.user)}>
+                    {this.props.client.user.name}
+                  </a>
+                </p>
+              </form>
+            </div>
+          )}
+
+          <p>
+            { this.props.prevPage && (
+              <a href={this.props.baseUrl + '?p=' + this.props.prevPage}>Prev page</a>
+            ) }
+            { this.props.prevPage && this.props.nextPage && ' - ' }
+            { this.props.nextPage && (
+              <a href={this.props.baseUrl + '?p=' + this.props.nextPage}>Next page</a>
+            ) }
+          </p>
 
         </div>
 

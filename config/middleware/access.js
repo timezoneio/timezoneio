@@ -1,7 +1,6 @@
 var UserModel = require('../../app/models/user');
 var TeamModel = require('../../app/models/team');
-var APIClientModel = require('../../app/models/apiClient');
-var APIAuthModel = require('../../app/models/apiAuth');
+var Token = require('../../app/models/apiToken');
 
 var access = module.exports = {};
 
@@ -47,10 +46,10 @@ access.requireSuperUser = function(req, res, next) {
 access.requireAuthentication = function(req, res, next) {
   if (req.user) return next();
 
-  var accessToken = req.query.access_token || req.body.access_token || null;
+  const accessToken = req.query.access_token || req.body.access_token || null;
 
   if (accessToken) {
-    APIAuthModel.findOne({ token: accessToken }, function(err, auth) {
+    Token.findOne({ token: accessToken }, function(err, auth) {
       if (err || !auth)
         return res.status(403).json({
           message: 'Invalid token :('
@@ -72,7 +71,7 @@ access.requireAuthentication = function(req, res, next) {
 
   res.status(403).json({
     message: 'Ah ah ah, you didn\'t say the magic word',
-    url:req.baseUrl
+    url: req.baseUrl
   });
 };
 

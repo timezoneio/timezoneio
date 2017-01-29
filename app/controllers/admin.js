@@ -1,5 +1,6 @@
 var TeamModel = require('../models/team.js');
 var UserModel = require('../models/user.js');
+var Client = require('../models/apiClient.js');
 var isValidEmail = require('../utils/strings').isValidEmail;
 
 var admin = module.exports = {};
@@ -166,4 +167,47 @@ admin.teams = function(req, res) {
         nextPage: teams && teams.length === COUNT ? (page + 1) : null
       });
     }, handleError(res));
+};
+
+admin.clients = function(req, res) {
+  Client
+    .find()
+    .limit(50)
+    .then(function(clients) {
+      res.render('admin', {
+        title: 'Admin - Clients',
+        clients: clients,
+        baseUrl: '/admin/clients',
+      });
+    })
+    .catch(handleError(res));
+};
+
+admin.clientCreate = function(req, res) {
+  if (!req.body.name) {
+    return handleError(res)('Must provide name');
+  }
+
+  const client = new Client({
+    name: req.body.name,
+    user: req.user,
+  });
+  client.generateSecret();
+  client.save(function(err) {
+    if (err) return handleError(res)('Failed to save');
+    res.redirect(`/admin/client/${client._id}`);
+  });
+};
+
+admin.client = function(req, res) {
+  Client
+    .findOne({ _id: req.params.clientId })
+    .populate('user')
+    .then(function(client) {
+      res.render('admin', {
+        title: 'Admin - Client',
+        client: client,
+      });
+    })
+    .catch(handleError(res));
 };

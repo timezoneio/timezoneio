@@ -7,8 +7,8 @@ var twitterHelper = require('../helpers/twitter');
 var UserModel = require('../models/user');
 var TeamModel = require('../models/team');
 var LocationModel = require('../models/location');
-var APIClientModel = require('../../app/models/apiClient');
-var APIAuthModel = require('../../app/models/apiAuth');
+var Client = require('../../app/models/apiClient');
+var Token = require('../../app/models/apiToken');
 var sendEmail = require('../../app/email/send');
 var errorCodes = require('../helpers/errorCodes');
 
@@ -395,12 +395,12 @@ api.getGravatar = function(req, res, next) {
 // TEMP API AUTH methods
 api.getOrCreateAPIClient = function(req, res, next) {
 
-  APIClientModel.findOne({ user: req.user.id }, function(err, client) {
+  Client.findOne({ user: req.user.id }, function(err, client) {
     if (err) return handleError(res, 'Error finding client');
 
     if (client) return res.json(client);
 
-    var userClient = new APIClientModel({
+    var userClient = new Client({
       user: req.user
     });
 
@@ -416,10 +416,10 @@ api.getOrCreateAPIClient = function(req, res, next) {
 
 api.getOrCreateAPIClientToken = function(req, res, next) {
 
-  APIClientModel.findOne({ _id: req.params.id }, function(err, client) {
+  Client.findOne({ _id: req.params.id }, function(err, client) {
     if (err) return handleError(res, 'Error finding client');
 
-    APIAuthModel.findOne({
+    Token.findOne({
       user: req.user.id,
       client: req.params.id
     }, function(err, auth) {
@@ -427,14 +427,14 @@ api.getOrCreateAPIClientToken = function(req, res, next) {
 
       if (auth) return res.json(auth);
 
-      var userAuth = new APIAuthModel({
+      var userToken = new Token({
         user: req.user,
         client: client
       });
 
-      userAuth.createToken();
+      userToken.createToken();
 
-      userAuth.save(function(err) {
+      userToken.save(function(err) {
         if (err) return handleError(res, 'Failed to save: ' + err);
         res.json(userAuth);
       });
