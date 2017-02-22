@@ -45,6 +45,17 @@ var handleError = function(res, statusCode, message, errorCode) {
     .json(errorResponse);
 };
 
+api.userGetSelf = function(req, res) {
+  if (!req.user) {
+    res.status(400).json({
+      message: 'Not logged in',
+      url: 'https://timezone.io/login'
+    })
+  } else {
+    res.json(req.user.toOwnerJSON())
+  }
+};
+
 api.getUserByEmail = function(req, res, next) {
 
   if (!req.query.email)

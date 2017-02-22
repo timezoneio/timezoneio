@@ -5,6 +5,8 @@ var access = require('../middleware/access');
 
 var router = express.Router();
 
+router.get('/self', api.userGetSelf);
+
 router.all('*', access.requireAuthentication);
 
 router.get('/user', access.requireTeamAdmin, api.getUserByEmail);
