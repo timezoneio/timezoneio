@@ -1,5 +1,6 @@
 var crypto = require('crypto');
 var async = require('async');
+const ENV = require('../../env.js');
 var getTimezoneFromLocation = require('../helpers/getTimezoneFromLocation');
 var getCityFromCoords = require('../helpers/getCityFromCoords');
 var twitterHelper = require('../helpers/twitter');
@@ -425,10 +426,15 @@ api.getOrCreateAPIClient = function(req, res, next) {
 
 };
 
-api.getOrCreateAPIClientToken = function(req, res, next) {
+api.getOrCreateAPIClientToken = function(req, res) {
+  var secret = req.query.secret;
+
+  if (!secret) return handleError(res, 'Client secret required');
 
   APIClientModel.findOne({ _id: req.params.id }, function(err, client) {
     if (err) return handleError(res, 'Error finding client');
+
+    if (client.secret !== secret) return handleError(res, 'Incorrect client secret')
 
     APIAuthModel.findOne({
       user: req.user.id,
