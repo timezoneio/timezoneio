@@ -8,11 +8,11 @@ var demoTimezones = [
     tz: 'America/Los_Angeles',
     people: [
       {
-        _id: '3',
-        name: 'Mary',
+        _id: '2',
+        name: 'Matt',
         tz: 'America/Los_Angeles',
-        location: 'San Francisco',
-        avatar: '/images/avatars/mary.jpg'
+        location: 'Los Angeles',
+        avatar: '/images/avatars/matty.jpg'
       }
     ]
   },
@@ -23,15 +23,15 @@ var demoTimezones = [
         _id: '1',
         name: 'Dan',
         tz: 'America/New_York',
-        location: 'New York',
-        avatar: '/images/avatars/dan.jpg'
+        location: 'Brooklyn',
+        avatar: '/images/avatars/dan_2.jpg'
       },
       {
-        _id: '2',
-        name: 'Sunil',
+        _id: '3',
+        name: 'Jennie',
         tz: 'America/New_York',
-        location: 'DC',
-        avatar: '/images/avatars/sunil.png'
+        location: 'New York',
+        avatar: '/images/avatars/jennie.jpg'
       }
     ]
   },
