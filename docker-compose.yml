@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile.development
     volumes:
      - .:/app
+    environment:
+      - PORT=8080
     ports:
      - "80:8888"
     expose:
