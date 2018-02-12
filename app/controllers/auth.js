@@ -28,6 +28,7 @@ auth.login = function(req, res) {
 
   res.render('login', {
     errors: req.flash('error'),
+    message: req.flash('message'),
     noScript: true
   });
 };

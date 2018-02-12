@@ -6,6 +6,13 @@ var CSRFToken = require('../components/CSRFToken');
 
 class Account extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state =  {
+      deleteAccountConfirmation: '',
+    };
+  }
+
   renderOption(name, option) {
     var id = `${name}-${option.value}`;
     return (
@@ -58,7 +65,15 @@ class Account extends React.Component {
     return options.map(this.renderOption.bind(this, 'privacyLocation'));
   }
 
+  handleDeleteAccountConfirmationChange(value) {
+    this.setState({ deleteAccountConfirmation: value })
+  }
+
   render() {
+    var deleteAccountConfirmationLink = {
+      value: this.state.deleteAccountConfirmation,
+      requestChange: this.handleDeleteAccountConfirmationChange.bind(this)
+    }
     return (
       <Page {...this.props}>
         <div className="content-container account-container">
@@ -71,7 +86,7 @@ class Account extends React.Component {
             Change your basic account and privacy information
           </p>
 
-          <form method="post">
+          <form method="post" action="/account/delete">
 
             <CSRFToken {...this.props} />
 
@@ -99,6 +114,34 @@ class Account extends React.Component {
 
             <button className="cta" type="submit">
               Save changes
+            </button>
+
+          </form>
+
+          <form method="post" action="/account/delete">
+
+            <CSRFToken {...this.props} />
+
+            <h3>Delete account</h3>
+
+            <p>This is irreversible. All of your data will be deleted forever.</p>
+
+            <div className="form-row">
+              <label className="danger">Type DELETE to confirm</label>
+              <input type="text" name="confirmation" valueLink={deleteAccountConfirmationLink} />
+            </div>
+
+            <div className="form-row">
+              <label>Please share the reason why you're deleting your account (Optional)</label>
+              <textarea name="reason" rows="2"></textarea>
+            </div>
+
+            <button
+              className="danger"
+              type="submit"
+              disabled={this.state.deleteAccountConfirmation !== 'DELETE'}
+            >
+              Delete my account forever
             </button>
 
           </form>
