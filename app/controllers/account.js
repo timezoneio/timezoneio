@@ -46,3 +46,9 @@ account.saveAccountInfo = function(req, res) {
   });
 
 };
+
+account.deleteAccount = function(req, res) {
+  req.logout();
+  req.flash('message', 'Your account has been deleted. Sorry to see you go!');
+  res.redirect('/login');
+}

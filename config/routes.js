@@ -55,6 +55,7 @@ module.exports = function(app, passport) {
 
   app.get('/account', access.requireLoggedIn, account.index);
   app.post('/account', access.requireLoggedIn, account.saveAccountInfo);
+  app.post('/account/delete', access.requireLoggedIn, account.deleteAccount);
   app.get('/account/password', auth.passwordChangeForm);
   app.post('/account/password', auth.passwordChange);
   app.get('/account/request-password-reset', auth.passwordResetRequestForm);

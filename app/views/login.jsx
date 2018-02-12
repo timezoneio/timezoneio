@@ -16,6 +16,10 @@ module.exports = React.createClass({
         <Notification style="error"
                       text={this.props.errors} />
 
+        <Notification style="success"
+                      text={this.props.message}
+                      allowDismiss={true} />
+
         <form action="/login" method="post" className="login-form">
 
           <input type="hidden" name="_csrf" value={this.props.csrf_token} />
