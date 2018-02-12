@@ -205,6 +205,7 @@ teamSchema.statics = {
     return this.findAllByUserId(user._id, done);
   },
 
+  // Delete the team and team members
   removeById: function(id) {
     return Promise
       .all([

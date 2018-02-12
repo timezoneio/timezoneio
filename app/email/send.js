@@ -43,6 +43,12 @@ var EMAIL_TYPES = {
   'passwordReset': {
     subject: 'Reset your Timezone.io password',
     category: 'passwordReset'
+  },
+  accountDeleteAdminNotification: {
+    subject: function (p) {
+      return `User Account Deleted: ${p.userEmail}`
+    },
+    category: 'accountDeleteAdminNotification'
   }
 };
 

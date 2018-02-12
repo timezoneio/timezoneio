@@ -1,5 +1,9 @@
 'use strict';
+var async = require('async')
 var UserModel = require('../models/user');
+var TeamModel = require('../models/team');
+var TeamMemberModel = require('../models/teamMember');
+var sendEmail = require('..//email/send');
 
 var account = module.exports = {};
 
@@ -48,7 +52,45 @@ account.saveAccountInfo = function(req, res) {
 };
 
 account.deleteAccount = function(req, res) {
-  req.logout();
-  req.flash('message', 'Your account has been deleted. Sorry to see you go!');
-  res.redirect('/login');
+  var reason = req.body.reason;
+
+  var handleDeleteFailure = function () {
+    req.flash('error', 'We were unable to delete your account, please email us at hi@timezone.io');
+    res.redirect('/account');
+  }
+
+  TeamModel
+    .findAllByUser(req.user)
+    .then(function (teams) {
+      var teamsToDelete = teams.filter(function (team) {
+        return team.isAdmin(req.user)
+      })
+
+      // Send the reason to the admin email to track why people are leaving
+      sendEmail('accountDeleteAdminNotification', 'hi@timezone.io', {
+        userEmail: req.user.email,
+        userName: req.user.name,
+        reason: reason,
+        teamNames: teamsToDelete.map(function (t) { return t.name }).join(', '),
+      })
+
+      async.eachSeries(teams, function (team, done) {
+        if (team.isAdmin(req.user)) {
+          TeamModel
+            .removeById(team._id)
+            .then(done, done)
+        } else {
+          team.removeTeamMember({ _id: req.user._id })
+          done()
+        }
+      }, function (results) {
+        UserModel
+          .remove({ _id: req.user._id })
+          .then(function () {
+            req.logout();
+            req.flash('message', 'Your account has been deleted. Sorry to see you go!');
+            res.redirect('/login');
+          }, handleDeleteFailure);
+      }, handleDeleteFailure);
+    }, handleDeleteFailure);
 }
