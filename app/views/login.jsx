@@ -17,8 +17,7 @@ module.exports = React.createClass({
                       text={this.props.errors} />
 
         <Notification style="success"
-                      text={this.props.message}
-                      allowDismiss={true} />
+                      text={this.props.message} />
 
         <form action="/login" method="post" className="login-form">
 

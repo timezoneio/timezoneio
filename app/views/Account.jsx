@@ -124,7 +124,7 @@ class Account extends React.Component {
 
             <h3>Delete account</h3>
 
-            <p>This is irreversible. All of your data will be deleted forever.</p>
+            <p>This is irreversible. All of your data, including teams you created, will be deleted forever.</p>
 
             <div className="form-row">
               <label className="danger">Type DELETE to confirm</label>
