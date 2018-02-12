@@ -146,7 +146,8 @@ module.exports = React.createClass({
 
   renderResults: function() {
 
-    if (this.state.location.length < 3 || !this.state.active) return '';
+    if ((this.state.location && this.state.location.length < 3) || !this.state.active)
+      return '';
 
     return (
       <div className="autocomplete--results">
