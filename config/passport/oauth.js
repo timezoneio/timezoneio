@@ -1,5 +1,5 @@
 const BearerStrategy = require('passport-http-bearer').Strategy;
-const Token = require('../../app/models/apiAuth'); //apiToken
+const AccessToken = require('../../app/models/accessToken')
 
 /**
  * BearerStrategy
@@ -9,7 +9,7 @@ const Token = require('../../app/models/apiAuth'); //apiToken
  */
 module.exports.bearer = new BearerStrategy(
   function (accessToken, done) {
-    Token
+    AccessToken
       .findOne({ token: accessToken })
       .populate('user')
       .then(function(token) {

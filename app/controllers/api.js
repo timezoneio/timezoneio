@@ -1,6 +1,5 @@
 var crypto = require('crypto');
 var async = require('async');
-const ENV = require('../../env.js');
 var getTimezoneFromLocation = require('../helpers/getTimezoneFromLocation');
 var getCityFromCoords = require('../helpers/getCityFromCoords');
 var twitterHelper = require('../helpers/twitter');
@@ -9,7 +8,7 @@ var UserModel = require('../models/user');
 var TeamModel = require('../models/team');
 var LocationModel = require('../models/location');
 var APIClientModel = require('../../app/models/apiClient');
-var APIAuthModel = require('../../app/models/apiAuth');
+var AccessToken = require('../../app/models/accessToken');
 var sendEmail = require('../../app/email/send');
 var errorCodes = require('../helpers/errorCodes');
 
@@ -436,7 +435,7 @@ api.getOrCreateAPIClientToken = function(req, res) {
 
     if (client.secret !== secret) return handleError(res, 'Incorrect client secret')
 
-    APIAuthModel.findOne({
+    AccessToken.findOne({
       user: req.user.id,
       client: req.params.id
     }, function(err, auth) {
@@ -444,7 +443,7 @@ api.getOrCreateAPIClientToken = function(req, res) {
 
       if (auth) return res.json(auth);
 
-      var userAuth = new APIAuthModel({
+      var userAuth = new AccessToken({
         user: req.user,
         client: client
       });
