@@ -45,6 +45,7 @@
     "node-jsx": "^0.13.3",
     "nodemailer": "^1.10.0",
     "passport": "^0.3.0",
+    "passport-http-bearer": "1.0.1",
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.3",
     "react": "^0.13.3",
@@ -55,7 +56,6 @@
     "stylus": "0.54.5",
     "twitter": "1.7.0",
     "underscore": "^1.8.3",
-    "webpack": "^1.12.6",
     "whatwg-fetch": "^0.10.0"
   },
   "devDependencies": {

@@ -2,6 +2,7 @@ var UserModel = require('../app/models/user');
 var TeamModel = require('../app/models/team');
 var local = require('./passport/local');
 var twitter = require('./passport/twitter');
+var bearer = require('./passport/oauth').bearer
 
 module.exports = function (passport) {
 
@@ -30,7 +31,6 @@ module.exports = function (passport) {
 
   passport.use(local);
   passport.use(twitter);
-  // passport.use(google);
-  // passport.use(facebook);
+  passport.use(bearer)
 
 };
