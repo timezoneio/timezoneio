@@ -1,4 +1,5 @@
 var apiRouter = require('./routers/api');
+const OAuth2Router = require('./routers/oauth2');
 var access = require('./middleware/access');
 var base = require('../app/controllers/base');
 var auth = require('../app/controllers/auth');
@@ -7,9 +8,8 @@ var team = require('../app/controllers/team');
 var people = require('../app/controllers/people');
 var services = require('../app/controllers/services');
 var admin = require('../app/controllers/admin');
-var getProfileUrl = require('../app/helpers/urls').getProfileUrl;
 
-var oauthConnectFlast = function(req, res, next) {
+var oauthConnectFlash = function(req, res, next) {
   if (req.query.use_avatar)
     req.flash('use_avatar', true);
   next();
@@ -41,7 +41,9 @@ module.exports = function(app, passport) {
   app.get('/join/:inviteHash/:userId-:emailHash', auth.joinTeam);
   app.get('/logout', auth.logout);
 
-  app.get('/connect/twitter', oauthConnectFlast,
+  app.use('/oauth', OAuth2Router)
+
+  app.get('/connect/twitter', oauthConnectFlash,
                               passport.authorize('twitter', {
                                 scope: 'email',
                                 failureRedirect: '/my-profile'

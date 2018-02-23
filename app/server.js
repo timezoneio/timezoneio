@@ -62,15 +62,22 @@ module.exports = function(mongooseConnection, redisClient) {
   // Always after sessions
   app.use(flash());
 
-  // Don't need CSRF w/ access tokens
+
   var csrfMiddleware = csrf();
   app.use(function(req, res, next) {
+    // The token route is getting redirected so a CSRF isn't sent
+    // This uses an authorization code for security
+    if (req.originalUrl === '/oauth/token') {
+      return next()
+    }
+
+    // Don't need CSRF w/ access tokens
     var isAPI = req.originalUrl.slice(0, 4) === '/api';
     var accessToken = req.query.access_token || req.body.access_token || null;
     if (!isAPI || !accessToken) {
       csrfMiddleware.apply(null, arguments);
     } else {
-      next();
+      next()
     }
   });
   app.use(function(req, res, next) {

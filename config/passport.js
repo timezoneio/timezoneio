@@ -2,7 +2,9 @@ var UserModel = require('../app/models/user');
 var TeamModel = require('../app/models/team');
 var local = require('./passport/local');
 var twitter = require('./passport/twitter');
-var bearer = require('./passport/oauth').bearer
+const oauthStrategies = require('./passport/oauth')
+const bearer = oauthStrategies.bearer
+const clientPassword = oauthStrategies.clientPassword
 
 module.exports = function (passport) {
 
@@ -32,5 +34,6 @@ module.exports = function (passport) {
   passport.use(local);
   passport.use(twitter);
   passport.use(bearer)
+  passport.use(clientPassword)
 
 };

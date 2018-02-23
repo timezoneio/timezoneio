@@ -25,6 +25,8 @@ access.requireLoggedIn = function(req, res, next) {
   if (req.user)
     return next();
 
+  // After login, redirect to the original url
+  req.flash('next', req.originalUrl)
   res.redirect('/login');
 };
 

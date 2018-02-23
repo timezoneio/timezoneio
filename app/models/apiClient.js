@@ -7,6 +7,7 @@ var apiClientSchema = new Schema({
   name: { type: String, default: '' },
   user: { type: Schema.ObjectId, ref: 'User' },
   secret: { type: String, default: '' },
+  redirectURI: { type: String, default: '' },
   createdAt: { type: Date, default: Date.now }
 });
 
