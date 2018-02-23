@@ -7,7 +7,7 @@ var twitterHelper = require('../helpers/twitter');
 var UserModel = require('../models/user');
 var TeamModel = require('../models/team');
 var LocationModel = require('../models/location');
-var APIClientModel = require('../../app/models/apiClient');
+var Client = require('../../app/models/client');
 var AccessToken = require('../../app/models/accessToken');
 var sendEmail = require('../../app/email/send');
 var errorCodes = require('../helpers/errorCodes');
@@ -406,12 +406,12 @@ api.getGravatar = function(req, res, next) {
 // TEMP API AUTH methods
 api.getOrCreateAPIClient = function(req, res, next) {
 
-  APIClientModel.findOne({ user: req.user.id }, function(err, client) {
+  Client.findOne({ user: req.user.id }, function(err, client) {
     if (err) return handleError(res, 'Error finding client');
 
     if (client) return res.json(client);
 
-    var userClient = new APIClientModel({
+    var userClient = new Client({
       user: req.user
     });
 
@@ -430,7 +430,7 @@ api.getOrCreateAPIClientToken = function(req, res) {
 
   if (!secret) return handleError(res, 'Client secret required');
 
-  APIClientModel.findOne({ _id: req.params.id }, function(err, client) {
+  Client.findOne({ _id: req.params.id }, function(err, client) {
     if (err) return handleError(res, 'Error finding client');
 
     if (client.secret !== secret) return handleError(res, 'Incorrect client secret')

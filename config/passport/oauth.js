@@ -1,6 +1,6 @@
 const BearerStrategy = require('passport-http-bearer').Strategy
 const ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy
-const Client = require('../../app/models/apiClient')
+const Client = require('../../app/models/client')
 const AccessToken = require('../../app/models/accessToken')
 
 /**

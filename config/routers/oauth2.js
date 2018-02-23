@@ -3,7 +3,7 @@ const oauth2orize = require('oauth2orize')
 const passport = require('passport')
 const access = require('../middleware/access');
 const User = require('../../app/models/user')
-const Client = require('../../app/models/apiClient')
+const Client = require('../../app/models/client')
 const AuthorizationCode = require('../../app/models/authorizationCode')
 const AccessToken = require('../../app/models/accessToken')
 
