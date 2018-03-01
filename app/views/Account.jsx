@@ -86,7 +86,7 @@ class Account extends React.Component {
             Change your basic account and privacy information
           </p>
 
-          <form method="post" action="/account/delete">
+          <form method="post" action="/account">
 
             <CSRFToken {...this.props} />
 
