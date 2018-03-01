@@ -83,8 +83,8 @@ api.userCreate = function(req, res, next) {
 
   var userData = req.body;
 
-  // could be DRYer
-  if (!userData.email)
+  // Stub users don't have an email
+  if (!userData.email && !userData.stub)
     return handleError(res, 'An email is required');
   if (!userData.name)
     return handleError(res, 'An name is required');
@@ -93,12 +93,18 @@ api.userCreate = function(req, res, next) {
   if (!userData.tz)
     return handleError(res, 'An timezone is required');
 
-  UserModel.findOneByEmail(userData.email, function(err, user) {
+  if (userData.email) {
+    userData.email = userData.email.toLowerCase();
+  } else if (userData.stub) {
+    delete userData.email;
+  }
+
+  var findUser = userData.email ? UserModel.findOneByEmail(userData.email) : Promise.resolve();
+
+  findUser.then(function(user) {
 
     // NOTE - in the future we should do a search before creating user
     if (user) return handleError(res, 'That user already exists!');
-
-    userData.email = userData.email.toLowerCase();
 
     var validData = {};
     for (var key in userData) {
@@ -116,12 +122,14 @@ api.userCreate = function(req, res, next) {
         newUser.save(function(err) {
           if (err) return handleError(res, 'Failed to save: ' + err);
 
-          sendEmail('invite', newUser.email, {
-            inviteUrl: req.team.getInviteUrl(newUser),
-            adminName: req.user.name,
-            name: newUser.name || 'there', // Hi <there>!,
-            teamName: req.team.name
-          });
+          if (newUser.email) {
+            sendEmail('invite', newUser.email, {
+              inviteUrl: req.team.getInviteUrl(newUser),
+              adminName: req.user.name,
+              name: newUser.name || 'there', // Hi <there>!,
+              teamName: req.team.name
+            });
+          }
 
           res.json(newUser);
         });
@@ -271,7 +279,7 @@ api.teamDelete = function(req, res) {
     }, createErrorHandler());
 };
 
-api.teamAddMember = function(req, res, next) {
+api.teamAddMember = function(req, res) {
   var team = req.team;
   var userId = req.body.userId;
 

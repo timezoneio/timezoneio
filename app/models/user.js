@@ -13,6 +13,7 @@ const ENV = require('../../env');
 var userSchema = new Schema({
   username: { type: String, default: '' },
   name: { type: String, default: '' },
+  stub: { type: Boolean, default: false },
   email: { type: String, default: '' },
   provider: { type: String, default: '' },
   hashedPassword: { type: String, default: '' },
@@ -246,12 +247,15 @@ userSchema.methods = {
    */
 
   skipValidation: function() {
-    return false;
+    return this.stub === true;
     // return ~oAuthTypes.indexOf(this.provider);
   },
 
   // Used for team invite emails and verifying user's identity
   getEmailHash: function() {
+    if (!this.email) {
+      return null;
+    }
     return crypto.createHash('md5')
                  .update(ENV.EMAIL_HASH_SALT + this.email)
                  .digest('hex')
@@ -371,6 +375,7 @@ userSchema.statics = {
   WRITABLE_FIELDS: WRITABLE_FIELDS,
 
   ADMIN_WRITABLE_FIELDS: WRITABLE_FIELDS.concat([
+    'stub',
     'email'
   ]),
 
