@@ -51,8 +51,13 @@ account.saveAccountInfo = function(req, res) {
 
 };
 
-account.deleteAccount = function(req, res) {
-  var reason = req.body.reason;
+account.deleteAccount = function(req, res, next) {
+  const confirmation = req.body.confirmation
+  const reason = req.body.reason
+
+  if (!confirmation || confirmation.toLowerCase() !== 'delete') {
+    return next(new Error('Missing DELETE confirmation text'))
+  }
 
   var handleDeleteFailure = function () {
     req.flash('error', 'We were unable to delete your account, please email us at hi@timezone.io');
