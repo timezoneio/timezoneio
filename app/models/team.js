@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var crypto = require('crypto');
 var Schema = mongoose.Schema;
 var TeamMember = require('./teamMember');
+const User = require('./user')
 const BASE_URL = require('../helpers/baseUrl');
 const ENV = require('../../env');
 
@@ -119,12 +120,21 @@ teamSchema.methods = {
   },
 
   getTeamMembers: function() {
+    const teamId = this._id
     return TeamMember
-      .find({ team: this._id })
-      .populate('user')
-      .then(function(teamMembers) {
-        return teamMembers.map( (tm) => tm.user );
-      });
+      .find({ team: teamId })
+      .then(function (teamMembers) {
+        const teamMemberIds = teamMembers.map(tm => tm.user)
+        return User
+          .find({ _id: { $in: teamMemberIds } })
+          .then((users) => {
+            if (!teamMembers.length !== users.length) {
+              // TODO - Add bug notifcation here:
+              console.log('Team member users missing on team ', teamId)
+            }
+            return users
+          })
+      })
   },
 
   addTeamMember: function(user) {
