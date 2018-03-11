@@ -31,7 +31,13 @@ team.index = function(req, res, next) {
                          'toJSON';
 
       // Ensure we're exposing the right data
-      team.people = team.people.map(function(u) { return u[toJSONMethod](); });
+      team.people = team.people.map(function(teamUser) {
+        if (teamUser.isOwnedBy(req.user) || teamUser.isOwnedBy(res.locals.impersonateUser)) {
+          return teamUser.toOwnerJSON();
+        }
+
+        return teamUser[toJSONMethod]();
+      });
 
       // Organize into timezones
       var time = moment();

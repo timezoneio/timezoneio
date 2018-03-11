@@ -250,6 +250,10 @@ userSchema.methods = {
     return this._id.toString() === SUPER_ADMIN_ID;
   },
 
+  isOwnedBy: function(user) {
+    return !!user && this._id.toString() === user._id.toString();
+  },
+
   isEmptyUser: function() {
     return !this.hashedPassword;
   },
