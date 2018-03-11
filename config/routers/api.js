@@ -1,13 +1,22 @@
 var express = require('express');
+var passport = require('passport')
 var api = require('../../app/controllers/api');
 var access = require('../middleware/access');
 
+var bearerMiddleware = passport.authenticate('bearer', { session: false })
 
 var router = express.Router();
 
 router.get('/self', api.userGetSelf);
 
-router.all('*', access.requireAuthentication);
+// Allow logged in users or authenticated requests
+router.all('*', function (req, res, next) {
+  if (req.user) {
+    next()
+  } else {
+    bearerMiddleware(req, res, next)
+  }
+});
 
 router.get('/user', access.requireTeamAdmin, api.getUserByEmail);
 router.post('/user', access.requireTeamAdmin, api.userCreate);

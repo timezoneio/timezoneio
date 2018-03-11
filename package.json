@@ -44,8 +44,12 @@
     "mustache": "^2.0.0",
     "node-jsx": "^0.13.3",
     "nodemailer": "^1.10.0",
+    "oauth2orize": "1.11.0",
     "passport": "^0.3.0",
+    "passport-http": "0.3.0",
+    "passport-http-bearer": "1.0.1",
     "passport-local": "^1.0.0",
+    "passport-oauth2-client-password": "0.1.2",
     "passport-twitter": "^1.0.3",
     "react": "^0.13.3",
     "react-tools": "^0.13.3",
@@ -55,7 +59,7 @@
     "stylus": "0.54.5",
     "twitter": "1.7.0",
     "underscore": "^1.8.3",
-    "webpack": "^1.12.6",
+    "uuid": "3.2.1",
     "whatwg-fetch": "^0.10.0"
   },
   "devDependencies": {

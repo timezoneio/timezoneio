@@ -1,7 +1,5 @@
 var UserModel = require('../../app/models/user');
 var TeamModel = require('../../app/models/team');
-var APIClientModel = require('../../app/models/apiClient');
-var APIAuthModel = require('../../app/models/apiAuth');
 
 var access = module.exports = {};
 
@@ -27,6 +25,8 @@ access.requireLoggedIn = function(req, res, next) {
   if (req.user)
     return next();
 
+  // After login, redirect to the original url
+  req.flash('next', req.originalUrl)
   res.redirect('/login');
 };
 
@@ -37,42 +37,6 @@ access.requireSuperUser = function(req, res, next) {
   res.status(403).json({
     message: 'Ah ah ah, you didn\'t say the magic word',
     url: req.baseUrl
-  });
-};
-
-// Ensure
-//   the user is logged in
-// or
-//   the request has a valid access_token
-access.requireAuthentication = function(req, res, next) {
-  if (req.user) return next();
-
-  var accessToken = req.query.access_token || req.body.access_token || null;
-
-  if (accessToken) {
-    APIAuthModel.findOne({ token: accessToken }, function(err, auth) {
-      if (err || !auth)
-        return res.status(403).json({
-          message: 'Invalid token :('
-        });
-
-      UserModel.findOne({ _id: auth.user }, function(err, user) {
-        if (err || !user)
-          return res.status(403).json({
-            message: 'No user found!'
-          });
-
-        req.user = user;
-
-        next();
-      });
-    });
-    return;
-  }
-
-  res.status(403).json({
-    message: 'Ah ah ah, you didn\'t say the magic word',
-    url:req.baseUrl
   });
 };
 
