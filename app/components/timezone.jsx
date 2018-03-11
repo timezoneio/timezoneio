@@ -16,6 +16,10 @@ module.exports = React.createClass({
       })
       .sort()
       .reduce(function(counts, el) {
+        if (el === null) {
+          return counts;
+        }
+
         if (!counts[el])
           counts[el] = 1;
         else
@@ -86,14 +90,16 @@ module.exports = React.createClass({
 
     if (this.props.timezone.major) timezoneClasses += ' timezone-major';
 
-    var topCity = this.getTopCity() || 'Add location';
+    var topCity = this.getTopCity();
+    var displayTopCity = topCity === '' ? 'Add location' : topCity || 'Hidden';
+
     var columns = this.getPeopleColumns(this.props.timezone.people);
 
     return (
       <div className={timezoneClasses}>
         <div className="timezone-header">
           <h3 className="timezone-time">{displayTime}</h3>
-          <p className="timezone-name">{topCity}</p>
+          <p className="timezone-name">{displayTopCity}</p>
           <p className="timezone-offset">{offset}</p>
         </div>
         <div className="timezone-people">
