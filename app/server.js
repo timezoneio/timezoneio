@@ -4,7 +4,7 @@ var logger = require('morgan');
 var slashes = require('connect-slashes');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-var RedisStore = require('connect-redis')(session);
+const MongoStore = require('connect-mongo')(session)
 var bodyParser = require('body-parser');
 var csrf = require('csurf');
 var multer = require('multer');
@@ -49,9 +49,11 @@ module.exports = function(mongooseConnection, redisClient) {
     resave: false, // don't save session if unmodified
     saveUninitialized: false, // don't create session until something stored
     secret: 'bodhi',
-    store: new RedisStore({
-      client: redisClient,
-      ttl: 14 * 86400 // 14 days expiration
+    store: new MongoStore({
+      mongooseConnection: mongooseConnection,
+      ttl: 14 * 86400, // 14 days expiration
+      autoRemove: 'interval',
+      autoRemoveInterval: 10, // minutes
     })
   }));
 
