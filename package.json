@@ -10,6 +10,9 @@
     "lint": "./node_modules/eslint/bin/eslint.js --ignore-pattern 'public/js' .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "engines": {
+    "node": "6.2"
+  },
   "author": "Dan Farrelly (http://danfarrelly.nyc/)",
   "repository": {
     "type": "git",
