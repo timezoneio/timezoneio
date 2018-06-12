@@ -51,7 +51,7 @@ module.exports = function(mongooseConnection, redisClient) {
     secret: 'bodhi',
     store: new RedisStore({
       client: redisClient,
-      host: isProduction ? '127.0.0.1' : 'redis',
+      host: process.env.REDIS_URL || 'redis',
       ttl: 14 * 86400 // 14 days expiration
     })
   }));
