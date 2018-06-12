@@ -46,12 +46,11 @@ module.exports = function(mongooseConnection, redisClient) {
 
   app.use(cookieParser());
   app.use(session({
-    resave: false, //don't save session if unmodified
+    resave: false, // don't save session if unmodified
     saveUninitialized: false, // don't create session until something stored
     secret: 'bodhi',
     store: new RedisStore({
       client: redisClient,
-      host: process.env.REDIS_URL || 'redis',
       ttl: 14 * 86400 // 14 days expiration
     })
   }));
