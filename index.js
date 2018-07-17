@@ -9,7 +9,7 @@ var retries = -1;
 var env = process.env.NODE_ENV;
 const isProduction = env === 'production';
 
-var MONGO_URL = ENV.MONGO_URL || 'mongodb://db/timezone';
+var MONGO_URL = ENV.MONGO_URL || 'mongodb://db:27017/timezone';
 const MONGO_CONNECTION_OPTIONS = {
   autoIndex: !isProduction,
   useNewUrlParser: true,
