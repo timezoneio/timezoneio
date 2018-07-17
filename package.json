@@ -22,7 +22,7 @@
   "dependencies": {
     "async": "1.2.1",
     "autoprefixer-stylus": "0.8.1",
-    "aws-sdk": "2.2.17",
+    "aws-sdk": "2.275.1",
     "body-parser": "1.12.2",
     "classnames": "2.1.2",
     "connect-flash": "0.1.1",

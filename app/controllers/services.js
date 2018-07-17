@@ -8,29 +8,41 @@ var S3_BUCKET = ENV.S3_BUCKET;
 var services = module.exports = {};
 
 services.signS3 = function(req, res) {
+  if (!req.user) {
+    return res.status(500).send({ message: 'Could not sign url' })
+  }
+
   aws.config.update({
     accessKeyId: AWS_ACCESS_KEY,
     secretAccessKey: AWS_SECRET_KEY
   });
 
-  var s3 = new aws.S3();
-  var s3_params = {
+  const s3 = new aws.S3();
+  const params = {
     Bucket: S3_BUCKET,
+    Conditions: [
+      ['starts-with', '$key', `avatar/${req.user._id}`],
+      ['starts-with', '$Content-Type', req.query.file_type],
+      { acl: 'public-read' },
+    ],
     Key: req.query.file_name,
-    Expires: 60,
-    ContentType: req.query.file_type,
-    ACL: 'public-read'
-  };
+    Expires: 300,
+  }
 
-  s3.getSignedUrl('putObject', s3_params, function(err, data){
-    if (err) return res.status(500).send({ message: 'Could not sign url' });
+  s3.createPresignedPost(params, (err, data) => {
+    if (err)
+      return res.status(500).send({ message: 'Could not sign url' })
 
-    var returnData = {
-      signedRequest: data,
-      url: 'https://' + S3_BUCKET + '.s3.amazonaws.com/' + req.query.file_name
+    const fields = Object.assign({}, data.fields, {
+      Key: req.query.file_name,
+      'Content-type': req.query.file_type,
+      acl: 'public-read',
+    })
+    const returnData = {
+      fields,
+      postURL: 'https://' + S3_BUCKET + '.s3.amazonaws.com/',
+      fileURL: 'https://' + S3_BUCKET + '.s3.amazonaws.com/' + req.query.file_name,
     };
     res.json(returnData);
-  });
-
-
+  })
 };

@@ -12,7 +12,7 @@ var getSignedRequest = function(file, filename) {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
           var response = JSON.parse(xhr.responseText);
-          uploadFileToS3(file, response.signedRequest, response.url)
+          uploadFileToS3(file, response.postURL, response.fields, response.fileURL)
             .then(resolve);
         } else{
           reject('Could not get signed url');
@@ -23,14 +23,13 @@ var getSignedRequest = function(file, filename) {
   });
 };
 
-var uploadFileToS3 = function(file, signedRequest, url) {
+var uploadFileToS3 = function(file, postURL, fields, fileURL) {
   return new Promise(function(resolve, reject) {
     var xhr = new XMLHttpRequest();
-    xhr.open('PUT', signedRequest);
-    xhr.setRequestHeader('x-amz-acl', 'public-read');
+    xhr.open('POST', postURL);
     xhr.onload = function() {
-      if (xhr.status === 200) {
-        resolve(url);
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve(fileURL);
       } else {
         reject('Failed to upload, bad response');
       }
@@ -38,7 +37,13 @@ var uploadFileToS3 = function(file, signedRequest, url) {
     xhr.onerror = function() {
       reject('Failed to upload!');
     };
-    xhr.send(file);
+
+    var formData = new FormData()
+    for (var k in fields) {
+      formData.append(k, fields[k]);
+    }
+    formData.append('file', file)
+    xhr.send(formData)
   });
 };
 
