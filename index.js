@@ -7,17 +7,18 @@ var MAX_RETRIES = 100;
 var retries = -1;
 
 var env = process.env.NODE_ENV;
-var isProduction = env === 'production';
+const isProduction = env === 'production';
 
 var MONGO_URL = ENV.MONGO_URL || 'mongodb://db/timezone';
+const MONGO_CONNECTION_OPTIONS = {
+  autoIndex: !isProduction,
+  useNewUrlParser: true,
+}
 
 var connect = function () {
   if (retries >= MAX_RETRIES)
     return console.info('Couldn\'t connect to the database');
-
-  var options = { server: { socketOptions: { keepAlive: 1 } } };
-  mongoose.connect(MONGO_URL);
-
+  mongoose.connect(MONGO_URL, MONGO_CONNECTION_OPTIONS);
   retries++;
 };
 connect();

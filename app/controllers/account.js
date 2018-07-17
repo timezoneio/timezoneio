@@ -34,14 +34,17 @@ account.saveAccountInfo = function(req, res) {
 
   req.user.save(function(err) {
     if (err) {
+      let message = err.message
       if (err.errors) {
-        let validationErrors = Object.keys(err.errors).map(function(key) {
-          return err.errors[key].message;
-        });
-        req.flash('error', 'There was an issue - ' + validationErrors.join(', '));
-      } else {
-        req.flash('error', 'We couldn\'t save your changes, please try again -');
+        message = Object.keys(err.errors).map((key) => err.errors[key].message).join(', ')
+
+      // TODO - Cleanup, move this elsewhere
+      } else if (err.code === 11000) {
+        const matches = err.message.match(/index: (\w+)_1/)
+        const field = matches && matches.length === 2 && matches[1]
+        message = field ? `${field} already exists` : err.message
       }
+      req.flash('error', `There was an issue: ${message}`);
     } else {
       req.flash('message', 'All your changes have been saved. Sweet.');
     }

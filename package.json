@@ -41,7 +41,7 @@
     "keymirror": "0.1.1",
     "lodash": "3.10.1",
     "moment-timezone": "0.5.4",
-    "mongoose": "4.0.6",
+    "mongoose": "5.2.4",
     "morgan": "1.5.1",
     "multer": "0.1.8",
     "mustache": "2.0.0",

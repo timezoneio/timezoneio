@@ -11,18 +11,28 @@ const ENV = require('../../env');
 
 
 var userSchema = new Schema({
-  username: { type: String, default: '' },
+  username: {
+    type: String,
+    index: {
+      unique: true,
+      partialFilterExpression: { username: { $exists: true } },
+    },
+  },
   name: { type: String, default: '' },
-  email: { type: String, default: '' },
+  email: {
+    type: String,
+    default: '',
+    index: {
+      unique: true,
+      partialFilterExpression: { email: { $exists: true } },
+    },
+  },
   provider: { type: String, default: '' },
   hashedPassword: { type: String, default: '' },
   salt: { type: String, default: '' },
   inviteCode: { type: String, default: '' }, // ???
 
-  // loginProvider: { type: String, default null },
-  // facebook: {},
   twitter: {},
-  // google: {},
 
   avatar: { type: String, default: '' },
   // Add GPS coords for smart location updating
@@ -35,13 +45,9 @@ var userSchema = new Schema({
 
   settings: [userSettings.schema],
 
-  createdAt: { type : Date, default : Date.now },
-  updatedAt: { type : Date, default : Date.now }
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
 });
-
-
-// Indexes
-userSchema.index({ username: 1 });
 
 const SUPER_ADMIN_ID = '5513998f6d1aacc66f7e7eff';
 
@@ -148,47 +154,19 @@ userSchema.path('email').validate(function (email) {
   return isValidEmail(email);
 }, 'Email must be valid');
 
-userSchema.path('email').validate(function (email, fn) {
-  var User = mongoose.model('User');
-  if (this.skipValidation()) fn(true);
-
-  // Check only when it is a new user or when email field is modified
-  if (this.isNew || this.isModified('email')) {
-    User.find({ email: email }).exec(function (err, users) {
-      fn(!err && users.length === 0);
-    });
-  } else fn(true);
-}, 'Email already exists');
-
 // NOTE - Disabled name + username requirements for signup flow,
 // maybe can check "onboarded" boolean in future
-userSchema.path('name').validate(function (name) {
-  return true;
-  // if (this.skipValidation()) return true;
-  // return name.length;
-}, 'Name cannot be blank');
+// userSchema.path('name').validate(function (name) {
+//   return true;
+//   // if (this.skipValidation()) return true;
+//   // return name.length;
+// }, 'Name cannot be blank');
 
-userSchema.path('username').validate(function (username) {
-  return true;
-  // if (this.skipValidation() || this.isEmptyUser()) return true;
-  // return username.length;
-}, 'Username cannot be blank');
-
-userSchema.path('username').validate(function (username, fn) {
-  var User = mongoose.model('User');
-  if (this.skipValidation() || this.isEmptyUser())
-    return fn(true);
-
-  if (!username)
-    return fn(true);
-
-  // Check only when it is a new user or when username field is modified
-  if (this.isNew || this.isModified('username')) {
-    User.find({ username: username }).exec(function (err, users) {
-      fn(!err && users.length === 0);
-    });
-  } else fn(true);
-}, 'Username already exists');
+// userSchema.path('username').validate(function (username) {
+//   return true;
+//   // if (this.skipValidation() || this.isEmptyUser()) return true;
+//   // return username.length;
+// }, 'Username cannot be blank');
 
 userSchema.path('hashedPassword').validate(function (hashedPassword) {
   if (this.skipValidation() || this.isEmptyUser()) return true;
