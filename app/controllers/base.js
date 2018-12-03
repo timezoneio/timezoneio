@@ -16,3 +16,11 @@ base.roadmap = function(req, res) {
 base.contact = function(req, res) {
   res.render('Contact');
 };
+
+base.privacy = function(req, res) {
+  res.render('Privacy', { noScript: true });
+};
+
+base.terms = function(req, res) {
+  res.render('Terms', { noScript: true });
+};

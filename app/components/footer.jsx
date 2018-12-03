@@ -10,17 +10,20 @@ var links = [
     text: 'Contact'
   },
   {
+    url: '/terms',
+    text: 'Terms'
+  },
+  {
+    url: '/privacy',
+    text: 'Privacy Policy'
+  },
+  {
     url: '/team/buffer',
     text: 'Demo'
   },
   {
     url: '/login',
     text: 'Login'
-  },
-  {
-    url: 'https://github.com/timezoneio/timezoneio/issues',
-    text: 'Roadmap',
-    target: '_blank'
   },
 ];
 

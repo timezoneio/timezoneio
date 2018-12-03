@@ -24,6 +24,8 @@ module.exports = function(app, passport) {
   app.get('/about', base.about);
   app.get('/roadmap', base.roadmap);
   app.get('/contact', base.contact);
+  app.get('/privacy', base.privacy);
+  app.get('/terms', base.terms);
 
   app.get('/login', auth.login);
   app.post('/login', passport.authenticate('local', {
