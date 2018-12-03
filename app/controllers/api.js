@@ -367,7 +367,13 @@ api.locationGetCity = function(req, res, next) {
     });
 
   getCityFromCoords(req.query.lat, req.query.long, function(err, city) {
-    if (err) return handleError(res, 'Error finding your city', errorCodes.CITY_NOT_FOUND);
+    if (err) {
+      return handleError(
+        res,
+        process.env.NODE_ENV === 'development' ? err : 'Error finding your city',
+        errorCodes.CITY_NOT_FOUND
+      );
+    }
 
     res.json({ city: city });
   });

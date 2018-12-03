@@ -3,6 +3,8 @@
 
 var geocoder = require('geocoder');
 
+const opts = { key: process.env.GOOGLE_MAPS_API_KEY }
+
 module.exports = function getCityFromCoords(lat, long, cb) {
 
   geocoder.reverseGeocode(lat, long, function(err, data) {
@@ -28,6 +30,6 @@ module.exports = function getCityFromCoords(lat, long, cb) {
       return cb(null, cities[0]);
 
     cb('No location found!');
-  });
+  }, opts);
 
 };
