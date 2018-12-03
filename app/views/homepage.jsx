@@ -24,7 +24,7 @@ var demoTimezones = [
         name: 'Dan',
         tz: 'America/New_York',
         location: 'Brooklyn',
-        avatar: '/images/avatars/dan_2.jpg'
+        avatar: 'https://www.gravatar.com/avatar/3d7fe8ff82fa8aa25972045b57b42d98?s=200'
       },
       {
         _id: '3',
@@ -36,14 +36,14 @@ var demoTimezones = [
     ]
   },
   {
-    tz: 'Europe/Rome',
+    tz: 'Europe/London',
     people: [
       {
         _id: '4',
         name: 'Carolyn',
-        tz: 'Europe/Rome',
-        location: 'Venice',
-        avatar: '//www.gravatar.com/avatar/17d551ff33a7b03d93bbd1f8fa18d4f5?s=200'
+        tz: 'Europe/London',
+        location: 'London',
+        avatar: 'https://www.gravatar.com/avatar/17d551ff33a7b03d93bbd1f8fa18d4f5?s=200'
       }
     ]
   }
