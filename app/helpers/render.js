@@ -6,6 +6,7 @@ var fs = require('fs');
 var path = require('path');
 var Mustache = require('mustache');
 var React = require('react');
+const ReactDOMServer = require('react-dom/server');
 
 const STATIC_VERSIONS = require('../../rev-manifest.json');
 const STATIC_DOMAIN = '//s3.amazonaws.com/timezoneio/';
@@ -35,8 +36,8 @@ module.exports = function render(pathName, locals, cb) {
   var data = locals || {};
   data.csrf_token = locals.csrf_token;
 
-  // clean user object for render
   if (data.impersonateUser) {
+  // clean user object for render
     data.realUser = data.user.toOwnerJSON();
     data.user = data.impersonateUser.toOwnerJSON();
   } else if (data.user && typeof data.user.toOwnerJSON === 'function') {
@@ -45,7 +46,7 @@ module.exports = function render(pathName, locals, cb) {
 
   var params = {};
 
-  params.body = React.renderToString(
+  params.body = ReactDOMServer.renderToString(
     React.createElement(ViewComponent, data)
   );
   params.data = JSON.stringify(data || {});

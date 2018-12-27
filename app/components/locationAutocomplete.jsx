@@ -4,30 +4,26 @@ var toolbelt = require('../utils/toolbelt.js');
 var KEY = require('../helpers/keyConstants.js');
 var ActionCreators = require('../actions/actionCreators.js');
 
-
-module.exports = React.createClass({
-
-  displayName: 'LocationAutocomplete',
-
-  getInitialState: function() {
-    return {
+class LocationAutocomplete extends React.Component {
+  constructor() {
+    this.state = {
       active: false,
       location: this.props.location || '',
       results: []
     };
-  },
+  }
 
-  componentWillReceiveProps: function(nextProps) {
+  componentWillReceiveProps(nextProps) {
     // If this component gets it's location cleared or sent a fresh location we update
     if (nextProps.clearLocation !== this.props.clearLocation)
       this.setState({ location: nextProps.location });
-  },
+  }
 
-  handleFocus: function() {
+  handleFocus() {
     this.setState({ active: true });
-  },
+  }
 
-  handleBlur: function() {
+  handleBlur() {
 
     if (this.blurTimeout)
       clearTimeout(this.blurTimeout);
@@ -36,9 +32,9 @@ module.exports = React.createClass({
     this.blurTimeout = setTimeout(function() {
       this.setState({ active: false });
     }.bind(this), 200);
-  },
+  }
 
-  handleChange: function(value) {
+  handleChange(value) {
 
     if (value.length)
       this.locationSearch(value);
@@ -46,9 +42,9 @@ module.exports = React.createClass({
     this.setState({ location: value });
 
     this.props.handleChange(value);
-  },
+  }
 
-  handleKeyDown: function(e) {
+  handleKeyDown(e) {
     switch (e.keyCode) {
       case KEY.UP:
         this.moveSelectionUp();
@@ -63,9 +59,9 @@ module.exports = React.createClass({
         this.makeSelection();
         break;
     }
-  },
+  }
 
-  moveSelectionUp: function() {
+  moveSelectionUp() {
     var results = this.state.results;
     var idx = toolbelt.indexOf('isSelected', results);
     var newSelectionIdx = idx <= 0 ? results.length - 1 : idx - 1;
@@ -76,9 +72,9 @@ module.exports = React.createClass({
     results[newSelectionIdx].isSelected = true;
 
     this.setState({ results: results });
-  },
+  }
 
-  moveSelectionDown: function() {
+  moveSelectionDown() {
     var results = this.state.results;
     var idx = toolbelt.indexOf('isSelected', results);
     var newSelectionIdx = (idx === -1 || idx === results.length) ? 0 : idx + 1;
@@ -89,17 +85,17 @@ module.exports = React.createClass({
     results[newSelectionIdx].isSelected = true;
 
     this.setState({ results: results });
-  },
+  }
 
-  makeSelection: function() {
+  makeSelection() {
     var idx = toolbelt.indexOf('isSelected', this.state.results);
     if (idx > -1) {
       var selected = this.state.results[idx];
       this.saveSelection(selected.name, selected.tz);
     }
-  },
+  }
 
-  saveSelection: function(name, tz) {
+  saveSelection(name, tz) {
 
     // Pass it upwards
     this.props.handleChange(name, tz);
@@ -114,24 +110,24 @@ module.exports = React.createClass({
       results: results,
       active: false
     });
-  },
+  }
 
-  locationSearch: function(value) {
+  locationSearch(value) {
     ActionCreators
       .locationSearch(value)
       .then(this.handleResults);
-  },
+  }
 
-  handleResults: function(results) {
+  handleResults(results) {
     this.setState({ results: results });
-  },
+  }
 
-  handleSelectOption: function(option, e) {
+  handleSelectOption(option, e) {
     e.stopPropagation();
     this.saveSelection(option.name, option.tz);
-  },
+  }
 
-  renderOption: function(option, idx) {
+  renderOption(option, idx) {
     var classes = classNames('autocomplete--option', {
       selected: option.isSelected
     });
@@ -142,9 +138,9 @@ module.exports = React.createClass({
         {option.value}
       </div>
     );
-  },
+  }
 
-  renderResults: function() {
+  renderResults() {
 
     if ((this.state.location && this.state.location.length < 3) || !this.state.active)
       return '';
@@ -154,9 +150,9 @@ module.exports = React.createClass({
         {this.state.results.map(this.renderOption)}
       </div>
     );
-  },
+  }
 
-  render: function() {
+  render() {
 
     var classes = classNames('autocomplete', {
       'active': this.state.active
@@ -184,4 +180,6 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}
+
+module.exports = LocationAutocomplete

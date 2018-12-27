@@ -9,7 +9,8 @@ services:
     environment:
       - PORT=8080
     ports:
-     - "80:8888"
+     - "8888:8888"
+     - "8080:8080"
     expose:
      - "8080"
      - "8888"

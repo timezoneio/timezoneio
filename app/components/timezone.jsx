@@ -5,11 +5,9 @@ var timeUtils = require('../utils/time.js');
 
 var PEOPLE_PER_COL = 8;
 
-module.exports = React.createClass({
+class Timezone extends React.Component {
 
-  displayName: 'Timezone',
-
-  getCountsOf: function(list, param) {
+  getCountsOf(list, param) {
     return list
       .map(function(el) {
         return el[param];
@@ -26,24 +24,23 @@ module.exports = React.createClass({
           counts[el]++;
         return counts;
       }, {});
-  },
+  }
 
-  getHighestOccurring: function(counts) {
+  getHighestOccurring(counts) {
     var keys = Object.keys(counts);
     return keys.reduce(function(prev, curr){
       return counts[curr] > counts[prev] ? curr : prev;
     }, keys[0]);
-  },
+  }
 
-  getTopTimezone: function() {
-
+  getTopTimezone() {
     var tzCounts = this.getCountsOf(this.props.timezone.people, 'tz');
     var topTz = this.getHighestOccurring(tzCounts);
 
     return topTz.replace(/.+\//g, '').replace(/_/g,' ');
-  },
+  }
 
-  getTopCity: function() {
+  getTopCity() {
 
     var cityCounts = this.getCountsOf(this.props.timezone.people, 'location');
     var topCity = this.getHighestOccurring(cityCounts);
@@ -51,16 +48,16 @@ module.exports = React.createClass({
     return cityCounts[topCity] === 1 && this.props.timezone.people.length > 1 ?
       this.getTopTimezone() :
       topCity;
-  },
+  }
 
-  isHighlighted: function(person) {
+  isHighlighted(person) {
     if (!this.props.activeFilter)
       return false;
 
     return person.name.search(this.props.activeFilter) > -1;
-  },
+  }
 
-  getPeopleColumns: function(people) {
+  getPeopleColumns(people) {
 
     var numPeople = people.length;
     var numCols = Math.ceil(numPeople / PEOPLE_PER_COL);
@@ -74,9 +71,9 @@ module.exports = React.createClass({
         cols.push([ person ]);
       return cols;
     }, []);
-  },
+  }
 
-  render: function() {
+  render() {
 
     // We clone the time object itself so the this time is bound to
     // the global app time
@@ -118,4 +115,6 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+};
+
+module.exports = Timezone

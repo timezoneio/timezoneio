@@ -2,19 +2,16 @@ var React = require('react');
 var AppDispatcher = require('../dispatchers/appDispatcher.js');
 var ActionTypes = require('../actions/actionTypes.js');
 
+class TimeSlider extends React.Component {
 
-module.exports = React.createClass({
-
-  displayName: 'TimeSlider',
-
-  getInitialState: function() {
-    return {
+  construtor() {
+    this.state = {
       value: 50,
       isCurrentTime: this.props.isCurrentTime
     };
-  },
+  }
 
-  handleChange: function(value) {
+  handleChange(value) {
     value = +value;
     var percentDelta = 2 * (value - 50) / 100;
 
@@ -28,8 +25,9 @@ module.exports = React.createClass({
       actionType: ActionTypes.ADJUST_TIME_DISPLAY,
       value: percentDelta
     });
-  },
-  render: function() {
+  }
+
+  render() {
 
     var valueLink = {
       value: this.props.isCurrentTime ? 50 : this.state.value,
@@ -47,4 +45,6 @@ module.exports = React.createClass({
     );
   }
 
-});
+}
+
+module.exports = TimeSlider

@@ -7,7 +7,8 @@
     "start": "node ./index.js",
     "build": "gulp webpack",
     "predeploy": "gulp predeploy",
-    "watch": "nodemon index.js & ./node_modules/gulp/bin/gulp.js webpack-dev-server",
+    "watch": "nodemon index.js & npm run dev-server",
+    "dev-server": "webpack-dev-server --config webpack.config.dev.js",
     "lint": "./node_modules/eslint/bin/eslint.js --ignore-pattern 'public/js' .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -51,7 +52,8 @@
     "passport": "0.3.0",
     "passport-local": "1.0.0",
     "passport-twitter": "1.0.3",
-    "react": "0.13.3",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
     "react-tools": "0.13.3",
     "redis": "2.4.2",
     "request": "2.60.0",
@@ -59,12 +61,13 @@
     "stylus": "0.54.5",
     "twitter": "1.7.0",
     "underscore": "1.8.3",
-    "webpack": "1.12.6",
     "whatwg-fetch": "0.10.0"
   },
   "devDependencies": {
-    "babel-core": "5.8.25",
-    "babel-loader": "5.3.2",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.4",
     "eslint": "2.10.2",
     "eslint-config-airbnb": "9.0.1",
     "eslint-plugin-import": "1.8.0",
@@ -81,10 +84,9 @@
     "gulp-stylus": "2.0.6",
     "gulp-uglify": "1.5.1",
     "gulp-util": "3.0.6",
-    "json-loader": "0.5.3",
     "nodemon": "1.9.2",
     "vinyl-transform": "1.0.0",
-    "webpack": "1.12.2",
-    "webpack-dev-server": "1.12.0"
+    "webpack": "^4.28.2",
+    "webpack-dev-server": "^3.1.14"
   }
 }
