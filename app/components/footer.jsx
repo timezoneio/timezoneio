@@ -1,6 +1,6 @@
-var React = require('react');
+const React = require('react')
 
-var links = [
+const links = [
   {
     url: '/about',
     text: 'About'
@@ -27,18 +27,8 @@ var links = [
   },
 ];
 
-
-module.exports = React.createClass({
-
-  displayName: 'Footer',
-
-  getInitialState: function() {
-    return {
-      links: links
-    };
-  },
-
-  render: function() {
+class Footer extends React.Component {
+  render() {
 
     var year = new Date().getFullYear();
 
@@ -51,7 +41,7 @@ module.exports = React.createClass({
             © {year} Timezone.io <br/>
           </p>
           <p>
-            {this.state.links.map(function(link, idx) {
+            {links.map(function(link, idx) {
               return (
                 <a key={idx}
                    href={link.url}
@@ -68,4 +58,6 @@ module.exports = React.createClass({
       </footer>
     );
   }
-});
+}
+
+module.exports = Footer

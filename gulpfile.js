@@ -1,7 +1,6 @@
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var path = require('path');
-var glob = require('glob');
 var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
 var plumber = require('gulp-plumber');
@@ -14,12 +13,7 @@ var cssmin = require('gulp-cssmin');
 var rev = require('gulp-rev');
 var awspublish = require('gulp-awspublish');
 
-
-var entries = glob.sync('./app/apps/*.js').reduce(function(obj, path) {
-  var filename = path.match(/.+\/(\w+).js/)[1];
-  obj[filename] = path;
-  return obj;
-}, {});
+const webpackConfig = require('./webpack.config')
 
 var webpackStats = {
   assets: true,
@@ -33,38 +27,6 @@ var webpackStats = {
   reasons : true,
   cached : true,
   chunkOrigins : true
-};
-
-var webpackConfig = {
-  entry: entries,
-  output: {
-		path: __dirname + '/public',
-		publicPath: '/',
-		filename: 'js/bundles/[name].js'
-	},
-  resolve: {
-    extensions: ['', '.json', '.jsx', '.js']
-  },
-  module: {
-    loaders: [
-      {
-        test: /\.jsx?$/,
-        exclude: /node_modules/,
-        loaders: ['babel?stage=0'], // optional[]=runtime if needed
-      },
-      { include: /\.json$/, loaders: ["json-loader"] } // moment-timezone
-    ]
-  },
-  plugins: [
-    // Build the production version of React
-    new webpack.DefinePlugin({
-      'process.env': {
-        'NODE_ENV': JSON.stringify('production'),
-       }
-    }),
-    // Only include British english in addition to American English for moment.js
-    new webpack.ContextReplacementPlugin(/moment[\\\/]locale$/, /^\.\/(en-gb)$/)
-  ]
 };
 
 var getAWSConfig = function() {
@@ -83,6 +45,7 @@ gulp.task('webpack-dev-server', function(callback) {
 
   var devConfig = webpackConfig;
   devConfig.devtool = '#inline-source-map';
+  devConfig.mode = 'development'
   var compiler = webpack(webpackConfig);
 
   new WebpackDevServer(compiler, {

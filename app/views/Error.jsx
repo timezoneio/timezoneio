@@ -1,6 +1,5 @@
-'use strict';
-var React = require('react');
-var Page = require('../components/Page.jsx');
+const React = require('react')
+const Page = require('../components/Page.jsx');
 
 class Error extends React.Component {
 
@@ -14,7 +13,10 @@ class Error extends React.Component {
 
   render() {
     return (
-      <Page {...this.props}>
+      <Page
+        user={this.props.user}
+        link={this.props.link}
+      >
         <div className="content-container">
           <h1>{this.props.type}</h1>
           {this.renderErrorStack(this.props.error)}
