@@ -34,6 +34,10 @@ to start up initially.
 ## Initial data
 
 The first time you run Timezone.io, you'll need some initial data in the DB.
+This script creates an admin user:
+
+```
+$ docker-compose exec app ./scripts/bootstrap.js
+```
 
 > TODO - grab a dump of the data
-
