@@ -12,7 +12,7 @@ module.exports = React.createClass({
 
   getMailTo: function() {
     if (typeof window === 'object')
-      return 'mailto:hi@timezone.io';
+      return 'mailto:timezone.io.app@gmail.com';
     return '';
   },
 

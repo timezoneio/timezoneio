@@ -12,13 +12,13 @@ mongoose.connection.once('open', () => {
   const admin = new User({
     username: 'admin',
     name: 'Dan Admin',
-    email: 'admin@timezone.io',
+    email: 'timezone.io.app@gmail.com',
     password: 'password',
     location: 'Brooklyn',
     tz: 'America/New_York',
   })
   admin.save().then(() => {
-    console.log('Created admin@timezone.io user w/ passsword:"password"')
+    console.log('Created timezone.io.app@gmail.com user w/ passsword:"password"')
     mongoose.connection.close()
     console.log('Database connection closed')
   })

@@ -1,6 +1,6 @@
 var sendEmail = require('../app/email/send');
 
-const TO = 'dan+test@timezone.io';
+const TO = 'timezone.io.app+test@gmail.com';
 
 console.info('Testing send email');
 

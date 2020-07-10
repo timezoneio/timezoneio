@@ -6,7 +6,7 @@ class Contact extends React.Component {
 
   getMailTo() {
     if (typeof window === 'object')
-      return 'mailto:hi@timezone.io';
+      return 'mailto:timezone.io.app@gmail.com';
     return '';
   }
 

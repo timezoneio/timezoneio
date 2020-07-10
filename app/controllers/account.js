@@ -63,7 +63,7 @@ account.deleteAccount = function(req, res, next) {
   }
 
   var handleDeleteFailure = function () {
-    req.flash('error', 'We were unable to delete your account, please email us at hi@timezone.io');
+    req.flash('error', 'We were unable to delete your account, please email us at timezone.io.app@gmail.com');
     res.redirect('/account');
   }
 
@@ -75,7 +75,7 @@ account.deleteAccount = function(req, res, next) {
       })
 
       // Send the reason to the admin email to track why people are leaving
-      // sendEmail('accountDeleteAdminNotification', 'hi@timezone.io', {
+      // sendEmail('accountDeleteAdminNotification', 'timezone.io.app@gmail.com', {
       //   userEmail: req.user.email,
       //   userName: req.user.name,
       //   reason: reason,

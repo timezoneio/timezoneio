@@ -4,9 +4,8 @@ var Mustache = require('mustache');
 const ENV = require('../../env.js');
 var sendgrid  = require('sendgrid')(ENV.SENDGRID_KEY);
 
-const FROM_EMAIL = 'hi@mail.timezone.io';
-const FROM_NAME = 'Dan from Timezone.io';
-const REPLY_EMAIL = 'hi@timezone.io';
+const FROM_EMAIL = 'no-reply@mail.timezone.io';
+const FROM_NAME = 'Timezone.io';
 
 /*
   createMessage('Welcome to Timezone.io!', '<p>My message</p>', 'test@yo.com', {
@@ -20,7 +19,6 @@ var createMessage = function(subject, html, to, options) {
     fromname: FROM_NAME,
     subject: subject,
     html: html,
-    replyto: REPLY_EMAIL,
     smtpapi: new sendgrid.smtpapi({
       category: options.category
     })
