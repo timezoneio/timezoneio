@@ -75,12 +75,12 @@ account.deleteAccount = function(req, res, next) {
       })
 
       // Send the reason to the admin email to track why people are leaving
-      sendEmail('accountDeleteAdminNotification', 'hi@timezone.io', {
-        userEmail: req.user.email,
-        userName: req.user.name,
-        reason: reason,
-        teamNames: teamsToDelete.map(function (t) { return t.name }).join(', '),
-      })
+      // sendEmail('accountDeleteAdminNotification', 'hi@timezone.io', {
+      //   userEmail: req.user.email,
+      //   userName: req.user.name,
+      //   reason: reason,
+      //   teamNames: teamsToDelete.map(function (t) { return t.name }).join(', '),
+      // })
 
       async.eachSeries(teams, function (team, done) {
         if (team.isAdmin(req.user)) {
