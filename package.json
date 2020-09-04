@@ -51,7 +51,7 @@
     "passport": "0.3.0",
     "passport-local": "1.0.0",
     "passport-twitter": "1.0.3",
-    "react": "0.13.3",
+    "react": "16.13.1",
     "react-tools": "0.13.3",
     "redis": "2.4.2",
     "request": "2.60.0",
