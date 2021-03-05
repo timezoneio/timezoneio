@@ -31,6 +31,9 @@ var userSchema = new Schema({
   hashedPassword: { type: String, default: '' },
   salt: { type: String, default: '' },
   inviteCode: { type: String, default: '' }, // ???
+  apiAccessToken: { type: String, default: function genApiToken() {
+    crypto.createHash('md5').digest('hex');
+  }},
 
   twitter: {},
 
@@ -64,7 +67,8 @@ var PUBLIC_FIELDS = [
 
 var OWNER_FIELDS = PUBLIC_FIELDS.concat([
   'coords',
-  'email'
+  'email',
+  'apiAccessToken'
 ]);
 
 var ADMIN_FIELDS = PUBLIC_FIELDS.concat([
@@ -246,6 +250,10 @@ userSchema.methods = {
                  .digest('hex');
   },
 
+  createApiAccessToken: function() {
+    return crypto.createHash('md5').digest('hex');
+  },
+
   isSuperAdmin: function() {
     return this._id.toString() === SUPER_ADMIN_ID;
   },
@@ -282,7 +290,19 @@ userSchema.methods = {
     if (this.teams) {
       json.teams = this.teams.map(function(t){ return t.toJSON(); });
     }
-    return json;
+
+    if (this.apiAccessToken) {
+      return json;
+    } else {
+      this.apiAccessToken = this.createApiAccessToken();
+      this.save(function(err) {
+        if (err) {
+          console.error("Unable to update User token for: ", this._id);
+        }
+      });
+      json.apiAccessToken = this.apiAccessToken;
+      return json;
+    }
   },
 
   useAvatar: function(provider) {
