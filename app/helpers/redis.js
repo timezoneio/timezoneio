@@ -1,19 +1,19 @@
-var redis = require('redis');
+var redis = require("redis");
 
-const options = {}
+const options = {};
 
-if (process.env.NODE_ENV === 'production') {
-  options.url = process.env.REDIS_URL
+if (process.env.NODE_ENV === "production") {
+  options.url = process.env.REDIS_URL || process.env.REDISCLOUD_URL;
 } else {
-  options.host = 'redis'
+  options.host = "redis";
 }
 
-const client = redis.createClient(options)
+const client = redis.createClient(options);
 
 // This is a simple wrapper so we can re-use the active redis connection
 
-client.on('error', function (err) {
-  console.log('Error ' + err);
+client.on("error", function (err) {
+  console.log("Error " + err);
 });
 
 module.exports = client;
