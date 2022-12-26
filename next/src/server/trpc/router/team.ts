@@ -1,4 +1,4 @@
-import type { Team, TeamMember } from "@prisma/client";
+// import type { Team, TeamMember } from "@prisma/client";
 import { z } from "zod";
 
 import { router, publicProcedure } from "../trpc";
@@ -30,17 +30,16 @@ export const teamRouter = router({
       },
     });
 
-    if (team?.id) {
-      const users = team.TeamMember.map((tm) => tm.member);
-      const people = users.map((u) => cleanUser(u));
-      return {
-        ...teamExclude(team, ["inviteHash", "TeamMember"]),
-        people,
-        timezones: groupByTimezones(users),
-      };
-
-      return;
+    if (!team?.id) {
+      throw new Error("Team not found");
     }
-    return team;
+
+    const users = team.TeamMember.map((tm) => tm.member);
+    const people = users.map((u) => cleanUser(u));
+    return {
+      ...teamExclude(team, ["inviteHash", "TeamMember"]),
+      people,
+      timezones: groupByTimezones(users),
+    };
   }),
 });

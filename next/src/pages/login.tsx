@@ -2,7 +2,7 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import { LockClosedIcon } from "@heroicons/react/20/solid";
-import { signIn, signOut, useSession } from "next-auth/react";
+// import { signIn, signOut, useSession } from "next-auth/react";
 
 import Nav from "src/components/Nav";
 

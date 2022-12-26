@@ -1,11 +1,14 @@
-import { User } from "@prisma/client";
+import type { User } from "@prisma/client";
 
 export function getMostPopularCity(people: User[]): string {
   const cityCounts = people
     .map((p) => p.location)
     .filter((l) => !!l)
-    .reduce((acc, l) => {
-      if (acc[l]) {
+    .reduce<{ [key: string]: number }>((acc, l) => {
+      if (!l) {
+        return acc;
+      }
+      if (acc.hasOwnProperty(l)) {
         acc[l] += 1;
       } else {
         acc[l] = 1;
@@ -13,10 +16,10 @@ export function getMostPopularCity(people: User[]): string {
       return acc;
     }, {});
 
-  const city = Object.keys(cityCounts).reduce(
+  const city = Object.keys(cityCounts).reduce<{ name: string; value: number }>(
     (acc, k) => {
-      if (cityCounts[k] > acc.value) {
-        return { name: k, value: cityCounts[k] };
+      if (cityCounts && (cityCounts[k] || 0) > acc.value) {
+        return { name: k, value: cityCounts[k] || 0 };
       }
       return acc;
     },

@@ -1,11 +1,8 @@
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import Image from "next/image";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
 
 import { trpc } from "src/utils/trpc";
 import type { TimezoneGroup } from "src/utils/transform";

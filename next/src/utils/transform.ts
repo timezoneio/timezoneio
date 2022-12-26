@@ -1,6 +1,6 @@
 import moment from "moment-timezone";
 
-import { User } from "@prisma/client";
+import type { User } from "@prisma/client";
 
 function getUTCOffset(tz: string) {
   return moment().tz(tz).utcOffset();

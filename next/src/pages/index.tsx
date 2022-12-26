@@ -1,20 +1,12 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
-
-import { trpc } from "../utils/trpc";
+// import Link from "next/link";
+// import { signIn, signOut, useSession } from "next-auth/react";
 
 import Nav from "src/components/Nav";
 
 const Home: NextPage = () => {
-  const userQuery = trpc.user.getById.useQuery("56435b8c4159630508317092");
-
-  const teamQuery = trpc.team.getBySlug.useQuery("buffer");
-
-  const user = userQuery.data;
-  console.log(userQuery.data, teamQuery.data);
-
   return (
     <>
       <Head>
@@ -39,8 +31,8 @@ const Home: NextPage = () => {
                 <div className="hidden sm:mb-8 sm:flex sm:justify-center">
                   <div className="relative overflow-hidden rounded-full py-1.5 px-4 text-sm leading-6 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
                     <span className="text-gray-600">
-                      We're working on some maintenance and will be back online
-                      ASAP!{" "}
+                      We&apos;re working on some maintenance and will be back
+                      online ASAP!{" "}
                       {/* <a href="#" className="font-semibold text-sky-700">
                         <span
                           className="absolute inset-0"
@@ -69,7 +61,7 @@ const Home: NextPage = () => {
                         &rarr;
                       </span>
                     </a> */}
-                    <a
+                    <Link
                       href="/team/buffer"
                       className="inline-block rounded-lg px-4 py-1.5 text-base font-semibold leading-7 text-gray-900 ring-1 ring-gray-900/10 hover:ring-gray-900/20"
                     >
@@ -77,7 +69,7 @@ const Home: NextPage = () => {
                       <span className="text-gray-400" aria-hidden="true">
                         &rarr;
                       </span>
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -103,26 +95,26 @@ const Home: NextPage = () => {
 
 export default Home;
 
-const AuthShowcase: React.FC = () => {
-  const { data: sessionData } = useSession();
+// const AuthShowcase: React.FC = () => {
+//   const { data: sessionData } = useSession();
 
-  const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery(
-    undefined, // no input
-    { enabled: sessionData?.user !== undefined }
-  );
+//   const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery(
+//     undefined, // no input
+//     { enabled: sessionData?.user !== undefined }
+//   );
 
-  return (
-    <div className="flex flex-col items-center justify-center gap-4">
-      <p className="text-center text-2xl text-white">
-        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-        {secretMessage && <span> - {secretMessage}</span>}
-      </p>
-      <button
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-        onClick={sessionData ? () => signOut() : () => signIn()}
-      >
-        {sessionData ? "Sign out" : "Sign in"}
-      </button>
-    </div>
-  );
-};
+//   return (
+//     <div className="flex flex-col items-center justify-center gap-4">
+//       <p className="text-center text-2xl text-white">
+//         {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
+//         {secretMessage && <span> - {secretMessage}</span>}
+//       </p>
+//       <button
+//         className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+//         onClick={sessionData ? () => signOut() : () => signIn()}
+//       >
+//         {sessionData ? "Sign out" : "Sign in"}
+//       </button>
+//     </div>
+//   );
+// };
