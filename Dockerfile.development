@@ -1,12 +1,8 @@
-FROM node:6.2-slim
+FROM node:10.15.0-alpine
 
 RUN mkdir -p /app
 WORKDIR /app
 
-RUN npm install -g nodemon
-
 ENV NODE_ENV development
-
-EXPOSE 8888
 
 CMD npm run watch

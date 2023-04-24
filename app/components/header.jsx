@@ -1,12 +1,10 @@
-var React = require('react');
-var Branding = require('./branding.jsx');
-var UserMenu = require('./userMenu.jsx');
+const React = require('react')
+const Branding = require('./branding.jsx')
+const UserMenu = require('./userMenu.jsx')
 
-module.exports = React.createClass({
+class Header extends React.Component {
 
-  displayName: 'Header',
-
-  renderRightComponent: function() {
+  renderRightComponent() {
 
     var buttons = [];
 
@@ -41,9 +39,9 @@ module.exports = React.createClass({
     }
 
     return buttons;
-  },
+  }
 
-  render: function() {
+  render() {
     var link = this.props.link === false ? false : true;
     return (
       <header className="site-header">
@@ -54,4 +52,6 @@ module.exports = React.createClass({
       </header>
     );
   }
-});
+}
+
+module.exports = Header

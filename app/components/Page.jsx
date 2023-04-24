@@ -9,8 +9,11 @@ class Page extends React.Component {
     return (
       <div className="container ensure-full-height">
 
-        <Header {...this.props}
-                demo={true} />
+        <Header
+          user={this.props.user}
+          link={this.props.link}
+          demo={true}
+        />
 
         {this.props.children}
 
