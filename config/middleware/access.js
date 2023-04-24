@@ -6,6 +6,28 @@ var APIAuthModel = require('../../app/models/apiAuth');
 var access = module.exports = {};
 
 
+access.requireApiAccessToken = function(req, res, next) {
+  var accessToken = req.query.access_token || req.body.access_token || null;
+
+  if (accessToken) {
+    UserModel.findOne({ accessToken: accessToken }, function(err, user) {
+      if (err || !user)
+        return res.status(403).json({
+          message: 'Invalid token :('
+        });
+
+      req.user = user;
+      next();
+    });
+    return;
+  }
+
+  res.status(403).json({
+    message: 'Ah ah ah, you didn\'t say the magic word',
+    url:req.baseUrl
+  });
+};
+
 access.allowImpersonate = function(req, res, next) {
 
   if (!req.user || !req.user.isSuperAdmin() || !req.query.impersonate)

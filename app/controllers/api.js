@@ -51,9 +51,9 @@ api.userGetSelf = function(req, res) {
     res.status(400).json({
       message: 'Not logged in',
       url: 'https://timezone.io/login'
-    })
+    });
   } else {
-    res.json(req.user.toOwnerJSON())
+    res.json(req.user.toOwnerJSON());
   }
 };
 
